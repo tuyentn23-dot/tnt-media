@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS cycles (id INTEGER PRIMARY KEY AUTOINCREMENT, started_at TEXT NOT NULL, ended_at TEXT, stage TEXT NOT NULL DEFAULT 'plan', goal TEXT, status TEXT NOT NULL DEFAULT 'running', meta_json TEXT);
+CREATE TABLE IF NOT EXISTS videos (id INTEGER PRIMARY KEY AUTOINCREMENT, cycle_id INTEGER, path TEXT, youtube_id TEXT, title TEXT, topic TEXT, format TEXT, score REAL, status TEXT NOT NULL DEFAULT 'created', published_at TEXT, created_at TEXT NOT NULL, meta_json TEXT);
+CREATE TABLE IF NOT EXISTS metrics (id INTEGER PRIMARY KEY AUTOINCREMENT, video_id INTEGER NOT NULL, ts TEXT NOT NULL, views INTEGER DEFAULT 0, ctr REAL, retention REAL, likes INTEGER DEFAULT 0, comments INTEGER DEFAULT 0, source TEXT DEFAULT 'youtube', raw_json TEXT);
+CREATE TABLE IF NOT EXISTS insights (id INTEGER PRIMARY KEY AUTOINCREMENT, cycle_id INTEGER, kind TEXT NOT NULL, finding TEXT NOT NULL, evidence_json TEXT, created_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS decisions (id INTEGER PRIMARY KEY AUTOINCREMENT, cycle_id INTEGER, rule_key TEXT NOT NULL, old_value TEXT, new_value TEXT, reason TEXT, applied_at TEXT, result_json TEXT);
+CREATE TABLE IF NOT EXISTS experiments (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, variant_a TEXT, variant_b TEXT, metric TEXT, winner TEXT, started_at TEXT, ended_at TEXT);
+CREATE TABLE IF NOT EXISTS tool_runs (id INTEGER PRIMARY KEY AUTOINCREMENT, cycle_id INTEGER, tool TEXT NOT NULL, args_json TEXT, ok INTEGER DEFAULT 0, ms INTEGER, output TEXT, ran_at TEXT NOT NULL);
+CREATE INDEX IF NOT EXISTS idx_metrics_video ON metrics(video_id, ts);
+CREATE INDEX IF NOT EXISTS idx_videos_cycle ON videos(cycle_id);
+CREATE INDEX IF NOT EXISTS idx_tool_runs_cycle ON tool_runs(cycle_id);

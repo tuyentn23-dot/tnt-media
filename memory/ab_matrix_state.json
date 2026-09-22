@@ -1,0 +1,23 @@
+{
+  "results": {
+    "satisfying15peak": {
+      "topic": "satisfying",
+      "duration": 15,
+      "hook": "peak",
+      "runs": 3,
+      "views": 1200,
+      "avg_views": 400.0,
+      "retention": 0.72
+    },
+    "food18cold": {
+      "topic": "food",
+      "duration": 18,
+      "hook": "cold",
+      "runs": 1,
+      "views": 300,
+      "avg_views": 300.0,
+      "retention": 0.4
+    }
+  },
+  "updated": "2026-09-12T02:53:48.907775"
+}

@@ -1,0 +1,12 @@
+{
+  "channel_id": "MinhTriet-AI",
+  "platform": "youtube",
+  "name": "MinhTriet-AI",
+  "handle": "@MinhTriet-AI",
+  "url": "youtube.com/@MinhTriet-AI",
+  "owner_confirmed": true,
+  "subscriber_count_user_reported": 1000,
+  "priority": 3,
+  "role": "reserve_channel",
+  "status": "pending_deep_audit"
+}

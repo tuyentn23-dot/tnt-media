@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "total_videos_created": 1,
+  "videos": [
+    {
+      "content_id": "VILEVI-A1-V1",
+      "title": "AI Soul - Consciousness Test",
+      "format": "YouTube Shorts",
+      "duration_seconds": 15,
+      "status": "test_prototype",
+      "created_at": "2026-09-05"
+    }
+  ],
+  "next_steps": [
+    "Create first production video",
+    "Integrate audio generation",
+    "Set up automated publishing"
+  ]
+}

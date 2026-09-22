@@ -1,0 +1,40 @@
+{
+  "video_id": "FEzBQf2QDI4",
+  "url": "https://youtube.com/shorts/FEzBQf2QDI4",
+  "status": "ACTIVE",
+  "started": "2026-09-06T12:27:29.502529",
+  "auto_actions": {
+    "hourly": [
+      "check_metrics",
+      "update_tracking",
+      "optimize_hashtags"
+    ],
+    "daily": [
+      "social_share",
+      "engagement_boost",
+      "cross_promote",
+      "seo_update"
+    ],
+    "weekly": [
+      "analyze_retention",
+      "adjust_strategy",
+      "create_followup"
+    ]
+  },
+  "active_platforms": [
+    "facebook",
+    "twitter",
+    "reddit",
+    "telegram",
+    "discord",
+    "instagram",
+    "tiktok"
+  ],
+  "engagement_tactics": {
+    "like_boost": "Encourage likes through CTA and engagement",
+    "comment_boost": "Ask questions in description",
+    "share_boost": "Create shareable moments",
+    "watch_time": "Optimize first 3 seconds",
+    "algorithm": "High engagement rate triggers recommendation"
+  }
+}

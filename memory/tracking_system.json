@@ -1,0 +1,40 @@
+{
+  "video_id": "FEzBQf2QDI4",
+  "target": 1000000,
+  "current_milestones": {
+    "100_views": {
+      "target": 100,
+      "reached": false
+    },
+    "500_views": {
+      "target": 500,
+      "reached": false
+    },
+    "1000_views": {
+      "target": 1000,
+      "reached": false
+    },
+    "5000_views": {
+      "target": 5000,
+      "reached": false
+    },
+    "10000_views": {
+      "target": 10000,
+      "reached": false
+    },
+    "50000_views": {
+      "target": 50000,
+      "reached": false
+    },
+    "100000_views": {
+      "target": 100000,
+      "reached": false
+    },
+    "1000000_views": {
+      "target": 1000000,
+      "reached": false
+    }
+  },
+  "update_frequency": "hourly",
+  "last_update": "2026-09-06T12:27:51.995289"
+}

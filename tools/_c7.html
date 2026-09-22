@@ -1,0 +1,11 @@
+async function hist(){const d=await api('videos?limit=40');const items=d.items||[];
+let h='<div class=panel><h2>Video da dang gan day</h2><table><thead><tr><th>ID</th><th>Tieu de</th><th>Topic</th><th>YT</th><th>Trang thai</th></tr></thead><tbody>';
+items.forEach(v=>{h+='<tr><td>'+esc(v.id)+'</td><td>'+esc((v.title||'').slice(0,60))+'</td><td>'+esc(v.topic||'')+'</td><td>'+(v.youtube_id?'<a style=color:#4f8cff href=https://youtu.be/'+v.youtube_id+' target=_blank>'+v.youtube_id+'</a>':'-')+'</td><td><span class=badge>'+esc(v.status||'')+'</span></td></tr>'});
+h+='</tbody></table></div>';document.getElementById('view').innerHTML=h}
+async function logs(){const d=await api('agent/actions?limit=40');const items=d.items||[];
+let h='<div class=panel><h2>Nhat ky hanh dong agent</h2><table><thead><tr><th>Thoi gian</th><th>Hanh dong</th><th>Chi tiet</th></tr></thead><tbody>';
+items.forEach(x=>{h+='<tr><td>'+esc(x.ts)+'</td><td>'+esc(x.action)+'</td><td>'+esc(String(x.detail).slice(0,80))+'</td></tr>'});
+h+='</tbody></table></div>';document.getElementById('view').innerHTML=h}
+function refresh(){render()}
+tabs();render();
+</script></body></html>

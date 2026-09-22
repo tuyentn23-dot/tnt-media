@@ -1,0 +1,30 @@
+{
+  "channel_id": "",
+  "platform": "youtube",
+  "name": "",
+  "url": "",
+  "owner_confirmed": false,
+  "status": "pending_analysis",
+  "positioning": "",
+  "primary_language": "",
+  "target_audience": [],
+  "content_pillars": [],
+  "formats": [],
+  "existing_ip_assets": [],
+  "monetization": {
+    "known_status": "unknown",
+    "notes": ""
+  },
+  "analysis": {
+    "strengths": [],
+    "weaknesses": [],
+    "top_formats": [],
+    "underperforming_formats": [],
+    "audience_signals": [],
+    "opportunities": [],
+    "risks": []
+  },
+  "experiments": [],
+  "evidence": [],
+  "last_analyzed_at": null
+}

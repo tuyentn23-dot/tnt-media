@@ -1,0 +1,44 @@
+{
+  "signatures": {
+    "lifestyle|life_morning_1|buổi sáng của người nhật có gì đặc biệt?": {
+      "youtube_id": "-L04EkEe1DI",
+      "topic": "chvilevi5676_lifestyle_life_morning_1",
+      "kind": "lifestyle",
+      "file": "D:\\TNT_AI\\venture_foundry\\media\\output\\chvilevi5676_life_morning_1_20260919_195020.mp4",
+      "ts": "2026-09-19T19:52:12",
+      "channel": "vilevi5676"
+    },
+    "food|food_pho_1|phở việt nam có từ bao giờ?": {
+      "youtube_id": "jC09ExHHPx0",
+      "topic": "chvilevi5676_food_food_pho_1",
+      "kind": "food",
+      "file": "D:\\TNT_AI\\venture_foundry\\media\\output\\chvilevi5676_food_pho_1_20260919_195212.mp4",
+      "ts": "2026-09-19T19:54:11",
+      "channel": "vilevi5676"
+    },
+    "animals|animal_dolphin_1|cá heo có thật sự giao tiếp bằng tên gọi": {
+      "youtube_id": "ezvDai6szxQ",
+      "topic": "chvilevi5676_animals_animal_dolphin_1",
+      "kind": "animals",
+      "file": "D:\\TNT_AI\\venture_foundry\\media\\output\\chvilevi5676_animal_dolphin_1_20260919_195411.mp4",
+      "ts": "2026-09-19T19:55:55",
+      "channel": "vilevi5676"
+    },
+    "nostalgia|nost_90s_1|tuổi thơ 9x việt nam có gì?": {
+      "youtube_id": "sYgA7HBOPi4",
+      "topic": "chvilevi5676_nostalgia_nost_90s_1",
+      "kind": "nostalgia",
+      "file": "D:\\TNT_AI\\venture_foundry\\media\\output\\chvilevi5676_nost_90s_1_20260919_195555.mp4",
+      "ts": "2026-09-19T19:58:04",
+      "channel": "vilevi5676"
+    },
+    "curiosity|cur_why_sky_1|vì sao bầu trời màu xanh?": {
+      "youtube_id": "JTxmzOHnNVQ",
+      "topic": "chvilevi5676_curiosity_cur_why_sky_1",
+      "kind": "curiosity",
+      "file": "D:\\TNT_AI\\venture_foundry\\media\\output\\chvilevi5676_cur_why_sky_1_20260919_195804.mp4",
+      "ts": "2026-09-19T19:59:38",
+      "channel": "vilevi5676"
+    }
+  }
+}

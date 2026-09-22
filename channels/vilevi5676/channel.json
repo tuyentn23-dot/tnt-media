@@ -1,0 +1,52 @@
+{
+ "id": "vilevi5676",
+ "name": "ViLe Vi",
+ "enabled": true,
+ "token_file": "config/token.pickle",
+ "style": {
+  "language": "vi",
+  "voice": "female_warm",
+  "music_genre": "lofi_chill",
+  "color_primary": "#2b6cb0",
+  "color_accent": "#f6ad55",
+  "font": "Georgia",
+  "font_size": 42,
+  "watermark": "@vilevi5676",
+  "intro_seconds": 1.0,
+  "outro_seconds": 2.0,
+  "aspect": "16:9",
+  "max_duration_sec": 180
+ },
+ "content": {
+  "kinds": [
+   "lifestyle",
+   "food",
+   "animals",
+   "nostalgia",
+   "curiosity"
+  ],
+  "category_id": "22",
+  "tags_base": [
+   "vilevi",
+   "vlog",
+   "doi song",
+   "am thuc",
+   "ky niem"
+  ],
+  "title_template": "{hook}",
+  "desc_template": "{body} {payoff}",
+  "topic_pool_file": "topic_pool.json"
+ },
+ "schedule": {
+  "enabled": true,
+  "interval_min": 360,
+  "batch": 1,
+  "post_hours": [
+   8,
+   12,
+   18,
+   20
+  ]
+ },
+ "niche": "whatif/facts/lifestyle/food/nostalgia"
+}

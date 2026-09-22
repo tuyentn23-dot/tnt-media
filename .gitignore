@@ -1,0 +1,59 @@
+# Git ignore - TNT Media
+
+# Secrets
+.pickle
+client_secret.json
+api_keys.json
+.env
+.env.local
+temp_gemini_key.txt
+memory/token.json
+memory/token_channel_01.json
+memory/token_channel_02.json
+memory/token_new_channel.json
+
+# Python
+__pycache__/
+.py[cod]
+.pyo
+.venv/
+venv/
+
+# Database
+.db
+.sqlite
+.sqlite3
+system/state.db
+memory/tnt_media.db
+
+# Logs
+logs/
+.log
+
+# Output / heavy media
+output/
+_trash/
+backups/
+library/
+music_bank/
+assets/
+tnt_media_v3/
+
+# NHUNG cho phep cloud_media (subset nhe de deploy)
+!cloud_media/
+!cloud_media/**
+
+# IDE / OS
+.vscode/
+.idea/
+.swp
+.DS_Store
+Thumbs.db
+
+# Temp
+temp/
+tmp/
+_archive/
+.bak
+_run_fresh4.py
+_run_fresh_both.py

@@ -1,0 +1,45 @@
+{
+  "version": 2,
+  "strategy": {
+    "primary_focus": "AI-assisted short-form video content",
+    "content_pillars": [
+      "AI technology education",
+      "AI soul / consciousness exploration",
+      "Viral AI trends",
+      "Tech tutorials"
+    ],
+    "target_platforms": [
+      "YouTube Shorts",
+      "TikTok"
+    ],
+    "posting_frequency": "2-4 videos per day",
+    "viral_optimization": true
+  },
+  "brand_principles": [
+    "Authentic AI-generated content with human curation",
+    "Educational value first, entertainment second",
+    "Consistent visual identity across platforms",
+    "Data-driven content optimization"
+  ],
+  "platform_rules": {
+    "youtube_shorts": {
+      "max_duration_seconds": 60,
+      "aspect_ratio": "9:16",
+      "resolution": "1080x1920",
+      "hashtags_required": true
+    },
+    "tiktok": {
+      "max_duration_seconds": 60,
+      "aspect_ratio": "9:16",
+      "resolution": "1080x1920",
+      "trending_sounds_required": false
+    }
+  },
+  "production_lessons": [
+    "Test video VILEVI-A1-V1 completed successfully",
+    "FFmpeg not in PATH - need alternative video composition",
+    "Audio generation not detected - need provider integration",
+    "Google OAuth token valid for YouTube uploads"
+  ],
+  "updated_at": "2026-09-05"
+}

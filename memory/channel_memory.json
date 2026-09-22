@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "active_channels": [
+    "Mialinhcute",
+    "MinhTriet-AI",
+    "vilevi5676"
+  ],
+  "channel_details": {
+    "Mialinhcute": {
+      "platform": "YouTube",
+      "status": "configured"
+    },
+    "MinhTriet-AI": {
+      "platform": "YouTube",
+      "status": "configured"
+    },
+    "vilevi5676": {
+      "platform": "YouTube",
+      "status": "active",
+      "oauth_valid": true
+    }
+  },
+  "updated_at": "2026-09-05"
+}

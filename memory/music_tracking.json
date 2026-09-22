@@ -1,0 +1,87 @@
+{
+  "songs": [
+    {
+      "id": "MUSIC-0001",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "shares": 0,
+      "status": "tracked",
+      "last_updated": "2026-09-06T00:18:21.590799"
+    },
+    {
+      "id": "MUSIC-0002",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "shares": 0,
+      "status": "tracked",
+      "last_updated": "2026-09-06T00:18:21.590853"
+    },
+    {
+      "id": "MUSIC-0003",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "shares": 0,
+      "status": "tracked",
+      "last_updated": "2026-09-06T00:18:21.590858"
+    },
+    {
+      "id": "MUSIC-0004",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "shares": 0,
+      "status": "tracked",
+      "last_updated": "2026-09-06T00:19:50.143277"
+    },
+    {
+      "id": "MUSIC-0005",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "shares": 0,
+      "status": "tracked",
+      "last_updated": "2026-09-06T00:19:50.143325"
+    },
+    {
+      "id": "MUSIC-0006",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "shares": 0,
+      "status": "tracked",
+      "last_updated": "2026-09-06T00:19:50.143329"
+    },
+    {
+      "id": "MUSIC-0007",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "shares": 0,
+      "status": "tracked",
+      "last_updated": "2026-09-06T08:16:07.201761"
+    },
+    {
+      "id": "MUSIC-0008",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "shares": 0,
+      "status": "tracked",
+      "last_updated": "2026-09-06T08:16:07.201818"
+    },
+    {
+      "id": "MUSIC-0009",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "shares": 0,
+      "status": "tracked",
+      "last_updated": "2026-09-06T08:16:07.201822"
+    }
+  ],
+  "metrics": {},
+  "alerts": []
+}

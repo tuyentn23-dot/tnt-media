@@ -1,0 +1,71 @@
+{
+  "videos": [
+    {
+      "id": "oGC_xppaNVg",
+      "title": "Nho Em - Ballad",
+      "genre": "Ballad"
+    },
+    {
+      "id": "ZBY2BMbnD5k",
+      "title": "Hy Vong - Pop",
+      "genre": "Pop"
+    },
+    {
+      "id": "zXWrVucfrOU",
+      "title": "Binh Yen - Lofi",
+      "genre": "Lofi"
+    },
+    {
+      "id": "M3Nbjt6-Sww",
+      "title": "Nho Em - AI Ballad",
+      "genre": "Ballad"
+    },
+    {
+      "id": "ZW05FUn35oA",
+      "title": "Ban Linh - Rap",
+      "genre": "Rap"
+    },
+    {
+      "id": "A4mPzIWIHqQ",
+      "title": "Nang Som Tren Vai - Nhac Tru Tinh Lang Man",
+      "channel": "vilevi5676",
+      "type": "music_video",
+      "audio": "Nang Som Tren Vai",
+      "has_audio": true,
+      "format": "landscape",
+      "published_at": "2026-09-06T13:47:18Z"
+    },
+    {
+      "id": "Uvh59V2SYmA",
+      "title": "Nang Som Tren Vai - Full Nhac Tru Tinh 2024",
+      "channel": "vilevi5676",
+      "type": "music_full",
+      "audio": "Nang Som Tren Vai",
+      "duration_seconds": 228,
+      "has_audio": true,
+      "format": "landscape",
+      "published_at": "2026-09-06T13:54:43Z"
+    },
+    {
+      "id": "wJdOV5TPVjg",
+      "title": "Nang Som Tren Vai - Official Music Video (Album Tinh Ca)",
+      "channel": "vilevi5676",
+      "type": "official_music_video",
+      "audio": "Nang Som Tren Vai",
+      "background": "Em Ban Cat Cat",
+      "duration_seconds": 228,
+      "has_audio": true,
+      "format": "landscape",
+      "published_at": "2026-09-06T14:16:32Z"
+    },
+    {
+      "id": "SIbeLaIRJ9Y",
+      "title": "Nang Som Tren Vai - Nhac Tru Tinh"
+    },
+    {
+      "id": "ZKUx7K01yM8",
+      "title": "Nang Som Tren Vai - Nhac Tru Tinh"
+    }
+  ],
+  "total": 5
+}

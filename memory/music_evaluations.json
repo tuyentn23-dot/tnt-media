@@ -1,0 +1,40 @@
+{
+  "evaluations": [
+    {
+      "timestamp": "2026-09-06T00:18:41.681754",
+      "total_songs": 3,
+      "tracked_songs": 3,
+      "quality_score": 7.5,
+      "engagement_score": 0,
+      "recommendations": [
+        "Tang cuong quang ba",
+        "Them nhac moi",
+        "Toi uu the loai"
+      ]
+    },
+    {
+      "timestamp": "2026-09-06T00:19:50.238511",
+      "total_songs": 6,
+      "tracked_songs": 6,
+      "quality_score": 7.5,
+      "engagement_score": 0,
+      "recommendations": [
+        "Tang cuong quang ba",
+        "Them nhac moi",
+        "Toi uu the loai"
+      ]
+    },
+    {
+      "timestamp": "2026-09-06T08:16:07.336207",
+      "total_songs": 9,
+      "tracked_songs": 9,
+      "quality_score": 7.5,
+      "engagement_score": 0,
+      "recommendations": [
+        "Tang cuong quang ba",
+        "Them nhac moi",
+        "Toi uu the loai"
+      ]
+    }
+  ]
+}

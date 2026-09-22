@@ -1,0 +1,79 @@
+{
+  "ballad": {
+    "bpm": 65,
+    "mood": "romantic",
+    "scale": "major",
+    "emotion": "love",
+    "name_vn": "Ballad"
+  },
+  "pop": {
+    "bpm": 110,
+    "mood": "happy",
+    "scale": "major",
+    "emotion": "joy",
+    "name_vn": "Pop"
+  },
+  "edm": {
+    "bpm": 128,
+    "mood": "energetic",
+    "scale": "minor",
+    "emotion": "freedom",
+    "name_vn": "EDM"
+  },
+  "hiphop": {
+    "bpm": 90,
+    "mood": "confident",
+    "scale": "minor",
+    "emotion": "pride",
+    "name_vn": "Hip Hop"
+  },
+  "rnb": {
+    "bpm": 80,
+    "mood": "sensual",
+    "scale": "minor",
+    "emotion": "desire",
+    "name_vn": "R&B"
+  },
+  "lofi": {
+    "bpm": 75,
+    "mood": "chill",
+    "scale": "major",
+    "emotion": "peace",
+    "name_vn": "Lofi"
+  },
+  "folk": {
+    "bpm": 90,
+    "mood": "nostalgic",
+    "scale": "pentatonic",
+    "emotion": "homesickness",
+    "name_vn": "Dan Ca"
+  },
+  "rock": {
+    "bpm": 140,
+    "mood": "powerful",
+    "scale": "minor",
+    "emotion": "rebellion",
+    "name_vn": "Rock"
+  },
+  "children": {
+    "bpm": 115,
+    "mood": "playful",
+    "scale": "major",
+    "emotion": "innocence",
+    "name_vn": "Thieu Nhi"
+  },
+  "ambient": {
+    "bpm": 55,
+    "mood": "meditative",
+    "scale": "dorian",
+    "emotion": "serenity",
+    "name_vn": "Ambient"
+  },
+  "cinematic": {
+    "bpm": 100,
+    "mood": "epic",
+    "scale": "minor",
+    "emotion": "awe",
+    "name_vn": "Cinematic"
+  }
+}

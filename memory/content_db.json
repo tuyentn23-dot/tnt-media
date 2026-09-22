@@ -1,0 +1,606 @@
+{
+ "whatif": [
+  {
+   "id": "blackhole",
+   "topic": "space",
+   "hook": "Nếu bạn rơi vào hố đen, bạn sẽ không chết ngay.",
+   "body": "Chân bạn bị kéo mạnh hơn đầu, kéo dài cơ thể như mì spaghetti. Khoa học gọi là spaghettification.",
+   "payoff": "Nhưng từ ngoài nhìn vào, bạn đông cứng mãi mãi - không bao giờ thực sự rơi vào.",
+   "question": "Bạn có dám thử không? Comment nhé!",
+   "search_query": "galaxy stars space",
+   "name": "Nếu bạn rơi vào hố đen, bạn sẽ không chế"
+  },
+  {
+   "id": "whale_swallow",
+   "topic": "ocean",
+   "hook": "Nếu cá voi xanh nuốt bạn, bạn sẽ không bị tiêu hóa.",
+   "body": "Cổ họng nó chỉ rộng bằng quả bóng rổ. Bạn mắc kẹt, không trôi xuống dạ dày.",
+   "payoff": "Nhưng oxy cạn trong vài phút. Bạn bất tỉnh trước khi hiểu chuyện gì xảy ra.",
+   "question": "Bạn nghĩ mình sống được bao lâu?",
+   "search_query": "ocean underwater waves",
+   "name": "Nếu cá voi xanh nuốt bạn, bạn sẽ không b"
+  },
+  {
+   "id": "no_sleep",
+   "topic": "body",
+   "hook": "Sau 11 ngày không ngủ, cơ thể bạn tự tắt.",
+   "body": "Ngày 3: ảo giác. Ngày 5: não ăn chính nó. Ngày 7: mất nhận biết thực tại.",
+   "payoff": "Không ai sống quá 11 ngày. Randy Gardner thử năm 1964 - suýt chết.",
+   "question": "Bạn thức khuya nhất là mấy giờ?",
+   "search_query": "human body anatomy",
+   "name": "Sau 11 ngày không ngủ, cơ thể bạn tự tắt"
+  },
+  {
+   "id": "sun_sound",
+   "topic": "space",
+   "hook": "Mặt trời ồn đến mức bạn chết ngay nếu nghe thấy.",
+   "body": "Nó tạo năng lượng bằng 1 tỷ quả bom mỗi giây. Âm thanh mạnh gấp 10 lần tiếng nổ lớn nhất.",
+   "payoff": "Nhưng vũ trụ trống rỗng, âm thanh không truyền tới bạn. Đó là điều duy nhất cứu bạn.",
+   "question": "Bạn có biết vũ trụ im lặng không?",
+   "search_query": "galaxy stars space",
+   "name": "Mặt trời ồn đến mức bạn chết ngay nếu ng"
+  },
+  {
+   "id": "moon_disappear",
+   "topic": "space",
+   "hook": "Nếu mặt trăng biến mất, Trái Đất sẽ hỗn loạn.",
+   "body": "Thủy triều sụp đổ. Khí hậu rối loạn. Ngày đêm mất ổn định vì Trái Đất quay nhanh hơn.",
+   "payoff": "Biển sẽ dâng lên nuốt nhiều thành phố ven biển trong vài tháng.",
+   "question": "Bạn có nghĩ Trái Đất chịu được không?",
+   "search_query": "galaxy stars space",
+   "name": "Nếu mặt trăng biến mất, Trái Đất sẽ hỗn "
+  },
+  {
+   "id": "earth_stops",
+   "topic": "space",
+   "hook": "Nếu Trái Đất ngừng quay, bạn sẽ bay về hướng đông với tốc độ 1.600km/h.",
+   "body": "Mọi thứ không gắn chặt sẽ bị hất văng. Gió mạnh khủng khiếp hình thành.",
+   "payoff": "Nhưng điều tệ nhất: một nửa hành tinh cháy, nửa kia đóng băng vĩnh viễn.",
+   "question": "Bạn nghĩ mình trụ được bao lâu?",
+   "search_query": "galaxy stars space",
+   "name": "Nếu Trái Đất ngừng quay, bạn sẽ bay về h"
+  },
+  {
+   "id": "immortal_jelly",
+   "topic": "ocean",
+   "hook": "Có một loài sứa bất tử.",
+   "body": "Turritopsis dohrnii có thể quay ngược vòng đời - từ già trở về non khi gặp nguy hiểm.",
+   "payoff": "Nó lặp lại mãi. Về lý thuyết, nó sống vĩnh viễn.",
+   "question": "Bạn có muốn bất tử như nó không?",
+   "search_query": "ocean underwater waves",
+   "name": "Có một loài sứa bất tử"
+  },
+  {
+   "id": "human_shadow",
+   "topic": "psychology",
+   "hook": "Bạn sợ điều gì ở người khác thường là điều bạn ghét ở chính mình.",
+   "body": "Jung gọi đó là shadow self. Khi bạn phán xét ai, bạn đang tự phán xét.",
+   "payoff": "Khi bạn chấp nhận phần tối của mình, bạn ngừng bị nó điều khiển.",
+   "question": "Bạn từng nhận ra điều này chưa?",
+   "search_query": "human face emotion",
+   "name": "Bạn sợ điều gì ở người khác thường là đi"
+  },
+  {
+   "id": "body_atoms",
+   "topic": "body",
+   "hook": "Cơ thể bạn chứa nguyên tử từ các ngôi sao đã chết.",
+   "body": "Sắt trong máu bạn sinh ra trong vụ nổ siêu tân tinh tỷ năm trước.",
+   "payoff": "Bạn literally là bụi sao biết suy nghĩ.",
+   "question": "Bạn cảm thấy thế nào khi biết điều này?",
+   "search_query": "human body anatomy",
+   "name": "Cơ thể bạn chứa nguyên tử từ các ngôi sa"
+  },
+  {
+   "id": "jupiter_storm",
+   "topic": "space",
+   "hook": "Cơn bão trên Sao Mộc lớn hơn cả Trái Đất.",
+   "body": "Nó gọi là Vết Đỏ Lớn, đã hoành hành hơn 350 năm. Gió mạnh 430km/h.",
+   "payoff": "Bạn có thể nhét 3 Trái Đất vào cơn bão đó.",
+   "question": "Bạn muốn thấy tận mắt không?",
+   "search_query": "galaxy stars space",
+   "name": "Cơn bão trên Sao Mộc lớn hơn cả Trái Đất"
+  },
+  {
+   "id": "neutron_star",
+   "topic": "space",
+   "hook": "Một thìa sao neutron nặng bằng cả một ngọn núi.",
+   "body": "Sao neutron là tàn dư của ngôi sao chết. Mật độ khủng khiếp đến mức 1cm³ = 1 tỷ tấn.",
+   "payoff": "Một thìa của nó trên Trái Đất sẽ xuyên thủng hành tinh.",
+   "question": "Bạn có tin nổi không?",
+   "search_query": "galaxy stars space",
+   "name": "Một thìa sao neutron nặng bằng cả một ng"
+  },
+  {
+   "id": "venus_hot",
+   "topic": "space",
+   "hook": "Sao Kim nóng đến mức chì tan chảy.",
+   "body": "Nhiệt độ 465°C, nóng hơn Sao Thủy dù xa Mặt Trời hơn. Mây axit sulfuric bao phủ.",
+   "payoff": "Mưa ở đó là axit, và nó bay hơi trước khi chạm đất.",
+   "question": "Bạn dám đến đó không?",
+   "search_query": "galaxy stars space",
+   "name": "Sao Kim nóng đến mức chì tan chảy"
+  },
+  {
+   "id": "saturn_float",
+   "topic": "space",
+   "hook": "Sao Thổ nhẹ đến mức có thể nổi trên nước.",
+   "body": "Mật độ nó chỉ bằng 70% nước. Nếu có bể bơi khổng lồ, nó sẽ nổi.",
+   "payoff": "Nhưng vành đai nó chỉ dày vài mét - mỏng như tờ giấy so với kích thước.",
+   "question": "Bạn có ngạc nhiên không?",
+   "search_query": "galaxy stars space",
+   "name": "Sao Thổ nhẹ đến mức có thể nổi trên nước"
+  },
+  {
+   "id": "moon_drift",
+   "topic": "space",
+   "hook": "Mặt trăng đang rời xa Trái Đất 3.8cm mỗi năm.",
+   "body": "Bằng tốc độ móng tay mọc. Trong 600 triệu năm nữa, nhật thực toàn phần sẽ biến mất.",
+   "payoff": "Ngày trên Trái Đất cũng đang dài ra - chậm hơn 1.8 giây mỗi thế kỷ.",
+   "question": "Bạn có để ý thời gian trôi nhanh hơn không?",
+   "search_query": "galaxy stars space",
+   "name": "Mặt trăng đang rời xa Trái Đất 3"
+  }
+ ],
+ "facts": [
+  {
+   "id": "octopus3heart",
+   "topic": "animal",
+   "hook": "Con bạch tuộc có 3 trái tim.",
+   "body": "Hai cái bơm máu đến mang, một cái đến toàn cơ thể. Máu nó xanh vì dựa trên đồng.",
+   "payoff": "Khi bơi, tim chính ngừng đập. Đó là lý do nó thích bò hơn bơi.",
+   "question": "Bạn biết con vật nào kỳ lạ hơn không?",
+   "search_query": "wild animal nature",
+   "name": "Con bạch tuộc có 3 trái tim"
+  },
+  {
+   "id": "shark_teeth",
+   "topic": "animal",
+   "hook": "Cá mập thay 30.000 răng mỗi năm.",
+   "body": "Răng mọc nhiều hàng như băng chuyền. Rụng 1 cái, cái sau trượt lên thay.",
+   "payoff": "Cả đời cá mập thay 50.000 răng. Nhiều hơn số ngày bạn sống.",
+   "question": "Bạn có sợ cá mập không?",
+   "search_query": "wild animal nature",
+   "name": "Cá mập thay 30"
+  },
+  {
+   "id": "brain_power",
+   "topic": "psychology",
+   "hook": "Bạn chỉ dùng 10% não? Đó là lời nói dối.",
+   "body": "Thực tế bạn dùng gần 100% não, chỉ không cùng lúc. Mỗi vùng một việc.",
+   "payoff": "Nếu chỉ 10%, bạn đã chết từ lâu. Não cần toàn bộ để duy trì sống.",
+   "question": "Bạn từng tin điều này chưa?",
+   "search_query": "human face emotion",
+   "name": "Bạn chỉ dùng 10% não? Đó là lời nói dối"
+  },
+  {
+   "id": "sloth_week",
+   "topic": "animal",
+   "hook": "Con lười mất 1 tuần để tiêu hóa một bữa ăn.",
+   "body": "Dạ dày nó có 4 ngăn, tiêu hóa cực chậm để tiết kiệm năng lượng.",
+   "payoff": "Nó chỉ đi vệ sinh 1 lần/tuần - và đó là lúc nguy hiểm nhất vì phải xuống đất.",
+   "question": "Bạn có kiên nhẫn như nó không?",
+   "search_query": "wild animal nature",
+   "name": "Con lười mất 1 tuần để tiêu hóa một bữa "
+  },
+  {
+   "id": "moon_fingernail",
+   "topic": "science",
+   "hook": "Móng tay bạn mọc nhanh hơn khi bạn thức.",
+   "body": "Ban đêm cơ thể nghỉ, móng chậm lại. Ban ngày hoạt động nhiều, móng nhanh hơn.",
+   "payoff": "Móng tay mọc 3.5mm/tháng. Đó là lý do bạn cắt hoài vẫn thấy dài.",
+   "question": "Bạn có để móng dài không?",
+   "search_query": "science",
+   "name": "Móng tay bạn mọc nhanh hơn khi bạn thức"
+  },
+  {
+   "id": "heart_lifetime",
+   "topic": "body",
+   "hook": "Trái tim bạn đập 2.5 tỷ lần trong đời.",
+   "body": "Mỗi ngày 100.000 lần. Mỗi phút 70 lần. Không nghỉ một giây nào.",
+   "payoff": "Trong đời nó bơm đủ máu lấp đầy 3 bể bơi lớn.",
+   "question": "Bạn có chăm sóc nó đủ không?",
+   "search_query": "human body anatomy",
+   "name": "Trái tim bạn đập 2"
+  },
+  {
+   "id": "black_widow",
+   "topic": "insect",
+   "hook": "Nhện góa phụ đen ăn thịt bạn tình sau khi giao phối.",
+   "body": "Con cái lớn hơn con đực 20 lần. Sau khi giao phối, nó thường ăn con đực.",
+   "payoff": "Nọc độc của nó mạnh gấp 15 lần rắn đuôi chuông.",
+   "question": "Bạn có sợ nhện không?",
+   "search_query": "insect",
+   "name": "Nhện góa phụ đen ăn thịt bạn tình sau kh"
+  },
+  {
+   "id": "tardigrade",
+   "topic": "animal",
+   "hook": "Có loài sinh vật sống được cả trong vũ trụ.",
+   "body": "Tardigrade chỉ 0.5mm, nhưng sống được ở -272°C, 150°C, và chân không vũ trụ.",
+   "payoff": "Chúng đã sống sót qua 5 cuộc đại tuyệt diệt. Sẽ sống sót cả khi con người biến mất.",
+   "question": "Bạn nghĩ loài này đến từ đâu?",
+   "search_query": "wild animal nature",
+   "name": "Có loài sinh vật sống được cả trong vũ t"
+  },
+  {
+   "id": "dream_time",
+   "topic": "psychology",
+   "hook": "Trong giấc mơ, bạn không bao giờ thấy mặt mình.",
+   "body": "Não không thể tạo hình ảnh khuôn mặt chính bạn khi mơ. Bạn thấy mọi thứ trừ chính mình.",
+   "payoff": "Nhưng nếu bạn mơ thấy mặt mình, có thể bạn đang tỉnh một phần.",
+   "question": "Bạn từng mơ thấy mặt mình chưa?",
+   "search_query": "human face emotion",
+   "name": "Trong giấc mơ, bạn không bao giờ thấy mặ"
+  },
+  {
+   "id": "honey_never",
+   "topic": "food",
+   "hook": "Mật ong không bao giờ hỏng.",
+   "body": "Mật ong trong mộ Ai Cập 3000 năm vẫn ăn được.",
+   "payoff": "Độ ẩm thấp và axit cao khiến vi khuẩn không sống nổi.",
+   "question": "Bạn biết thực phẩm nào bền hơn?",
+   "search_query": "food cooking fresh",
+   "name": "Mật ong không bao giờ hỏng"
+  },
+  {
+   "id": "octopus_blue",
+   "topic": "animal",
+   "hook": "Bạch tuộc có máu màu xanh.",
+   "body": "Máu chúng dùng đồng thay vì sắt để vận chuyển oxy.",
+   "payoff": "Đồng hoạt động tốt hơn trong nước lạnh.",
+   "question": "Bạn biết loài nào máu khác thường?",
+   "search_query": "wild animal nature",
+   "name": "Bạch tuộc có máu màu xanh"
+  },
+  {
+   "id": "banana_berry",
+   "topic": "food",
+   "hook": "Quả chuối là một loại quả mọng.",
+   "body": "Chuối là quả mọng vì hạt nằm bên trong thịt.",
+   "payoff": "Dâu tây mới KHÔNG phải quả mọng.",
+   "question": "Bạn có tin dâu tây không phải quả mọng?",
+   "search_query": "food cooking fresh",
+   "name": "Quả chuối là một loại quả mọng"
+  },
+  {
+   "id": "venus_day",
+   "topic": "space",
+   "hook": "Một ngày trên Sao Kim dài hơn một năm.",
+   "body": "Sao Kim quay cực chậm: 243 ngày Trái Đất cho 1 vòng.",
+   "payoff": "Nhưng nó quay quanh Mặt Trời chỉ 225 ngày.",
+   "question": "Bạn biết hành tinh nào kỳ lạ hơn?",
+   "search_query": "galaxy stars space",
+   "name": "Một ngày trên Sao Kim dài hơn một năm"
+  },
+  {
+   "id": "shark_nobone",
+   "topic": "shark",
+   "hook": "Cá mập không có xương.",
+   "body": "Toàn bộ cơ thể chúng làm bằng sụn mềm.",
+   "payoff": "Sụn nhẹ hơn xương giúp cá mập bơi nhanh hơn.",
+   "question": "Bạn có sợ cá mập không?",
+   "search_query": "shark ocean",
+   "name": "Cá mập không có xương"
+  },
+  {
+   "id": "human_bacteria",
+   "topic": "body",
+   "hook": "Cơ thể bạn có nhiều vi khuẩn hơn tế bào.",
+   "body": "39 nghìn tỷ vi khuẩn so với 30 nghìn tỷ tế bào người.",
+   "payoff": "Bạn là một hệ sinh thái di động.",
+   "question": "Bạn có thấy lạ không?",
+   "search_query": "human body anatomy",
+   "name": "Cơ thể bạn có nhiều vi khuẩn hơn tế bào"
+  },
+  {
+   "id": "moon_smell",
+   "topic": "space",
+   "hook": "Mặt Trăng có mùi như thuốc súng.",
+   "body": "Phi hành gia Apollo nói bụi Mặt Trăng có mùi kim loại cháy.",
+   "payoff": "Bụi chứa sắt và thủy tinh từ thiên thạch.",
+   "question": "Bạn muốn ngửi thử không?",
+   "search_query": "galaxy stars space",
+   "name": "Mặt Trăng có mùi như thuốc súng"
+  },
+  {
+   "id": "cat_nose",
+   "topic": "cat",
+   "hook": "Mũi mèo có dấu vân tay riêng.",
+   "body": "Mỗi mũi mèo có họa tiết độc nhất như vân tay người.",
+   "payoff": "Không hai con mèo nào giống hệt nhau.",
+   "question": "Bạn có mèo không?",
+   "search_query": "cat",
+   "name": "Mũi mèo có dấu vân tay riêng"
+  },
+  {
+   "id": "human_light",
+   "topic": "body",
+   "hook": "Cơ thể bạn phát sáng trong bóng tối.",
+   "body": "Tế bào người phát ánh sáng cực yếu, mắt không thấy.",
+   "payoff": "Bạn phát sáng mạnh nhất buổi chiều.",
+   "question": "Bạn có tin mình phát sáng?",
+   "search_query": "human body anatomy",
+   "name": "Cơ thể bạn phát sáng trong bóng tối"
+  },
+  {
+   "id": "bee_dance",
+   "topic": "animal",
+   "hook": "Ong mật nói chuyện bằng cách nhảy.",
+   "body": "Ong thợ nhảy hình số 8 để chỉ đường đến hoa.",
+   "payoff": "Góc nhảy cho biết hướng, độ dài cho khoảng cách.",
+   "question": "Bạn biết loài nào giao tiếp lạ hơn?",
+   "search_query": "wild animal nature",
+   "name": "Ong mật nói chuyện bằng cách nhảy"
+  },
+  {
+   "id": "octopus_brain9",
+   "topic": "animal",
+   "hook": "Bạch tuộc có 9 bộ não.",
+   "body": "Một não trung tâm và 8 não nhỏ ở mỗi xúc tu.",
+   "payoff": "Xúc tu có thể hành động độc lập.",
+   "question": "Bạn biết loài nào thông minh hơn?",
+   "search_query": "wild animal nature",
+   "name": "Bạch tuộc có 9 bộ não"
+  },
+  {
+   "id": "flamingo_pink",
+   "topic": "animal",
+   "hook": "Hồng hạc hồng vì ăn tôm.",
+   "body": "Chúng sinh ra màu xám, hồng lên nhờ thức ăn.",
+   "payoff": "Nếu đổi thức ăn, chúng mất màu hồng.",
+   "question": "Bạn biết loài nào đổi màu vì thức ăn?",
+   "search_query": "wild animal nature",
+   "name": "Hồng hạc hồng vì ăn tôm"
+  },
+  {
+   "id": "snail_teeth",
+   "topic": "animal",
+   "hook": "Ốc sên có hàng nghìn chiếc răng.",
+   "body": "Lưỡi ốc sên có hơn 10.000 răng siêu nhỏ.",
+   "payoff": "Chúng dùng răng cạo thức ăn.",
+   "question": "Loài nào nhiều răng nhất?",
+   "search_query": "wild animal nature",
+   "name": "Ốc sên có hàng nghìn chiếc răng"
+  },
+  {
+   "id": "deepsea_pressure",
+   "topic": "ocean",
+   "hook": "Đáy đại dương còn ít người đặt chân tới hơn cả Mặt Trăng.",
+   "body": "95% đại dương chưa được khám phá. Áp suất ở rãnh Mariana lớn gấp 1000 lần mặt đất.",
+   "payoff": "Nếu không có áo giáp, cơ thể bạn sẽ bị nghiền nát trong tích tắc.",
+   "question": "Bạn dám lặn xuống đâu sâu nhất?",
+   "search_query": "ocean underwater waves",
+   "name": "Đáy đại dương còn ít người đặt chân tới "
+  },
+  {
+   "id": "sleep_debt",
+   "topic": "body",
+   "hook": "Thiếu ngủ 1 đêm làm não bạn già đi 1-2 tuổi.",
+   "body": "Các tế bào thần kinh bắt đầu ăn chính bản thân để lấy năng lượng. Khoa học gọi là autophagy.",
+   "payoff": "Ngủ bù có thể phục hồi, nhưng không hoàn toàn. Càng thức khuya càng nợ não.",
+   "question": "Đêm qua bạn ngủ đủ chưa?",
+   "search_query": "human body anatomy",
+   "name": "Thiếu ngủ 1 đêm làm não bạn già đi 1-2 t"
+  },
+  {
+   "id": "honey_forever",
+   "topic": "food",
+   "hook": "Mật ong không bao giờ hỏng. Thật đấy.",
+   "body": "Nhà khảo cổ tìm thấy mật ong 3000 năm trong mộ Ai Cập vẫn ăn được. Nó có độ ẩm cực thấp và tính axit cao.",
+   "payoff": "Vi khuẩn không thể sống trong mật ong. Đó là lý do nó trường tồn.",
+   "question": "Bạn có tin không?",
+   "search_query": "food cooking fresh",
+   "name": "Mật ong không bao giờ hỏng"
+  },
+  {
+   "id": "banana_radioactive",
+   "topic": "food",
+   "hook": "Chuối có phóng xạ. Ăn 10 triệu quả mới chết.",
+   "body": "Chuối chứa kali-40, một đồng vị phóng xạ tự nhiên. Nhưng liều lượng cực nhỏ.",
+   "payoff": "Bạn phải ăn 10 triệu quả cùng lúc mới đủ gây hại. Ăn thoải mái đi.",
+   "question": "Bạn ăn được bao nhiêu quả chuối?",
+   "search_query": "food cooking fresh",
+   "name": "Chuối có phóng xạ"
+  },
+  {
+   "id": "heartbeats",
+   "topic": "body",
+   "hook": "Trái tim bạn đập 2.5 tỷ lần trong đời.",
+   "body": "Mỗi ngày tim bơm khoảng 7500 lít máu, đủ chứa đầy một bể bơi nhỏ.",
+   "payoff": "Tim là cơ bền nhất cơ thể, hoạt động không ngừng nghỉ suốt cuộc đời bạn.",
+   "question": "Bạn có chăm sóc tim mình chưa?",
+   "search_query": "human body anatomy",
+   "name": "Trái tim bạn đập 2"
+  },
+  {
+   "id": "octopus_escape",
+   "topic": "animal",
+   "hook": "Bạch tuộc có thể chui qua lỗ nhỏ bằng đồng xu.",
+   "body": "Nó không có xương, nên toàn bộ cơ thể có thể co lại tùy ý, chỉ giới hạn bởi cái mỏ.",
+   "payoff": "Đó là lý do bạch tuộc trốn thoát khỏi bể cá dễ dàng.",
+   "question": "Bạn biết con vật nào thoát giỏi hơn không?",
+   "search_query": "octopus underwater coral",
+   "name": "Bạch tuộc có thể chui qua lỗ nhỏ bằng đồ"
+  },
+  {
+   "id": "cheetah_speed",
+   "topic": "animal",
+   "hook": "Báo săn tăng tốc nhanh hơn siêu xe.",
+   "body": "Nó đạt 0-100km/h trong 3 giây, nhanh hơn nhiều xe thể thao đắt tiền.",
+   "payoff": "Nhưng chỉ giữ tốc độ đó được 30 giây trước khi quá nhiệt.",
+   "question": "Bạn nghĩ con gì nhanh nhất?",
+   "search_query": "cheetah running savanna",
+   "name": "Báo săn tăng tốc nhanh hơn siêu xe"
+  },
+  {
+   "id": "everest_growth",
+   "topic": "nature",
+   "hook": "Everest cao thêm mỗi năm.",
+   "body": "Núi cao nhất thế giới mọc thêm khoảng 4mm mỗi năm do mảng kiến tạo đẩy lên.",
+   "payoff": "Vậy nó còn cao hơn nữa trong tương lai.",
+   "question": "Bạn muốn chinh phục Everest không?",
+   "search_query": "mount everest snow peak",
+   "name": "Everest cao thêm mỗi năm"
+  },
+  {
+   "id": "honeybee_dance",
+   "topic": "animal",
+   "hook": "Ong mật nhảy múa để chỉ đường.",
+   "body": "Khi tìm thấy hoa, ong thợ nhảy điệu lắc bụng chỉ hướng và khoảng cách cho đồng đội.",
+   "payoff": "Đó là một trong những ngôn ngữ phức tạp nhất trong tự nhiên.",
+   "question": "Bạn biết loài nào thông minh hơn?",
+   "search_query": "honey bee flower macro",
+   "name": "Ong mật nhảy múa để chỉ đường"
+  },
+  {
+   "id": "sea_salt",
+   "topic": "ocean",
+   "hook": "Đại dương chứa muối đủ lấp cả lục địa.",
+   "body": "Nếu rút hết nước biển, lượng muối còn lại sẽ phủ Trái Đất dày 166m.",
+   "payoff": "Muối đó đến từ đá và mưa suốt hàng tỷ năm.",
+   "question": "Bạn có biết nước biển mặn từ đâu?",
+   "search_query": "ocean waves salt water",
+   "name": "Đại dương chứa muối đủ lấp cả lục địa"
+  },
+  {
+   "id": "human_teeth",
+   "topic": "body",
+   "hook": "Răng bạn khỏe hơn răng cá mập.",
+   "body": "Men răng người là chất cứng nhất cơ thể, cứng hơn cả xương. Cá mập thay răng liên tục vì răng yếu.",
+   "payoff": "Nhưng răng người không mọc lại. Cá mập thì có hàng nghìn cái dự trữ.",
+   "question": "Bạn đánh răng mấy lần một ngày?",
+   "search_query": "human smile teeth closeup",
+   "name": "Răng bạn khỏe hơn răng cá mập"
+  },
+  {
+   "id": "rain_smell",
+   "topic": "nature",
+   "hook": "Bạn ngửi được mùi mưa trước khi trời mưa.",
+   "body": "Mùi đó gọi là petrichor, do dầu từ thực vật và vi khuẩn đất tiết ra khi gặp độ ẩm.",
+   "payoff": "Mũi người nhạy tới mức phát hiện mùi này từ rất xa.",
+   "question": "Bạn có thích mùi mưa không?",
+   "search_query": "rain drops leaves green",
+   "name": "Bạn ngửi được mùi mưa trước khi trời mưa"
+  },
+  {
+   "id": "goldfish_memory",
+   "topic": "animal",
+   "hook": "Cá vàng nhớ được 3 tháng, không phải 3 giây.",
+   "body": "Nghiên cứu cho thấy cá vàng học được nhiệm vụ và nhớ hàng tháng.",
+   "payoff": "Định kiến 3 giây hoàn toàn sai.",
+   "question": "Bạn từng nuôi cá vàng chưa?",
+   "search_query": "goldfish aquarium swim",
+   "name": "Cá vàng nhớ được 3 tháng, không phải 3 g"
+  },
+  {
+   "id": "cloud_weight",
+   "topic": "nature",
+   "hook": "Một đám mây nặng bằng 100 con voi.",
+   "body": "Mây tích trung bình chứa 500 tấn nước, tương đương khối lượng trăm con voi.",
+   "payoff": "Vậy mà nó vẫn bay được vì nước phân tán thành giọt nhỏ li ti.",
+   "question": "Bạn có tin mây nặng vậy không?",
+   "search_query": "white clouds blue sky",
+   "name": "Một đám mây nặng bằng 100 con voi"
+  },
+  {
+   "id": "sneeze_speed",
+   "topic": "body",
+   "hook": "Hắt hơi phóng ra không khí nhanh hơn bão.",
+   "body": "Một cú hắt hơi bắn không khí với tốc độ tới 160km/h.",
+   "payoff": "Đó là lý do bạn nên che miệng lại.",
+   "question": "Bạn hắt hơi to nhất khi nào?",
+   "search_query": "person sneezing tissue",
+   "name": "Hắt hơi phóng ra không khí nhanh hơn bão"
+  },
+  {
+   "id": "mantis_shrimp",
+   "topic": "animal",
+   "hook": "Tôm bọ ngựa đấm mạnh bằng đạn súng.",
+   "body": "Cú đấm của nó nhanh tới mức đun sôi nước xung quanh, tạo bong bóng ánh sáng.",
+   "payoff": "Lực đủ làm vỡ kính bể cá. Đó là một trong những cú đấm nhanh nhất tự nhiên.",
+   "question": "Bạn nghĩ con gì mạnh nhất?",
+   "search_query": "mantis shrimp colorful ocean",
+   "name": "Tôm bọ ngựa đấm mạnh bằng đạn súng"
+  },
+  {
+   "id": "tardigrade_space",
+   "topic": "animal",
+   "hook": "Có sinh vật sống được cả trong vũ trụ.",
+   "body": "Tardigrade (gấu nước) sống sót trong chân không, bức xạ, và nhiệt độ cực hạn.",
+   "payoff": "Chúng có thể tồn tại hàng thập kỷ không cần nước.",
+   "question": "Bạn có tin có sinh vật bất tử?",
+   "search_query": "microscope organism cells",
+   "name": "Có sinh vật sống được cả trong vũ trụ"
+  },
+  {
+   "id": "aurora_sound",
+   "topic": "nature",
+   "hook": "Cực quang phát ra âm thanh.",
+   "body": "Khi cực quang mạnh, nó tạo tiếng rắc nhỏ mà tai người có thể nghe trong im lặng.",
+   "payoff": "Âm thanh do các hạt tích điện va vào khí quyển.",
+   "question": "Bạn muốn thấy cực quang chứ?",
+   "search_query": "aurora borealis northern lights",
+   "name": "Cực quang phát ra âm thanh"
+  },
+  {
+   "id": "diamond_rain",
+   "topic": "space",
+   "hook": "Trên Sao Hải Vương có mưa kim cương.",
+   "body": "Áp suất cực lớn biến khí methane thành kim cương rơi xuống.",
+   "payoff": "Đó là cơn mưa đắt nhất vũ trụ.",
+   "question": "Bạn có muốn tới đó không?",
+   "search_query": "neptune planet space blue",
+   "name": "Trên Sao Hải Vương có mưa kim cương"
+  },
+  {
+   "id": "human_glow",
+   "topic": "body",
+   "hook": "Cơ thể người phát sáng trong bóng tối.",
+   "body": "Bạn phát ra ánh sáng cực yếu, mạnh nhất vào buổi chiều, do phản ứng hóa học tế bào.",
+   "payoff": "Mắt người không đủ nhạy để thấy, nhưng camera chuyên dụng thì có.",
+   "question": "Bạn có biết mình phát sáng không?",
+   "search_query": "human silhouette dark light",
+   "name": "Cơ thể người phát sáng trong bóng tối"
+  },
+  {
+   "id": "blue_whale_heart",
+   "topic": "animal",
+   "hook": "Tim cá voi xanh to bằng một chiếc xe hơi.",
+   "body": "Tim nặng 600kg, và động mạch đủ lớn để một người bơi qua.",
+   "payoff": "Lưỡi nó nặng bằng cả một con voi.",
+   "question": "Bạn có tin nổi không?",
+   "search_query": "whale ocean giant blue",
+   "name": "Tim cá voi xanh to bằng một chiếc xe hơi"
+  },
+  {
+   "id": "lightning_hot",
+   "topic": "nature",
+   "hook": "Sét nóng gấp 5 lần bề mặt Mặt Trời.",
+   "body": "Tia sét đạt 30.000 độ C, nóng hơn cả bề mặt Mặt Trời (5.500 độ).",
+   "payoff": "Nó chỉ kéo dài vài phần triệu giây nhưng đủ gây cháy.",
+   "question": "Bạn sợ sấm sét không?",
+   "search_query": "lightning storm dark sky",
+   "name": "Sét nóng gấp 5 lần bề mặt Mặt Trời"
+  },
+  {
+   "id": "sand_count",
+   "topic": "nature",
+   "hook": "Trái Đất có nhiều ngôi sao hơn hạt cát?",
+   "body": "Ước tính vũ trụ có 200 tỷ tỷ ngôi sao, nhiều hơn mọi hạt cát trên Trái Đất.",
+   "payoff": "Bạn là duy nhất trong vũ trụ bao la này.",
+   "question": "Bạn có thấy mình nhỏ bé không?",
+   "search_query": "starry night sky galaxy",
+   "name": "Trái Đất có nhiều ngôi sao hơn hạt cát?"
+  },
+  {
+   "id": "frozen_frog",
+   "topic": "animal",
+   "hook": "Có loài ếch đóng băng rồi sống lại.",
+   "body": "Ếch gỗ Bắc Mỹ đóng băng vào mùa đông, tim ngừng đập, rồi tan băng và hồi sinh vào xuân.",
+   "payoff": "Cơ thể nó sản xuất chất chống đông tự nhiên.",
+   "question": "Bạn có tin điều này thật không?",
+   "search_query": "frog winter ice nature",
+   "name": "Có loài ếch đóng băng rồi sống lại"
+  }
+ ]
+}

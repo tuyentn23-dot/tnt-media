@@ -1,0 +1,12 @@
+output/batch_0.mp4 -> 882472
+output/batch_1.mp4 -> 676840
+output/batch_2.mp4 -> 1212183
+output/batch_3.mp4 -> 895268
+ALL DONE
+Cancelling an overlapped future failed
+future: <_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>
+Traceback (most recent call last):
+  File "C:\Users\DELL\AppData\Local\Programs\Python\Python313-arm64\Lib\asyncio\windows_events.py", line 72, in _cancel_overlapped
+    self._ov.cancel()
+    ~~~~~~~~~~~~~~~^^
+OSError: [WinError 6] The handle is invalid

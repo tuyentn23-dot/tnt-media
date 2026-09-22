@@ -1,0 +1,139 @@
+[
+  {
+    "topic": "Cong nghe AI",
+    "title": "Khoanh khac Cong nghe AI khien internet bung no",
+    "video_id": "MOCK_VIDEO_ID_999",
+    "score": 85,
+    "status": "published"
+  },
+  {
+    "topic": "Kien truc sang tao",
+    "title": "Day la ly do Kien truc sang tao dang trending",
+    "video_id": "MOCK_VIDEO_ID_999",
+    "score": 85,
+    "status": "published"
+  },
+  {
+    "topic": "Kham pha the gioi",
+    "title": "Day la ly do Kham pha the gioi dang trending",
+    "video_id": "MOCK_VIDEO_ID_999",
+    "score": 85,
+    "status": "published"
+  },
+  {
+    "topic": "Cong nghe AI",
+    "title": "99% nguoi xem se bat ngo voi Cong nghe AI nay",
+    "video_id": "MOCK_VIDEO_ID_999",
+    "score": 85,
+    "status": "published"
+  },
+  {
+    "topic": "Kien truc sang tao",
+    "title": "Khoanh khac Kien truc sang tao khien internet bung no",
+    "video_id": "MOCK_VIDEO_ID_999",
+    "score": 85,
+    "status": "published"
+  },
+  {
+    "topic": "Kham pha the gioi",
+    "title": "Su that nga ngua ve Kham pha the gioi ban chua tung biet",
+    "video_id": "MOCK_VIDEO_ID_999",
+    "score": 85,
+    "status": "published"
+  },
+  {
+    "topic": "Cong nghe AI",
+    "title": "Day la ly do Cong nghe AI dang trending",
+    "video_id": "MOCK_VIDEO_ID_999",
+    "score": 85,
+    "status": "published"
+  },
+  {
+    "topic": "Kien truc sang tao",
+    "title": "Su that nga ngua ve Kien truc sang tao ban chua tung biet",
+    "video_id": "MOCK_VIDEO_ID_999",
+    "score": 85,
+    "status": "published"
+  },
+  {
+    "topic": "Kham pha the gioi",
+    "title": "Khoanh khac Kham pha the gioi khien internet bung no",
+    "video_id": "MOCK_VIDEO_ID_999",
+    "score": 85,
+    "status": "published"
+  },
+  {
+    "topic": "Cong nghe AI",
+    "title": "99% nguoi xem se bat ngo voi Cong nghe AI nay",
+    "video_id": "MOCK_VIDEO_ID_999",
+    "score": 85,
+    "status": "published"
+  },
+  {
+    "topic": "Kien truc sang tao",
+    "title": "Su that nga ngua ve Kien truc sang tao ban chua tung biet",
+    "video_id": "MOCK_VIDEO_ID_999",
+    "score": 85,
+    "status": "published"
+  },
+  {
+    "topic": "Kham pha the gioi",
+    "title": "99% nguoi xem se bat ngo voi Kham pha the gioi nay",
+    "video_id": "MOCK_VIDEO_ID_999",
+    "score": 85,
+    "status": "published"
+  },
+  {
+    "topic": "Cong nghe AI",
+    "title": "99% nguoi xem se bat ngo voi Cong nghe AI nay",
+    "video_id": "MOCK_VIDEO_ID_999",
+    "score": 85,
+    "status": "published"
+  },
+  {
+    "topic": "Kien truc sang tao",
+    "title": "Su that nga ngua ve Kien truc sang tao ban chua tung biet",
+    "video_id": "MOCK_VIDEO_ID_999",
+    "score": 85,
+    "status": "published"
+  },
+  {
+    "topic": "Kham pha the gioi",
+    "title": "Khoanh khac Kham pha the gioi khien internet bung no",
+    "video_id": "MOCK_VIDEO_ID_999",
+    "score": 85,
+    "status": "published"
+  },
+  {
+    "topic": "Cong nghe AI",
+    "title": "Khoanh khac Cong nghe AI khien internet bung no",
+    "video_id": "FcENIt-SkXo",
+    "score": 85,
+    "status": "published"
+  },
+  {
+    "youtube_id": "WqiwVywFZP4",
+    "title": "AbstractMotion",
+    "file": "output/short_abstract_music.mp4"
+  },
+  {
+    "youtube_id": "U9r5iccaz9k",
+    "title": "MusicVibes",
+    "file": "output/music_abstract_v1.mp4"
+  },
+  {
+    "youtube_id": "LC1LbsskooA",
+    "title": "SharkFacts",
+    "file": "output/story_shark_teeth.mp4"
+  },
+  {
+    "youtube_id": "QGtJSmHo0bg",
+    "title": "BlackWidow",
+    "file": "output/story_black_widow.mp4"
+  },
+  {
+    "youtube_id": "ISsAOvCB2ak",
+    "title": "OctopusFact",
+    "file": "output/story_octopus_blue.mp4"
+  }
+]

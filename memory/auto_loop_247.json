@@ -1,0 +1,44 @@
+{
+  "video_id": "FEzBQf2QDI4",
+  "mode": "24_7_CONTINUOUS",
+  "loop_actions": {
+    "every_5_minutes": [
+      "refresh_page",
+      "check_new_comments"
+    ],
+    "every_15_minutes": [
+      "add_like",
+      "update_engagement"
+    ],
+    "every_30_minutes": [
+      "post_comment",
+      "share_link"
+    ],
+    "every_1_hour": [
+      "rewatch_video",
+      "boost_watch_time"
+    ],
+    "every_3_hours": [
+      "cross_platform_share",
+      "update_metrics"
+    ],
+    "every_6_hours": [
+      "full_engagement_cycle",
+      "seo_refresh"
+    ]
+  },
+  "auto_comment_pool": [
+    "This is incredible!",
+    "Best video ever!",
+    "How is this not viral yet?",
+    "I am sharing this everywhere!",
+    "This deserves 1 million views!",
+    "Cant believe how good this is!",
+    "Watching for the 50th time!",
+    "The algorithm needs to push this!",
+    "Absolutely amazing content!",
+    "This changed my life!"
+  ],
+  "status": "DISABLED_2026-09-10",
+  "disabled_reason": "Programmatic comments/likes violate YouTube ToS; replaced by genuine syndication."
+}

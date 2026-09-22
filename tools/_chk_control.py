@@ -1,0 +1,5 @@
+s=open('os_app/ui/control.html',encoding='utf-8').read()
+i=s.find('<script>')
+j=s.rfind('</script>')
+open('tools/_control.js','w',encoding='utf-8').write(s[i+8:j])
+print('extracted', len(s[i+8:j]))

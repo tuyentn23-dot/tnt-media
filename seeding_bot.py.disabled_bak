@@ -1,0 +1,20 @@
+import os, pickle
+from googleapiclient.discovery import build
+
+def add_comment(video_id, text):
+    token_path = 'token.pickle' if os.path.exists('token.pickle') else 'media/config/token.pickle'
+    try:
+        with open(token_path, "rb") as f:
+            creds = pickle.load(f)
+        youtube = build("youtube", "v3", credentials=creds)
+        req = youtube.commentThreads().insert(
+            part="snippet",
+            body={"snippet": {"videoId": video_id, "topLevelComment": {"snippet": {"textOriginal": text}}}}
+        )
+        res = req.execute()
+        print(f"Thanh cong! Da them binh luan seeding: {res['id']}")
+    except Exception as e:
+        print(f"Loi seeding: {e}")
+
+if __name__ == '__main__':
+    add_comment("Pt5s7AiQ_hc", "Quán cà phê này ở hẻm 42 đúng không mọi người? Hôm bữa mình cũng thấy hiện tượng y hệt lúc 12h đêm... 😱")

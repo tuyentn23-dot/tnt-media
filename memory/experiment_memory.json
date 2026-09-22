@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "experiments": [
+    {
+      "id": "VILEVI-A1-V1",
+      "type": "test_prototype",
+      "result": "success",
+      "lessons_learned": [
+        "OpenCV can create basic video frames",
+        "Need better text rendering",
+        "Should add transitions between scenes"
+      ]
+    }
+  ],
+  "active_experiments": [],
+  "updated_at": "2026-09-05"
+}

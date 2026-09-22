@@ -1,0 +1,51 @@
+{
+  "id": "Mialinhcute",
+  "name": "Mia Linh Cute",
+  "enabled": true,
+  "token_file": "token.pickle",
+  "style": {
+    "language": "vi",
+    "voice": "female_cute",
+    "music_genre": "happy_kids",
+    "color_primary": "#ff69b4",
+    "color_accent": "#ffd700",
+    "font": "Arial-Bold",
+    "font_size": 78,
+    "watermark": "@Mialinhcute",
+    "intro_seconds": 0.5,
+    "outro_seconds": 1.0,
+    "aspect": "9:16",
+    "max_duration_sec": 50
+  },
+  "content": {
+    "kinds": [
+      "anime",
+      "roblox",
+      "cute_animals",
+      "meme"
+    ],
+    "category_id": "24",
+    "tags_base": [
+      "shorts",
+      "forkids",
+      "kids",
+      "viral",
+      "cutecute"
+    ],
+    "title_template": "{hook}",
+    "desc_template": "{body} {payoff}",
+    "topic_pool_file": "topic_pool.json"
+  },
+  "schedule": {
+    "enabled": true,
+    "interval_min": 90,
+    "batch": 2,
+    "post_hours": [
+      7,
+      11,
+      16,
+      19,
+      21
+    ]
+  }
+}

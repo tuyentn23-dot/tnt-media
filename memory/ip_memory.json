@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "ips": [
+    {
+      "id": "VILEVI-A1",
+      "name": "AI Soul / Consciousness Series",
+      "type": "original_series",
+      "format": "short_form",
+      "status": "prototype_completed",
+      "episodes_planned": 10,
+      "episodes_created": 1
+    }
+  ],
+  "updated_at": "2026-09-05"
+}

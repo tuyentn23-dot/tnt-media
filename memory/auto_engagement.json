@@ -1,0 +1,28 @@
+{
+  "video_id": "FEzBQf2QDI4",
+  "status": "DISABLED_2026-09-10",
+  "started": "2026-09-06T12:29:12.096647",
+  "auto_comments": [
+    "This video is amazing! Watching it again!",
+    "One of the best shorts I have seen today!",
+    "The algorithm needs to show this to everyone!",
+    "I have watched this 10 times already!",
+    "Sharing this with all my friends!",
+    "This deserves millions of views!",
+    "Cant stop watching this!",
+    "Best content on YouTube right now!"
+  ],
+  "auto_likes": true,
+  "auto_share": true,
+  "engagement_schedule": {
+    "comment_every": "30 minutes",
+    "like_every": "15 minutes",
+    "watch_again_every": "1 hour"
+  },
+  "watch_time_boost": {
+    "loop_watching": true,
+    "multiple_sessions": true,
+    "extended_watch": true
+  },
+  "disabled_reason": "Programmatic comments/likes violate YouTube ToS; replaced by genuine syndication."
+}

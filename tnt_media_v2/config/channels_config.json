@@ -1,0 +1,26 @@
+{
+  "channels": [
+    {
+      "id": "vilevi5676",
+      "youtube_channel_id": "UCbblZzHm3CZzmoUZznfIoTg",
+      "handle": "@vilevi5676",
+      "niche": "nhac_tru_tinh",
+      "content_types": [
+        "music_video",
+        "audio_visualizer",
+        "lyric_video"
+      ],
+      "target_duration": "3-5_minutes",
+      "posting_frequency": "daily"
+    }
+  ],
+  "content_strategy": {
+    "nhac_tru_tinh": {
+      "visual_style": "audio_visualizer",
+      "audio_quality": "48khz_stereo",
+      "video_resolution": "1280x720",
+      "fps": 15,
+      "seo_optimized": true
+    }
+  }
+}

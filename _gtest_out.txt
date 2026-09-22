@@ -1,0 +1,3 @@
+[Thumbnail Generator] Đang thiết kế bìa video chuẩn CTR cao cho: Gacha story test #shorts
+[Thumbnail Generator] Đã tạo thành công bìa video tại: output\GACHA_CRUSH_thumb.jpg
+URL https://youtu.be/Rng27Mreeu4

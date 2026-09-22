@@ -1,0 +1,15 @@
+<div class=top><div><h1>TNT Media - Control Center</h1><div class=sub>Quan ly & dieu khien da kenh</div></div><div class=row><button class="btn ghost" onclick=refresh()>Lam moi</button><a class=btn href=/os>Ve Dashboard</a></div></div>
+<div class=wrap>
+<div class=grid id=stats></div>
+<div class=tabs id=tabs></div>
+<div id=view></div>
+</div>
+<div class=toast id=toast></div>
+<script>
+const api=async(u,o)=>{const r=await fetch('/os/api/'+u,o||{});return r.json()};
+const esc=s=>String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const toast=(m,k)=>{const t=document.getElementById('toast');t.textContent=m;t.style.display='block';t.style.borderColor=k==='ok'?'#2ecc71':k==='bad'?'#ff5c5c':'#1f2836';setTimeout(()=>t.style.display='none',2600)};
+let cur='overview';
+const TABS=[['overview','Tong quan'],['channels','Kenh'],['content','Noi dung'],['publish','Dang bai'],['history','Lich su'],['logs','Nhat ky']];
+function tabs(){document.getElementById('tabs').innerHTML=TABS.map(t=>'<button class="'+(t[0]===cur?'on':'')+'" onclick="go(&quot;'+t[0]+'&quot;)">'+t[1]+'</button>').join('')}
+function go(t){cur=t;tabs();render()}

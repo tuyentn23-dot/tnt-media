@@ -1,0 +1,57 @@
+{
+  "satisfying": [
+    "https://cdn.pixabay.com/video/2023/10/22/186115-877653483_large.mp4",
+    "https://cdn.pixabay.com/video/2022/12/11/143019-780350112_large.mp4",
+    "https://cdn.pixabay.com/video/2023/03/30/156615-812649013_large.mp4",
+    "https://cdn.pixabay.com/video/2023/07/08/171176-844307604_large.mp4",
+    "https://cdn.pixabay.com/video/2022/10/24/136320-763870262_large.mp4",
+    "https://assets.mixkit.co/videos/52208/52208-1080.mp4",
+    "https://assets.mixkit.co/videos/52472/52472-1080.mp4"
+  ],
+  "food": [
+    "https://cdn.pixabay.com/video/2023/04/18/159322-818889591_large.mp4",
+    "https://cdn.pixabay.com/video/2023/01/25/147926-793260566_large.mp4",
+    "https://cdn.pixabay.com/video/2022/09/13/131031-748040914_large.mp4",
+    "https://cdn.pixabay.com/video/2023/06/20/167598-838509807_large.mp4",
+    "https://cdn.pixabay.com/video/2023/02/14/151068-798913031_large.mp4",
+    "https://assets.mixkit.co/videos/40524/40524-1080.mp4",
+    "https://assets.mixkit.co/videos/10434/10434-1080.mp4",
+    "https://assets.mixkit.co/videos/43925/43925-1080.mp4",
+    "https://assets.mixkit.co/videos/42910/42910-1080.mp4"
+  ],
+  "magic": [
+    "https://cdn.pixabay.com/video/2023/08/23/177328-856894642_large.mp4",
+    "https://cdn.pixabay.com/video/2023/05/11/163305-825641366_large.mp4",
+    "https://cdn.pixabay.com/video/2022/11/15/139546-771454818_large.mp4"
+  ],
+  "cat": [
+    "https://cdn.pixabay.com/video/2023/07/31/173367-850781083_large.mp4",
+    "https://cdn.pixabay.com/video/2022/06/27/121564-725724079_large.mp4",
+    "https://cdn.pixabay.com/video/2023/03/16/154709-808193632_large.mp4"
+  ],
+  "dog": [
+    "https://cdn.pixabay.com/video/2023/04/05/157618-815182198_large.mp4",
+    "https://cdn.pixabay.com/video/2022/12/26/144882-784933261_large.mp4",
+    "https://cdn.pixabay.com/video/2023/01/10/146369-788743122_large.mp4"
+  ],
+  "coffee": [
+    "https://assets.mixkit.co/videos/41859/41859-1080.mp4",
+    "https://assets.mixkit.co/videos/41865/41865-1080.mp4",
+    "https://assets.mixkit.co/videos/236/236-1080.mp4",
+    "https://assets.mixkit.co/videos/4982/4982-1080.mp4"
+  ],
+  "water": [
+    "https://assets.mixkit.co/videos/51502/51502-1080.mp4",
+    "https://assets.mixkit.co/videos/1197/1197-1080.mp4",
+    "https://assets.mixkit.co/videos/1164/1164-1080.mp4"
+  ],
+  "fire": [
+    "https://assets.mixkit.co/videos/52284/52284-1080.mp4",
+    "https://assets.mixkit.co/videos/4426/4426-1080.mp4",
+    "https://assets.mixkit.co/videos/52304/52304-1080.mp4"
+  ],
+  "abstract": [
+    "https://assets.mixkit.co/videos/44818/44818-1080.mp4",
+    "https://assets.mixkit.co/videos/30/30-1080.mp4"
+  ]
+}

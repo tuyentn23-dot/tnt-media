@@ -1,0 +1,149 @@
+{
+  "love": {
+    "name_vn": "Yeu thuong",
+    "genres": [
+      "ballad",
+      "rnb"
+    ],
+    "bpm_range": [
+      65,
+      85
+    ],
+    "keywords": [
+      "yeu",
+      "nho",
+      "thuong",
+      "tran trong"
+    ]
+  },
+  "joy": {
+    "name_vn": "Vui tuoi",
+    "genres": [
+      "pop",
+      "children"
+    ],
+    "bpm_range": [
+      100,
+      130
+    ],
+    "keywords": [
+      "vui",
+      "cuoi",
+      "nang",
+      "hanh phuc"
+    ]
+  },
+  "sadness": {
+    "name_vn": "Buon ba",
+    "genres": [
+      "ballad",
+      "lofi"
+    ],
+    "bpm_range": [
+      60,
+      75
+    ],
+    "keywords": [
+      "buon",
+      "khoc",
+      "co don",
+      "chia ly"
+    ]
+  },
+  "hope": {
+    "name_vn": "Hy vong",
+    "genres": [
+      "pop",
+      "edm"
+    ],
+    "bpm_range": [
+      110,
+      130
+    ],
+    "keywords": [
+      "hy vong",
+      "uoc mo",
+      "tin tuong"
+    ]
+  },
+  "nostalgia": {
+    "name_vn": "Hoai niem",
+    "genres": [
+      "folk",
+      "ballad"
+    ],
+    "bpm_range": [
+      60,
+      80
+    ],
+    "keywords": [
+      "ky niem",
+      "xua",
+      "que huong"
+    ]
+  },
+  "freedom": {
+    "name_vn": "Tu do",
+    "genres": [
+      "edm",
+      "rock"
+    ],
+    "bpm_range": [
+      120,
+      140
+    ],
+    "keywords": [
+      "tu do",
+      "phong khoang",
+      "khat khao"
+    ]
+  },
+  "peace": {
+    "name_vn": "Binh yen",
+    "genres": [
+      "lofi",
+      "ambient"
+    ],
+    "bpm_range": [
+      40,
+      75
+    ],
+    "keywords": [
+      "binh yen",
+      "tinh",
+      "an nhien"
+    ]
+  },
+  "pride": {
+    "name_vn": "Tu hao",
+    "genres": [
+      "hiphop",
+      "rock"
+    ],
+    "bpm_range": [
+      80,
+      140
+    ],
+    "keywords": [
+      "tu hao",
+      "ban linh",
+      "manh me"
+    ]
+  },
+  "serenity": {
+    "name_vn": "Thanh than",
+    "genres": [
+      "ambient",
+      "lofi"
+    ],
+    "bpm_range": [
+      40,
+      60
+    ],
+    "keywords": [
+      "thien",
+      "tinh tam",
+      "chua lanh"
+    ]
+  }
+}

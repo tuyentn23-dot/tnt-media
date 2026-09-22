@@ -1,0 +1,218 @@
+{
+ "shark": {
+  "hook": "Cá Mập Bí Ẩn",
+  "lines": [
+   "Cá mập đã tồn tại trên Trái Đất hơn bốn trăm triệu năm.",
+   "Chúng có thể ngửi thấy một giọt máu từ cách xa hàng trăm mét.",
+   "Mỗi năm chỉ có khoảng năm vụ tấn công người trên toàn thế giới.",
+   "Loài người giết cá mập nhiều gấp hàng triệu lần ngược lại."
+  ]
+ },
+ "space": {
+  "hook": "Vũ Trụ Bao La",
+  "lines": [
+   "Vũ trụ bao la đến không tưởng.",
+   "Mỗi vì sao là một thế giới bí ẩn.",
+   "Chúng ta chỉ là hạt bụi nhỏ bé giữa ngân hà.",
+   "Ánh sáng từ xa xôi phải mất hàng triệu năm mới đến được mắt ta."
+  ]
+ },
+ "ocean": {
+  "hook": "Đại Dương Bí Ẩn",
+  "lines": [
+   "Con người mới khám phá chưa đến 5% đại dương.",
+   "Dưới đáy biển có những sinh vật còn lạ hơn ngoài hành tinh.",
+   "Áp suất đáy biển đủ nghiền nát mọi tàu ngầm.",
+   "Đại dương còn bí ẩn hơn cả vũ trụ."
+  ]
+ },
+ "brain": {
+  "hook": "Bộ Não Kỳ Diệu",
+  "lines": [
+   "Não bạn tạo ra 70.000 suy nghĩ mỗi ngày.",
+   "Nhưng 95% trong đó lặp lại y hệt ngày hôm qua.",
+   "Bộ não không phân biệt được tưởng tượng và thực tại.",
+   "Đó là lý do bạn có thể tự lừa chính mình."
+  ]
+ },
+ "animal": {
+  "hook": "Thế Giới Động Vật",
+  "lines": [
+   "Thế giới động vật muôn màu muôn vẻ.",
+   "Mỗi loài đều có cách sinh tồn kỳ diệu riêng.",
+   "Có loài sống hàng trăm năm, có loài chỉ vài ngày.",
+   "Thiên nhiên luôn khiến ta phải kinh ngạc."
+  ]
+ },
+ "satisfy2": {
+  "hook": "Thỏa Mãn Thị Giác",
+  "lines": [
+   "Những thước phim thỏa mãn thị giác.",
+   "Từng chuyển động đều mượt mà và hài hòa.",
+   "Màu sắc và nhịp điệu khiến ta thư giãn.",
+   "Hãy thư giãn và tận hưởng từng khoảnh khắc."
+  ]
+ },
+ "satisfying": {
+  "hook": "Thỏa Mãn Thị Giác",
+  "lines": [
+   "Những thước phim thỏa mãn thị giác.",
+   "Từng chuyển động đều mượt mà và hài hòa.",
+   "Màu sắc và nhịp điệu khiến ta thư giãn.",
+   "Hãy thư giãn và tận hưởng từng khoảnh khắc."
+  ]
+ },
+ "fire": {
+  "hook": "Sức Mạnh Ngọn Lửa",
+  "lines": [
+   "Lửa là một trong những phát minh vĩ đại nhất.",
+   "Nó sưởi ấm, nấu chín và bảo vệ con người.",
+   "Ngọn lửa chứa đựng sức mạnh và vẻ đẹp kỳ lạ.",
+   "Từ tia lửa nhỏ có thể bùng lên cả một đám cháy."
+  ]
+ },
+ "water": {
+  "hook": "Nước Kỳ Diệu",
+  "lines": [
+   "Nước là nguồn sống của mọi sinh vật.",
+   "Cơ thể con người chứa khoảng sáu mươi phần trăm là nước.",
+   "Nước có thể tồn tại ở ba thể rắn, lỏng và khí.",
+   "Không có nước, sự sống trên Trái Đất sẽ không tồn tại."
+  ]
+ },
+ "cat": {
+  "hook": "Loài Mèo Bí Ẩn",
+  "lines": [
+   "Mèo ngủ tới mười sáu tiếng mỗi ngày.",
+   "Chúng có thể xoay tai một trăm tám mươi độ.",
+   "Mèo nhìn thấy trong bóng tối gấp sáu lần con người.",
+   "Mỗi tiếng kêu của mèo đều có ý nghĩa riêng."
+  ]
+ },
+ "dog": {
+  "hook": "Người Bạn Trung Thành",
+  "lines": [
+   "Chó là người bạn trung thành của con người.",
+   "Khứu giác của chó nhạy hơn ta hàng chục nghìn lần.",
+   "Chúng có thể hiểu hàng trăm từ và cử chỉ.",
+   "Tình cảm của chó dành cho chủ là vô điều kiện."
+  ]
+ },
+ "body": {
+  "hook": "Cơ Thể Kỳ Diệu",
+  "lines": [
+   "Cơ thể bạn thay mới hàng tỷ tế bào mỗi ngày.",
+   "Mỗi giây có 2 triệu tế bào hồng cầu được sinh ra.",
+   "Bạn già đi mỗi giây, nhưng không cảm nhận được.",
+   "Cơ thể là cỗ máy hoàn hảo nhất vũ trụ."
+  ]
+ },
+ "coffee": {
+  "hook": "Cà Phê Thú Vị",
+  "lines": [
+   "Cà phê là thức uống được yêu thích khắp thế giới.",
+   "Mỗi ngày có hơn hai tỷ tách cà phê được uống.",
+   "Hương thơm cà phê đánh thức mọi giác quan.",
+   "Một tách cà phê có thể thay đổi cả một buổi sáng."
+  ]
+ },
+ "food": {
+  "hook": "Thế Giới Ẩm Thực",
+  "lines": [
+   "Ẩm thực là nghệ thuật của hương vị.",
+   "Mỗi món ăn kể một câu chuyện văn hóa riêng.",
+   "Màu sắc và mùi thơm đánh thức vị giác.",
+   "Một bữa ăn ngon là niềm hạnh phúc giản dị."
+  ]
+ },
+ "magic": {
+  "hook": "Điều Kỳ Diệu",
+  "lines": [
+   "Phép thuật là nghệ thuật của sự bất ngờ.",
+   "Đôi khi điều kỳ diệu đến từ những điều nhỏ bé.",
+   "Trí tưởng tượng không có giới hạn.",
+   "Hãy tin vào điều kỳ diệu quanh ta mỗi ngày."
+  ]
+ },
+ "spider": {
+  "hook": "Loài Nhện Bí Ẩn",
+  "lines": [
+   "Nhện là một trong những loài săn mồi tài ba nhất.",
+   "Tơ nhện bền hơn cả thép cùng kích thước.",
+   "Có loài nhện nhảy xa gấp nhiều lần cơ thể.",
+   "Mỗi mạng nhện là một kiệt tác của tự nhiên."
+  ]
+ },
+ "psychology": {
+  "hook": "Tâm Lý Bí Ẩn",
+  "lines": [
+   "Khi bạn nhớ lại ký ức, bạn đang nhớ lần cuối bạn nhớ nó.",
+   "Bộ não tự bịa ra ký ức để lấp đầy khoảng trống.",
+   "Càng cố quên điều gì, bạn càng nhớ nó rõ hơn.",
+   "Tâm trí bạn không đáng tin như bạn tưởng."
+  ]
+ },
+ "abstract": {
+  "hook": "Nghệ Thuật Trừu Tượng",
+  "lines": [
+   "Nghệ thuật trừu tượng không có giới hạn.",
+   "Màu sắc và hình khối hòa quyện vào nhau.",
+   "Mỗi người nhìn thấy một điều khác biệt.",
+   "Cảm xúc là ngôn ngữ chung của nghệ thuật."
+  ]
+ },
+ "snake": {
+  "hook": "Loài Rắn Bí Ẩn",
+  "lines": [
+   "Loài rắn là sinh vật bí ẩn bậc nhất hành tinh.",
+   "Không chân, không mí mắt, nhưng di chuyển cực kỳ uyển chuyển.",
+   "Một số loài sở hữu nọc độc có thể hạ gục con mồi lớn gấp nhiều lần.",
+   "Chúng cảm nhận rung động và nhiệt độ để săn mồi trong bóng tối."
+  ]
+ },
+ "anime": {
+  "hook": "Thế Giới Anime",
+  "lines": [
+   "Thế giới anime đầy màu sắc và phiêu lưu.",
+   "Mỗi nhân vật đều có một ước mơ thật đẹp.",
+   "Từ tình bạn đến lòng dũng cảm, tất cả đều truyền cảm hứng.",
+   "Hãy cùng khám phá những câu chuyện tuyệt vời nhé!"
+  ]
+ },
+ "roblox": {
+  "hook": "Thế Giới Roblox",
+  "lines": [
+   "Roblox là thế giới sáng tạo không giới hạn.",
+   "Bạn có thể xây nhà, chơi game và kết bạn.",
+   "Mỗi trò chơi là một cuộc phiêu lưu mới.",
+   "Hãy cùng nhau khám phá và sáng tạo nhé!"
+  ]
+ },
+ "cute_animals": {
+  "hook": "Những Bạn Thú Cute",
+  "lines": [
+   "Những chú thú nhỏ đáng yêu luôn làm ta vui.",
+   "Chúng có bộ lông mềm và đôi mắt tròn xoe.",
+   "Mỗi cử chỉ đều đáng yêu hết mực.",
+   "Hãy yêu thương các bạn nhỏ này nhé!"
+  ]
+ },
+ "meme": {
+  "hook": "Meme Vui Nhộn",
+  "lines": [
+   "Meme mang lại tiếng cười cho mọi người.",
+   "Chỉ cần một bức ảnh cũng khiến ta vui cả ngày.",
+   "Tiếng cười là liều thuốc tinh thần tuyệt vời.",
+   "Hãy chia sẻ tiếng cười đến bạn bè nhé!"
+  ]
+ },
+ "gacha": {
+  "hook": "Thế Giới Gacha",
+  "lines": [
+   "Gacha là nơi bạn tạo nhân vật của riêng mình.",
+   "Mỗi nhân vật có kiểu tóc và trang phục đẹp.",
+   "Bạn có thể kể những câu chuyện thú vị.",
+   "Hãy cùng nhau sáng tạo thế giới mơ ước nhé!"
+  ]
+ }
+}

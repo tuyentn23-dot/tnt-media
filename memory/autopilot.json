@@ -1,0 +1,9 @@
+{
+  "enabled": true,
+  "interval_min": 60,
+  "batch": 2,
+  "kinds": [
+    "whatif",
+    "facts"
+  ]
+}

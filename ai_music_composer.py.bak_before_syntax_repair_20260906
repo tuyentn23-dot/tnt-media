@@ -1,0 +1,80 @@
+# TNT Music AI Composer - AI chuyen sang tac nhac
+# Version 1.0
+
+import json
+import os
+import numpy as np
+import wave
+import struct
+from datetime import datetime
+
+class TNTMusicAI:
+ def init(self):
+ self.version = '1.0.0'
+ self.name = 'TNT Music AI Composer'
+ self.sample_rate = 44100
+ self.notes = {
+ 'C3': 130.81, 'D3': 146.83, 'E3': 164.81, 'F3': 174.61,
+ 'G3': 196.00, 'A3': 220.00, 'B3': 246.94,
+ 'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23,
+ 'G4': 392.00, 'A4': 440.00, 'B4': 493.88,
+ 'C5': 523.25, 'D5': 587.33, 'E5': 659.25, 'F5': 698.46,
+ 'G5': 783.99, 'A5': 880.00, 'B5': 987.77
+ }
+ self.chord_progressions = {
+ 'sad': [['C4', 'E4', 'G4'], ['A3', 'C4', 'E4'], ['F3', 'A3', 'C4'], ['G3', 'B3', 'D4']],
+ 'happy': [['C4', 'E4', 'G4'], ['G3', 'B3', 'D4'], ['A3', 'C4', 'E4'], ['F3', 'A3', 'C4']],
+ 'romantic': [['C4', 'E4', 'G4'], ['A3', 'C4', 'E4'], ['D4', 'F4', 'A4'], ['G3', 'B3', 'D4']]
+ }
+ self.lyrics_templates = {
+ 'love': 'Anh nho em, nho tung khoanh khac',
+ 'sad': 'Buon trong long, khong the nao quen',
+ 'hope': 'Hy vong mai, se den ben ta'
+ }
+ 
+ def compose(self, mood='romantic', duration_minutes=4):
+ song = self.generate_melody(mood, duration_minutes)
+ return song
+ 
+ def generate_melody(self, mood, minutes):
+ N = int(self.sample_rate * minutes * 60)
+ song = np.zeros(N)
+ chords = self.chord_progressions.get(mood, self.chord_progressions['romantic'])
+ 
+ section = self.sample_rate * 4
+ chord_count = min(len(chords) * 15, N // section)
+ 
+ for i in range(chord_count):
+ chord_idx = i % 4
+ chord = chords[chord_idx]
+ freq = self.notes[chord[0]]
+ start = i * section
+ end = min(start + section, N)
+ dur = end - start
+ t = np.arange(dur) / self.sample_rate
+ 
+ wave_data = np.sin(2 * np.pi * freq * t) * np.exp(-t * 0.5) * 0.4
+ wave_data += np.sin(2 * np.pi * freq * 2 * t) * np.exp(-t * 0.8) * 0.2
+ 
+ song[start:end] += wave_data
+ 
+ song = song / np.max(np.abs(song)) * 0.8
+ return song
+ 
+ def save_wav(self, song, filename):
+ os.makedirs('output/ai_composed', exist_ok=True)
+ path = 'output/ai_composed/' + filename
+ wav = wave.open(path, 'w')
+ wav.setnchannels(1)
+ wav.setsampwidth(2)
+ wav.setframerate(self.sample_rate)
+ wav.writeframes(b''.join([struct.pack('h', int(s * 32767)) for s in song]))
+ wav.close()
+ return path
+
+if name == 'main':
+ ai = TNTMusicAI()
+ print(ai.name, 'Version', ai.version)
+ song = ai.compose('romantic', 4)
+ path = ai.save_wav(song, 'ballad_romantic.wav')
+ print('Composed:', path)

@@ -1,0 +1,23 @@
+{
+  "solution": "HuggingFace Inference API - MusicGen Small",
+  "model": "facebook/musicgen-small",
+  "api_type": "free_tier",
+  "setup_steps": [
+    "1. Dang ky tai khoan tai huggingface.co",
+    "2. Tao Access Token",
+    "3. Dung API de generate music",
+    "4. Xu ly output va upload YouTube"
+  ],
+  "prompt_example": "A beautiful pop ballad about eternal love, with piano and strings, emotional and touching",
+  "integration_code": {
+    "python_library": "requests",
+    "endpoint": "https://api-inference.huggingface.co/models/facebook/musicgen-small",
+    "method": "POST",
+    "headers": {
+      "Authorization": "Bearer YOUR_HF_TOKEN"
+    },
+    "body": {
+      "inputs": "prompt here"
+    }
+  }
+}

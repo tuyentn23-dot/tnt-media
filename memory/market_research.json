@@ -1,0 +1,98 @@
+{
+  "vietnam_music_market_2026": {
+    "top_genres": [
+      "Ballad",
+      "Rap",
+      "EDM",
+      "Pop",
+      "Lofi"
+    ],
+    "average_song_duration": "4-5 minutes",
+    "listener_preferences": {
+      "ballad": {
+        "popularity": 85,
+        "age_group": "18-45",
+        "key_elements": [
+          "lyrics_depth",
+          "emotional_vocal",
+          "piano_based"
+        ]
+      },
+      "rap": {
+        "popularity": 90,
+        "age_group": "15-30",
+        "key_elements": [
+          "beat_strength",
+          "flow",
+          "relatable_lyrics"
+        ]
+      },
+      "edm": {
+        "popularity": 75,
+        "age_group": "16-28",
+        "key_elements": [
+          "drop_intensity",
+          "bass",
+          "samples"
+        ]
+      },
+      "pop": {
+        "popularity": 80,
+        "age_group": "13-35",
+        "key_elements": [
+          "catchy_hook",
+          "production_quality",
+          "danceable"
+        ]
+      },
+      "lofi": {
+        "popularity": 70,
+        "age_group": "16-25",
+        "key_elements": [
+          "chill_vibe",
+          "study_focus",
+          "mellow"
+        ]
+      }
+    },
+    "successful_artists_analysis": {
+      "Son_Tung_MTP": {
+        "style": "Pop/EDM",
+        "avg_duration": "4:30",
+        "signature": "catchy_hook + high_production"
+      },
+      "Den_Vau": {
+        "style": "Rap",
+        "avg_duration": "4:15",
+        "signature": "deep_lyrics + unique_flow"
+      },
+      "Vu": {
+        "style": "Ballad/Pop",
+        "avg_duration": "4:45",
+        "signature": "emotional_depth + clean_vocal"
+      }
+    },
+    "what_makes_song_viral": [
+      "Memorable hook within first 30 seconds",
+      "Emotional connection",
+      "Production quality",
+      "Relatable lyrics",
+      "Catchy melody",
+      "Professional mixing"
+    ]
+  },
+  "global_music_trends_2026": {
+    "streaming_platforms": [
+      "Spotify",
+      "Apple Music",
+      "YouTube Music"
+    ],
+    "audio_quality_standard": "320kbps MP3 or FLAC",
+    "production_requirements": {
+      "mixing": "Professional EQ, compression, reverb",
+      "mastering": "Loudness normalization (-14 LUFS)",
+      "structure": "Intro-Verse-Chorus-Verse-Chorus-Bridge-Chorus-Outro",
+      "layering": "Multiple instruments + vocals"
+    }
+  }
+}

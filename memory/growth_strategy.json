@@ -1,0 +1,36 @@
+{
+  "video_id": "FEzBQf2QDI4",
+  "created_at": "2026-09-06T12:26:09.499483",
+  "phases": {
+    "phase_1_hour_0_6": {
+      "actions": [
+        "Share on all social platforms",
+        "Post in relevant groups",
+        "Add to playlists"
+      ],
+      "target": "100 views"
+    },
+    "phase_2_hour_6_24": {
+      "actions": [
+        "Engage with every comment",
+        "Reply to viewers",
+        "Create community post"
+      ],
+      "target": "500 views"
+    },
+    "phase_3_hour_24_72": {
+      "actions": [
+        "Create follow-up content",
+        "Cross-promote with other videos",
+        "Analyze retention"
+      ],
+      "target": "2000 views"
+    }
+  },
+  "algorithm_boost": {
+    "watch_time_focus": "Create engaging first 3 seconds",
+    "engagement_rate": "Aim for 10%+ like-to-view ratio",
+    "comment_velocity": "Respond within 1 hour",
+    "share_encouragement": "Add share CTA in description"
+  }
+}

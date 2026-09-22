@@ -1,0 +1,19 @@
+{
+  "cycles": [
+    {
+      "id": "PDCA-0001",
+      "started_at": "2026-09-06T00:16:54.447445",
+      "status": "running"
+    },
+    {
+      "id": "PDCA-0002",
+      "started_at": "2026-09-06T00:19:49.976057",
+      "status": "running"
+    },
+    {
+      "id": "PDCA-0003",
+      "started_at": "2026-09-06T08:16:06.953982",
+      "status": "running"
+    }
+  ]
+}

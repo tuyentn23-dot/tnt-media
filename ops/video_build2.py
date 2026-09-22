@@ -1,0 +1,258 @@
+# -- coding: utf-8 --
+"""TNT Media OS - enhanced video builder v2 (flatten, fast).
+Real voiceover (edge-tts) + sentence-timed captions + music bed.
+Overlays are baked per-frame via fl_image (single-layer, fast)."""
+import os
+import sys
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, ROOT)
+os.environ.setdefault('IMAGEIO_FFMPEG_EXE', os.path.join(ROOT, 'tools', 'ffmpeg.exe'))
+try:
+    import ops.compat
+except Exception:
+    pass
+
+FONT_BOLD = 'C:/Windows/Fonts/arialbd.ttf'
+W, H = 1080, 1920
+SAFE_TOP = 300
+SAFE_BOTTOM = 480
+FPS = 30
+CROSS = 0.35
+ENCODE_PRESET = os.environ.get('TNT_ENC_PRESET', 'veryfast')
+BITRATE = os.environ.get('TNT_BITRATE', '8000k')
+AUDIO_BITRATE = os.environ.get('TNT_ABITRATE', '192k')
+
+def _pil_text(text, size, color=(255,255,255), stroke=6, stroke_color=(0,0,0), max_w=920):
+    from PIL import Image, ImageDraw, ImageFont
+    import numpy as np
+    fp = FONT_BOLD
+    font = ImageFont.truetype(fp, size) if os.path.exists(fp) else ImageFont.load_default()
+    words = str(text).split()
+    lines = []
+    cur = ''
+    for w in words:
+        t = (cur + ' ' + w).strip()
+        bb = font.getbbox(t)
+        if bb[2] - bb[0] <= max_w or not cur:
+            cur = t
+        else:
+            lines.append(cur)
+            cur = w
+    if cur:
+        lines.append(cur)
+    lh = size + int(size * 0.4)
+    pad = stroke * 4
+    iw = max_w + pad
+    ih = lh * len(lines) + pad
+    img = Image.new("RGBA", (iw, ih), (0,0,0,0))
+    d = ImageDraw.Draw(img)
+    y = stroke * 2
+    for ln in lines:
+        bb = font.getbbox(ln)
+        tw = bb[2] - bb[0]
+        x = (iw - tw) // 2
+        d.text((x, y), ln, font=font, fill=color, stroke_width=stroke, stroke_fill=stroke_color)
+        y += lh
+    return np.array(img)
+
+def _sc(clip, a, b):
+    f = getattr(clip, "subclipped", None) or getattr(clip, "subclip", None)
+    return f(a, b)
+
+def _fx(clip, fn):
+    m = getattr(clip, "transform", None)
+    if m is not None:
+        try:
+            return m(fn)
+        except TypeError:
+            pass
+    m = getattr(clip, "fl", None)
+    if m is not None:
+        return m(fn)
+    return clip.image_transform(lambda f: fn(lambda t: f, 0))
+
+def _crop(clip, x1, y1, width, height):
+    m = getattr(clip, "cropped", None)
+    if m is not None:
+        return m(x1=x1, y1=y1, width=width, height=height)
+    return clip.crop(x1=x1, y1=y1, width=width, height=height)
+
+def _fit(clip, w=W, h=H):
+    _resize = getattr(clip, "resized", None) or getattr(clip, "resize", None)
+    sw = int(clip.w)
+    sh = int(clip.h)
+    if sw >= w and sh >= h:
+        try:
+            r = _resize(height=h, resample='lanczos')
+        except Exception:
+            r = _resize(height=h)
+        x = max(0, (r.w - w) // 2)
+        y = max(0, (r.h - h) // 2)
+        return _crop(r, x, y, w, h)
+    import numpy as np
+    from PIL import Image
+    try:
+        from moviepy.editor import CompositeVideoClip, ImageClip
+    except Exception:
+        from moviepy import CompositeVideoClip, ImageClip
+    fr = clip.get_frame(0)
+    bg = Image.fromarray(np.uint8(fr)).resize((max(1, w // 12), max(1, h // 12))).resize((w, h))
+    bgc = ImageClip(np.array(bg)).set_duration(clip.duration)
+    fg = _resize(width=w)
+    if fg.h > h:
+        fg = fg.resize(height=h)
+    fg = fg.with_position(('center', 'center'))
+    return CompositeVideoClip([bgc, fg], size=(w, h)).set_duration(clip.duration)
+
+def _vignette_np():
+    import numpy as np
+    yy, xx = np.mgrid[0:H, 0:W]
+    cx = W / 2.0
+    cy = H / 2.0
+    d = np.sqrt(((xx - cx) / cx) ** 2 + ((yy - cy) / cy) ** 2)
+    m = np.clip(d - 0.55, 0, 1.4) / 1.4
+    al = (m * 210).astype('uint8')
+    out = np.zeros((H, W, 4), dtype='uint8')
+    out[:, :, 3] = al
+    return out
+
+def _aloop(ac, total):
+    try:
+        return ac.with_effects([_afx.AudioLoop(duration=total)])
+    except Exception:
+        pass
+    try:
+        return ac.loop(duration=total)
+    except Exception:
+        return ac
+
+def _avol(ac, v):
+    for name in ("with_volume_scaled", "volumex"):
+        m = getattr(ac, name, None)
+        if m is not None:
+            return m(v)
+    return ac
+
+def _saudio(clip, audio):
+    m = getattr(clip, "with_audio", None)
+    if m is not None:
+        return m(audio)
+    return clip.set_audio(audio)
+
+try:
+    import moviepy.audio.fx as _afx
+except Exception:
+    _afx = None
+
+def build_short(footage_paths, script_lines, out_path, hook_text=None, music_path=None, target_dur=15.0, voice_text=None, voice_path=None, sentences=None, voice_name=None):
+    try:
+        from moviepy.editor import CompositeVideoClip, AudioFileClip, CompositeAudioClip
+    except Exception:
+        from moviepy import CompositeVideoClip, AudioFileClip, CompositeAudioClip
+    from ops.compat import get_video_clip, concat
+    from ops.video_quality import rank_footage
+    import numpy as np
+    from PIL import Image
+    paths = [p for p in (footage_paths or []) if os.path.exists(p)]
+    paths = rank_footage(paths)
+    if not paths:
+        raise ValueError('no footage found')
+    vp = voice_path
+    sents = list(sentences or [])
+    if voice_text and not vp:
+        from ops import voice as _v
+        vp, sents = _v.synth(voice_text, voice=voice_name)
+    vdur = 0.0
+    if vp and os.path.exists(vp):
+        try:
+            vdur = float(AudioFileClip(vp).duration)
+        except Exception:
+            vdur = 0.0
+    total = max(float(target_dur), vdur)
+    V = get_video_clip()
+    n = len(paths)
+    per = min(2.5, max(1.6, total / max(1, n)))
+    clips = []
+    for p in paths:
+        c = _fit(V(p))
+        if c.duration > per:
+            c = _sc(c, 0, per)
+        else:
+            loops = int(per // max(0.6, c.duration)) + 1
+            c = concat([c] * loops)
+            c = _sc(c, 0, per)
+        clips.append(c)
+    base = concat(clips)
+    if base.duration < total:
+        reps = int(total // max(0.5, base.duration)) + 1
+        base = concat([base] * reps)
+        base = _sc(base, 0, total)
+
+    lines = []
+    if sents:
+        for s in sents:
+            t = (s.get('text') or '').strip()
+            if t:
+                lines.append((t, float(s.get('start', 0.0)), float(s.get('end', 0.0))))
+    else:
+        sl = [x for x in (script_lines or []) if str(x).strip()]
+        if sl:
+            seg = total / len(sl)
+            for i, t in enumerate(sl):
+                lines.append((str(t), i * seg, (i + 1) * seg))
+    hook_np = _pil_text(hook_text, 96, color=(255,235,60), stroke=9, max_w=940) if hook_text else None
+    hook_img = Image.fromarray(hook_np) if hook_np is not None else None
+    cap_imgs = []
+    for it in lines:
+        cnp = _pil_text(it[0], 66, color=(255,255,255), stroke=8, max_w=900)
+        cap_imgs.append((Image.fromarray(cnp), it[1], it[2]))
+    vig = Image.fromarray(_vignette_np())
+    def _draw(gf, t):
+        f = gf(t)
+        img = Image.fromarray(np.uint8(f)).convert('RGBA')
+        img.alpha_composite(vig, (0, 0))
+        if hook_img is not None and t < 2.0:
+            img.alpha_composite(hook_img, ((W - hook_img.width) // 2, SAFE_TOP))
+        for (ci, st, en) in cap_imgs:
+            if st <= t < en:
+                img.alpha_composite(ci, ((W - ci.width) // 2, H - SAFE_BOTTOM))
+        return np.array(img.convert('RGB'))
+    base = _fx(base, _draw)
+    try:
+        base = base.fadein(0.1).fadeout(1.5)
+    except Exception:
+        pass
+
+    tracks = []
+    if music_path and os.path.exists(music_path):
+        try:
+            ac = AudioFileClip(music_path)
+            if ac.duration < total:
+                ac = _aloop(ac, total)
+            else:
+                ac = _sc(ac, 0, total)
+            try:
+                ac = _avol(ac, 0.35)
+            except Exception:
+                pass
+            tracks.append(ac)
+        except Exception:
+            pass
+    if vp and os.path.exists(vp):
+        try:
+            tracks.append(AudioFileClip(vp))
+        except Exception:
+            pass
+    if tracks:
+        try:
+            base = _saudio(base, CompositeAudioClip(tracks))
+        except Exception:
+            pass
+    tmp_out = out_path + '.tmp.mp4'
+    base.write_videofile(tmp_out, fps=FPS, codec='libx264', audio_codec='aac', preset=ENCODE_PRESET, bitrate=BITRATE, audio_bitrate=AUDIO_BITRATE, threads=4, logger=None)
+    import os as _os2
+    if _os2.path.exists(out_path):
+        _os2.remove(out_path)
+    _os2.rename(tmp_out, out_path)
+    return out_path

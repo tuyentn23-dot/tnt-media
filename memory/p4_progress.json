@@ -1,0 +1,462 @@
+{
+  "p4_footage_cycle": {
+    "date": "2026-09-12",
+    "topics": {
+      "abstract": 2,
+      "cat": 1,
+      "coffee": 4,
+      "dog": 1,
+      "fire": 3,
+      "food": 3,
+      "magic": 1,
+      "satisfying": 2,
+      "water": 3
+    },
+    "sources": "mixkit+pexels+pixabay",
+    "notes": "MAX_BYTES 12MB->80MB; import-time IMAGEIO_FFMPEG_EXE fix; arm64 python required for moviepy",
+    "end_to_end_verified": true,
+    "gated_short": {
+      "file": "output/short_food_vertical_gated.mp4",
+      "duration": 14.97,
+      "w": 607,
+      "h": 1080,
+      "audio": true,
+      "viral_score": 100,
+      "passes_gate": true
+    },
+    "fixes": [
+      "MAX_BYTES 12MB->80MB",
+      "import-time IMAGEIO_FFMPEG_EXE in real_footage_pipeline",
+      "retention_optimizer: moviepy v2 concat via _get_concat helper",
+      "retention_optimizer: added make_vertical + add_music",
+      "all pipeline runs must use Python313-arm64 (has moviepy 2.2.1)"
+    ],
+    "gated_shorts": [
+      {
+        "file": "output/short_food_vertical_gated.mp4",
+        "score": 100,
+        "pass": true
+      },
+      {
+        "file": "output/short_cat_gated.mp4",
+        "score": 100,
+        "pass": true
+      },
+      {
+        "file": "output/short_dog_gated.mp4",
+        "score": 100,
+        "pass": true
+      },
+      {
+        "file": "output/short_magic_gated.mp4",
+        "score": 100,
+        "pass": true
+      }
+    ],
+    "pexels": "ops/pexels_fetcher.py saved; key in .env",
+    "suno": "NO key yet - user must provide"
+  },
+  "dashboard_build_2026_09_12": {
+    "existing_infra": [
+      "supervisor.autonomous_supervisor",
+      "youtube_uploader.upload_video",
+      "analytics_aggregator.aggregator",
+      "auto_evolution.evolution_engine",
+      "continuous_generator",
+      "pdca_optimizer",
+      "cross_platform_syndicator",
+      "platform_publisher",
+      "master_daemon_orchestrator",
+      "dashboard.py(v2 FastAPI)"
+    ],
+    "plan": "upgrade ops/dashboard.py to 24/7 control center: status, videos, delete, cleanup, auto-publish toggle, auto-scan, auto-evaluate, self-upgrade",
+    "inventory": {
+      "ops_modules": 38,
+      "footage_topics": 9,
+      "gated_shorts": 4
+    }
+  },
+  "control_center_2026_09_12": {
+    "module": "ops/control_center.py",
+    "version": "3.0.0",
+    "port": 8787,
+    "runtime": "venv python (has fastapi/uvicorn): D:/TNT_AI/venv/Scripts/python.exe",
+    "pipeline_runtime": "arm64 python (has moviepy): C:/Users/DELL/AppData/Local/Programs/Python/Python313-arm64/python.exe",
+    "endpoints": [
+      "/api/status",
+      "/api/videos",
+      "/api/delete",
+      "/api/automation",
+      "/api/cleanup",
+      "/api/run",
+      "/api/published",
+      "/ (HTML)"
+    ],
+    "features": [
+      "24/7 worker loop (120s)",
+      "auto_publish/scan/evaluate/upgrade toggles",
+      "cleanup_junk -> _trash/",
+      "disk usage",
+      "library stats",
+      "publish history (memory/published.json)"
+    ],
+    "launcher": "start_control_center.bat",
+    "verified": {
+      "status": 200,
+      "videos": 15,
+      "published": 1,
+      "disk": "1.3GB",
+      "all_endpoints": true
+    }
+  },
+  "viral_upgrade_2026_09_12": {
+    "viral_engine": "ops/viral_engine.py - honest hook_motion/pace/loop_gap metrics (replaces too-easy gate)",
+    "publish_one": "ops/publish_one.py - real YouTube upload w/ token refresh + viral gate",
+    "token_status": "refresh works (valid=True); scope youtube; uploads possible",
+    "honest_scores": {
+      "food": 80,
+      "cat": 80,
+      "dog": 55,
+      "magic": 55
+    },
+    "action_taken": "fetched higher-action dog/magic footage from Pexels; rescoring",
+    "reality": "stock footage rarely viral; need unique moments/twist",
+    "honest_findings": "Pexels stock is inherently low-motion (best ~0.32-0.54). viral_engine real scores: food=80 cat=80 dog=55 magic=55 dog_v2=75. Hook is the bottleneck. Stock rarely goes viral; need unique moments or original footage.",
+    "publishable_now": [
+      "short_food_vertical_gated.mp4 (80)",
+      "short_cat_gated.mp4 (80)"
+    ],
+    "blocked": [
+      "dog (55)",
+      "magic (55)",
+      "dog_v2 (75) - hook weak"
+    ]
+  },
+  "copyright_music_fix_2026_09_12": {
+    "problem": "music_bed.wav nguon goc KHONG ro -> rui ro Content ID; 1 nhac dung chung moi topic -> khong khop",
+    "solution": "ops/safe_music.py - nhac goc 100% an toan (numpy+wave), 5 track rieng theo topic",
+    "tracks": [
+      "music_food.wav",
+      "music_cat.wav",
+      "music_dog.wav",
+      "music_magic.wav",
+      "music_satisfying.wav"
+    ],
+    "integration": "retention_optimizer.add_music tu chon nhac theo topic",
+    "content_id_check": "CLWStoqoZkk + kU80bESMcog: chua bi claim (processed, no rejection, licensedContent=False)",
+    "note": "Content ID co the quet sau vai gio-vai ngay",
+    "resolution": "Option A executed: deleted 2 old videos (CLWStoqoZkk, kU80bESMcog), re-rendered + republished with safe original music",
+    "new_published": {
+      "food": "ZWigu9khafw (public, licensed:False)",
+      "cat": "6gp9ZjKF9bY (public, licensed:False)"
+    }
+  },
+  "story_engine_2026_09_12": {
+    "strategy_shift": "from stock footage -> STORY content (voiceover + captions + footage)",
+    "why": "stock footage cannot viral (no story, no hook, no differentiation)",
+    "modules": [
+      "ops/story_engine.py",
+      "ops/captions.py",
+      "memory/story_db.json (12 stories)"
+    ],
+    "format": "TTS voiceover (gtts vi) + burned captions + topic music + vertical 9:16",
+    "verified": "output/story_test.mp4 - 17.3s, 720x1280, voiceover=True, captions rendered",
+    "topics": [
+      "animal",
+      "psychology",
+      "science"
+    ],
+    "next": "publish story shorts, measure real retention"
+  },
+  "rework_strategy_2026_09_12": {
+    "strategy": "learn from proven viral formats (NOT invent) - research via YouTube API",
+    "research": "80 viral shorts across 8 niches in memory/viral_research.json",
+    "winning_formats": [
+      "what-if",
+      "I-story",
+      "science reaction",
+      "animal vs",
+      "shocking facts"
+    ],
+    "content_db": "memory/content_db.json (4 whatif + 3 facts, Vietnamese, open-loop)",
+    "renderer": "ops/content_video.py - voiceover+big captions+vertical bg",
+    "verified": "output/whatif_blackhole.mp4 21.8s 720x1280 voiceover+captions",
+    "batch": "7 videos rendered (4 whatif + 3 facts), 3 published",
+    "next": "publish best, measure retention",
+    "published_story_videos": {
+      "blackhole": "cMjrSOZNBuw (public) - space what-if",
+      "whale": "2Ure4ELpoX8 (public) - ocean what-if",
+      "octopus": "C3T1ViHZLEs (public) - animal fact"
+    },
+    "gates": "story_gate.py for whatif/facts (content-based); viral_engine for motion clips"
+  },
+  "fixes_v2_2026_09_12": {
+    "font_fix": "TextClip now uses font=C:/Windows/Fonts/arialbd.ttf (Vietnamese-capable) - was default font = tofu",
+    "footage_fix": "topic-matched footage: space/ocean/animal/psychology/body each 4 clips",
+    "effects_fix": "yellow hook (top), white payoff (delayed 3s), topic footage bg",
+    "renderer": "ops/content_video2.py",
+    "verified": "v2_blackhole: 18431 yellow px (hook renders), white payoff present",
+    "user_deleted": "3 old story videos (font+irrelevant footage)"
+  },
+  "growth_system_2026_09_12": {
+    "modules": [
+      "ops/perf_tracker.py",
+      "ops/scheduler.py",
+      "ops/content_video3.py (effects+CTA)"
+    ],
+    "real_perf_first": {
+      "satisfying": "907 views/6 likes",
+      "cat_v2": "880 views/5 likes",
+      "food_v2": "232 views/1 like"
+    },
+    "insight": "channel HAS reach (~900 views); problem = retention + interaction (0 comments)",
+    "fixes_applied": [
+      "font arialbd (VN ok)",
+      "topic footage",
+      "yellow hook+white payoff+progress bar",
+      "question CTA for comments"
+    ],
+    "v4_published": 7,
+    "v4_links": [
+      "ZA_HunSMw_Y",
+      "wiD8SQS4CTM",
+      "oMx4qZFlRq0",
+      "bibhwcv4-9g",
+      "Ep0B2Q8w_s4",
+      "76obObOgiLs",
+      "nsLku1MZuqw"
+    ],
+    "strategy_doc": "GROWTH_STRATEGY.md, PERFORMANCE_INSIGHTS.md",
+    "next": "monitor 24-48h, double down on what works, post consistently"
+  },
+  "multiscene_commentbot_2026_09_12": {
+    "multiscene_renderer": "ops/content_video4.py - 3 scenes (hook/body/payoff), each different footage + text color",
+    "verified": "ms_blackhole: 3 distinct scenes (diff 31-34px), yellow/white/cyan text",
+    "published": "X0Uf0JLLA3I (multi-scene blackhole)",
+    "comment_bot": "ops/comment_bot.py - reads+replies comments (needs youtube.force-ssl scope)",
+    "blocker": "comment API needs re-auth with force-ssl scope (user must re-run OAuth in browser)",
+    "ms_published": [
+      "X0Uf0JLLA3I (blackhole)",
+      "TuMt4ZCBV3A (brain)",
+      "hBxNpN9MVws (no_sleep)",
+      "qoWkJhE6Ppk (octopus)",
+      "R2943m8kpnc (shark)",
+      "XdqdH8AQ0jw (sun)",
+      "us3AazfMBRI (whale)"
+    ],
+    "total_ms": 7
+  },
+  "retention_opt_2026_09_12": {
+    "renderer": "ops/content_video5.py - 13s target, instant hook, 3 fast scenes, speed-scaled audio",
+    "verified": "r5_blackhole.mp4 = exactly 13.0s, 720x1280, audio",
+    "strategy": "RETENTION_STRATEGY.md (12-15s sweet spot, instant hook, loop)",
+    "why": "retention = ~80% of algorithm signal; short videos get higher %-watched",
+    "status": "renderer ready; can batch render + replace old longer videos"
+  },
+  "pdca_cycle_1_2026_09_12": {
+    "plan": "render retention-optimized 13s + expand content",
+    "do": "10 r5 videos (13s) published + content DB expanded to 15",
+    "check": {
+      "best": "76obObOgiLs sun (908 views, 12 likes, 1 comment)",
+      "insight": "new videos match old views but 2x likes",
+      "like_rate_improved": "~1.2% vs 0.66%"
+    },
+    "act": "double down on high-like formats (sun/space/facts with strong hook)"
+  },
+  "pdca_cycle_2_2026_09_12": {
+    "plan": "render all 19 content items with winning pattern",
+    "status": "rendering r6 batch (2/19 done, ongoing)",
+    "new_content": [
+      "jupiter_storm",
+      "neutron_star",
+      "venus_hot",
+      "black_widow"
+    ],
+    "winning_pattern": "space + awe + strong hook + question CTA",
+    "autopilot": "ops/autopilot.py built for autonomous render+publish",
+    "pdca_loop": "ops/pdca_loop.py for continuous cycle"
+  },
+  "cleanup_pending_2026_09_12": {
+    "reason": "36 videos got ~5 views (not distributed) - repetitive content triggered spam signal",
+    "keep": [
+      "I3sMT5Ha-sQ",
+      "ZA_HunSMw_Y",
+      "wiD8SQS4CTM",
+      "oMx4qZFlRq0",
+      "bibhwcv4-9g",
+      "Ep0B2Q8w_s4",
+      "76obObOgiLs"
+    ],
+    "delete_count": 36,
+    "status": "PENDING - network to YouTube API temporarily down",
+    "script": "ops/cleanup.py (_cleanup.py) ready to run when network returns"
+  },
+  "viral_algorithm_2026_09_12": {
+    "truth": "no algorithm guarantees viral; system maximizes PROBABILITY via measurable factors",
+    "factors": [
+      "retention ~50%",
+      "rewatch ~20%",
+      "CTR ~15%",
+      "engagement ~10%",
+      "satisfaction ~5%",
+      "consistency"
+    ],
+    "modules": {
+      "viral_optimizer_ai.py": "self-learning: scores videos, finds winners",
+      "viral_engine_auto.py": "autonomous measure-learn cycle",
+      "title_optimizer.py": "viral title + hashtag generator",
+      "perf_tracker.py": "real performance data",
+      "content_video5.py": "13s retention-optimized renderer",
+      "scheduler.py": "consistent posting",
+      "content_video4.py": "multi-scene quality"
+    },
+    "learned": {
+      "winners": 6,
+      "total": 7,
+      "top": "76obObOgiLs (score 770)"
+    },
+    "seo_capability": "can update title/desc/tags via youtube scope",
+    "limits": [
+      "no guarantee of viral",
+      "no direct retention data (needs analytics scope)",
+      "no torch for AI lip-sync"
+    ]
+  },
+  "go_strategy_sun_2026_09_12": {
+    "video": "76obObOgiLs (sun)",
+    "views": "1266 (rising from 1220)",
+    "moves_applied": [
+      "#shorts title",
+      "search keywords",
+      "desc+hashtags",
+      "10 tags",
+      "category 28 Science",
+      "playlist",
+      "madeForKids false",
+      "custom thumbnail"
+    ],
+    "result": "SEO fully optimized; view rising naturally",
+    "lesson": "metadata is maxed; content quality drives remaining views"
+  },
+  "seo_complete_2026_09_12": {
+    "vi_em_video": {
+      "id": "TB8rai-HPng",
+      "views": "12 (from 0)",
+      "shorts": true,
+      "desc_len": 231,
+      "tags": 10,
+      "category": "10 Music",
+      "thumbnail": "set",
+      "playlist": "added"
+    },
+    "seo_loop": "ops/seo_loop.py - audits all videos",
+    "seo_batch_fix": "ops/seo_batch_fix.py - fixes missing SEO",
+    "fixed_batch": 7,
+    "moves": [
+      "#shorts",
+      "keywords",
+      "desc+hashtags",
+      "tags",
+      "category",
+      "playlist",
+      "madeForKids",
+      "thumbnail"
+    ]
+  },
+  "media_cleanup_2026_09_12": {
+    "before": "2077 MB (643 files)",
+    "after": "911 MB",
+    "freed": "1166 MB (56%)",
+    "actions": [
+      "emptied _trash (108 files)",
+      "removed temp_ff folders",
+      "deleted 59 published/intermediate outputs (416MB)",
+      "kept top-2 clips/topic, deleted 47 surplus clips (744MB)"
+    ],
+    "auto_cleaner": "ops/media_cleaner.py + auto_clean.bat",
+    "rule": "delete published outputs (on YouTube), keep only best clips/topic"
+  },
+  "dashboard_2026_09_12": {
+    "file": "dashboard.html (Apple-style, dark, minimal)",
+    "served_by": "ops/control_center.py index route",
+    "endpoints": [
+      "/api/status",
+      "/api/videos",
+      "/api/automation",
+      "/api/cleanup",
+      "/api/run"
+    ],
+    "features": [
+      "4 stat cards",
+      "published list",
+      "automation toggles",
+      "actions (clean/seo/publish)",
+      "auto-refresh 30s"
+    ],
+    "verified": "HTTP 200, all endpoints OK",
+    "run": "start_control_center.bat -> localhost:8787"
+  },
+  "desktop_launcher_2026_09_12": {
+    "desktop": "TNT Media.lnk",
+    "target": "venv python + control_center.py",
+    "auto_browser": "localhost:8787",
+    "icon": "dashboard_icon.ico",
+    "dashboard": "dashboard.html",
+    "status": "verified HTTP 200"
+  },
+  "dashboard_v2_2026_09_12": {
+    "type": "multi-channel, sidebar, 6 views (Apple-style)",
+    "views": [
+      "overview",
+      "videos",
+      "automation",
+      "content",
+      "analytics",
+      "activity"
+    ],
+    "sidebar": "channel list (multi-channel ready)",
+    "apis": [
+      "/api/status",
+      "/api/videos",
+      "/api/channels",
+      "/api/analytics",
+      "/api/content",
+      "/api/activity",
+      "/api/automation",
+      "/api/cleanup",
+      "/api/run"
+    ],
+    "channels_model": "memory/channels.json",
+    "verified": "9262 bytes, all views + APIs OK",
+    "scale": "designed for many channels - channels.json holds list"
+  },
+  "dashboard_v2_jsfix2_2026_09_12": {
+    "bug2": "Unexpected identifier ops",
+    "cause": "data-run=\"ops/..\" unescaped quotes in JS string",
+    "fix": "data-run= single quotes",
+    "favicon": "inline SVG added",
+    "verified": "9812 bytes, 0 odd-quote lines"
+  },
+  "dashboard_v2_FINAL_2026_09_12": {
+    "status": "COMPLETE - verified with esprima JS parser",
+    "js_valid": true,
+    "apis": "6/6 working",
+    "data_keys": "all match",
+    "favicon": "inline SVG",
+    "views": [
+      "overview",
+      "videos",
+      "automation",
+      "content",
+      "analytics",
+      "activity"
+    ],
+    "fixes": [
+      "sw quote",
+      "ops quote (data-run single quotes)",
+      "run() line corruption",
+      "favicon"
+    ],
+    "verification_tool": "esprima (real JS parser, not guessing)"
+  }
+}

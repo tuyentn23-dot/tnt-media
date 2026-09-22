@@ -1,0 +1,15 @@
+async function stats(){
+try{const d=await api('summary');const ch=await api('channels');
+const items=ch.items||[];const pub=items.reduce((a,x)=>a+(x.published||0),0);const en=items.filter(x=>x.enabled).length;
+document.getElementById('stats').innerHTML=
+'<div class=card><div class=lbl>Kenh hoat dong</div><div class=val>'+en+'/'+items.length+'</div></div>'+
+'<div class=card><div class=lbl>Tong video da dang</div><div class=val>'+pub+'</div></div>'+
+'<div class=card><div class=lbl>Tong video</div><div class=val>'+(d.videos||0)+'</div></div>'+
+'<div class=card><div class=lbl>Da publish</div><div class=val>'+(d.published||0)+'</div></div>';
+}catch(e){document.getElementById('stats').innerHTML='<div class=card>Loi: '+esc(e.message)+'</div>'}}
+async function render(){document.getElementById('view').innerHTML='<div class=panel>Dang tai...</div>';await stats();
+if(cur==='overview')return ov();if(cur==='channels')return chs();if(cur==='content')return ct();if(cur==='publish')return pub();if(cur==='history')return hist();if(cur==='logs')return logs()}
+async function ov(){const d=await api('summary');const c=await api('charts');
+let h='<div class=panel><h2>Trang thai he thong</h2><pre>'+esc(JSON.stringify(d,null,2))+'</pre></div>';
+h+='<div class=panel><h2>Bieu do theo chu de</h2><pre>'+esc(JSON.stringify(c,null,2))+'</pre></div>';
+document.getElementById('view').innerHTML=h}

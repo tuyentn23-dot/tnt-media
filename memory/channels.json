@@ -1,0 +1,12 @@
+{
+  "channels": [
+    {
+      "id": "UCbblZzHm3CZzmoUZznfIoTg",
+      "name": "TNT Media",
+      "active": true,
+      "token": "token.pickle",
+      "niche": "space/psychology/animal"
+    }
+  ],
+  "active": "UCbblZzHm3CZzmoUZznfIoTg"
+}

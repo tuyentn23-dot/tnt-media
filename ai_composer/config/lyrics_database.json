@@ -1,0 +1,47 @@
+{
+  "ballad_love": {
+    "title": "Nho Em",
+    "verses": [
+      "Anh nho em, nho tung khoanh khac",
+      "Tinh yeu nay van con day nhung dau",
+      "Gio day em da di xa roi",
+      "Nhung long anh van mai khong phai"
+    ],
+    "chorus": [
+      "Yeu em, yeu em mai khong thoi",
+      "Du cho bao giong to co qua day",
+      "Anh van dung day, van yeu em",
+      "Tinh yeu nay mai khong phai"
+    ]
+  },
+  "pop_hope": {
+    "title": "Hy Vong",
+    "verses": [
+      "Nang mai len, gio thoi nhe nhang",
+      "Long nhu mo ra, bao hy vong moi",
+      "Duong phia truoc van con dai",
+      "Nhung ta se buoc tiep, khong ngung"
+    ],
+    "chorus": [
+      "Hay tin vao ngay mai tuoi sang",
+      "Hay tin vao nhung dieu tot dep",
+      "Ta se vuot qua tat ca",
+      "Den ben bo vinh quang"
+    ]
+  },
+  "lofi_peace": {
+    "title": "Binh Yen",
+    "verses": [
+      "Chieu buong roi, nang nhat dan",
+      "Ta ngoi day, lang nghe long minh",
+      "Cuoc song nay that an binh",
+      "Khi ta biet du la du"
+    ],
+    "chorus": [
+      "Binh yen oi, hay den day",
+      "Cho long ta lang xuong",
+      "Bo het nhung muon phien",
+      "Chi con lai su thanh than"
+    ]
+  }
+}

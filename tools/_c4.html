@@ -1,0 +1,10 @@
+async function chs(){const d=await api('channels');const items=d.items||[];
+let h='<div class=panel><h2>Quan ly kenh <button class="btn ok" onclick="runAll()">Auto dang tat ca (2/kenh)</button></h2><table><thead><tr><th>Kenh</th><th>Trang thai</th><th>Kinds</th><th>Video moi</th><th>Da dang</th><th>Hanh dong</th></tr></thead><tbody>';
+items.forEach(x=>{const fresh=x.fresh||{};const total=Object.values(fresh).reduce((a,b)=>a+b,0);
+h+='<tr><td><b>'+esc(x.name||x.id)+'</b><br><span style=color:#8b97a8;font-size:11px>'+esc(x.id)+'</span></td>';
+h+='<td><span class="badge '+(x.enabled?'b-ok':'b-bad')+'">'+(x.enabled?'BAT':'TAT')+'</span></td>';
+h+='<td>'+esc((x.kinds||[]).join(', '))+'</td>';
+h+='<td>'+(total>0?'<span class="badge b-warn">'+total+' moi</span>':'0')+'</td>';
+h+='<td>'+esc(x.published||0)+'</td>';
+h+='<td><button class="btn '+(x.enabled?'bad':'ok')+'" onclick="tog(&quot;'+x.id+'&quot;,'+(x.enabled?'false':'true')+')">'+(x.enabled?'Tat':'Bat')+'</button> <button class="btn" onclick="runOne(&quot;'+x.id+'&quot;)">Dang ngay</button></td></tr>'});
+h+='</tbody></table></div>';document.getElementById('view').innerHTML=h}

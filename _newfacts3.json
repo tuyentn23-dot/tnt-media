@@ -1,0 +1,92 @@
+[
+ {
+  "id": "mantis_shrimp",
+  "topic": "animal",
+  "hook": "Tôm bọ ngựa đấm mạnh bằng đạn súng.",
+  "body": "Cú đấm của nó nhanh tới mức đun sôi nước xung quanh, tạo bong bóng ánh sáng.",
+  "payoff": "Lực đủ làm vỡ kính bể cá. Đó là một trong những cú đấm nhanh nhất tự nhiên.",
+  "question": "Bạn nghĩ con gì mạnh nhất?",
+  "search_query": "mantis shrimp colorful ocean"
+ },
+ {
+  "id": "tardigrade_space",
+  "topic": "animal",
+  "hook": "Có sinh vật sống được cả trong vũ trụ.",
+  "body": "Tardigrade (gấu nước) sống sót trong chân không, bức xạ, và nhiệt độ cực hạn.",
+  "payoff": "Chúng có thể tồn tại hàng thập kỷ không cần nước.",
+  "question": "Bạn có tin có sinh vật bất tử?",
+  "search_query": "microscope organism cells"
+ },
+ {
+  "id": "aurora_sound",
+  "topic": "nature",
+  "hook": "Cực quang phát ra âm thanh.",
+  "body": "Khi cực quang mạnh, nó tạo tiếng rắc nhỏ mà tai người có thể nghe trong im lặng.",
+  "payoff": "Âm thanh do các hạt tích điện va vào khí quyển.",
+  "question": "Bạn muốn thấy cực quang chứ?",
+  "search_query": "aurora borealis northern lights"
+ },
+ {
+  "id": "diamond_rain",
+  "topic": "space",
+  "hook": "Trên Sao Hải Vương có mưa kim cương.",
+  "body": "Áp suất cực lớn biến khí methane thành kim cương rơi xuống.",
+  "payoff": "Đó là cơn mưa đắt nhất vũ trụ.",
+  "question": "Bạn có muốn tới đó không?",
+  "search_query": "neptune planet space blue"
+ },
+ {
+  "id": "human_glow",
+  "topic": "body",
+  "hook": "Cơ thể người phát sáng trong bóng tối.",
+  "body": "Bạn phát ra ánh sáng cực yếu, mạnh nhất vào buổi chiều, do phản ứng hóa học tế bào.",
+  "payoff": "Mắt người không đủ nhạy để thấy, nhưng camera chuyên dụng thì có.",
+  "question": "Bạn có biết mình phát sáng không?",
+  "search_query": "human silhouette dark light"
+ },
+ {
+  "id": "blue_whale_heart",
+  "topic": "animal",
+  "hook": "Tim cá voi xanh to bằng một chiếc xe hơi.",
+  "body": "Tim nặng 600kg, và động mạch đủ lớn để một người bơi qua.",
+  "payoff": "Lưỡi nó nặng bằng cả một con voi.",
+  "question": "Bạn có tin nổi không?",
+  "search_query": "whale ocean giant blue"
+ },
+ {
+  "id": "lightning_hot",
+  "topic": "nature",
+  "hook": "Sét nóng gấp 5 lần bề mặt Mặt Trời.",
+  "body": "Tia sét đạt 30.000 độ C, nóng hơn cả bề mặt Mặt Trời (5.500 độ).",
+  "payoff": "Nó chỉ kéo dài vài phần triệu giây nhưng đủ gây cháy.",
+  "question": "Bạn sợ sấm sét không?",
+  "search_query": "lightning storm dark sky"
+ },
+ {
+  "id": "sand_count",
+  "topic": "nature",
+  "hook": "Trái Đất có nhiều ngôi sao hơn hạt cát?",
+  "body": "Ước tính vũ trụ có 200 tỷ tỷ ngôi sao, nhiều hơn mọi hạt cát trên Trái Đất.",
+  "payoff": "Bạn là duy nhất trong vũ trụ bao la này.",
+  "question": "Bạn có thấy mình nhỏ bé không?",
+  "search_query": "starry night sky galaxy"
+ },
+ {
+  "id": "frozen_frog",
+  "topic": "animal",
+  "hook": "Có loài ếch đóng băng rồi sống lại.",
+  "body": "Ếch gỗ Bắc Mỹ đóng băng vào mùa đông, tim ngừng đập, rồi tan băng và hồi sinh vào xuân.",
+  "payoff": "Cơ thể nó sản xuất chất chống đông tự nhiên.",
+  "question": "Bạn có tin điều này thật không?",
+  "search_query": "frog winter ice nature"
+ },
+ {
+  "id": "venus_day",
+  "topic": "space",
+  "hook": "Một ngày trên Sao Kim dài hơn một năm.",
+  "body": "Sao Kim quay quanh trục mất 243 ngày Trái Đất, nhưng quay quanh Mặt Trời chỉ 225 ngày.",
+  "payoff": "Ngày còn dài hơn năm, và nó quay ngược chiều.",
+  "question": "Bạn có bối rối không?",
+  "search_query": "venus planet space clouds"
+ }
+]

@@ -1,0 +1,29 @@
+{
+ "ok": true,
+ "at": "2026-09-22T15:32:46",
+ "tiers": [
+  {
+   "tier": 1,
+   "ab_experiments": [
+    "ab_32",
+    "ab_31",
+    "ab_30"
+   ]
+  },
+  {
+   "tier": 2,
+   "ok": true,
+   "topics": 14,
+   "formats": 2
+  },
+  {
+   "tier": 3,
+   "generated": [
+    {
+     "name": "gen_d7ad3c2a",
+     "path": "memory\\gen_tools\\gen_d7ad3c2a.py"
+    }
+   ]
+  }
+ ]
+}

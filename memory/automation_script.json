@@ -1,0 +1,18 @@
+{
+  "target": "FEzBQf2QDI4",
+  "execution_plan": {
+    "step_1": "Share link to all social platforms",
+    "step_2": "Post in relevant groups and communities",
+    "step_3": "Engage with existing comments",
+    "step_4": "Create reaction/response videos",
+    "step_5": "Build backlinks from forums",
+    "step_6": "Cross-promote on other channels",
+    "step_7": "Use trending hashtags consistently",
+    "step_8": "Monitor analytics and adjust"
+  },
+  "message_templates": {
+    "share": "Check out this amazing video! https://youtube.com/shorts/FEzBQf2QDI4 #shorts #viral #fyp",
+    "comment": "This is incredible! Sharing with everyone!",
+    "promo": "Dont miss this viral short! https://youtube.com/shorts/FEzBQf2QDI4"
+  }
+}

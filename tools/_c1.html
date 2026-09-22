@@ -1,0 +1,22 @@
+<!doctype html><html lang=vi><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>TNT Media - Control Center</title><style>
+:root{--bg:#0a0d12;--panel:#111722;--panel2:#161d2b;--line:#1f2836;--txt:#e6edf3;--mut:#8b97a8;--acc:#4f8cff;--ok:#2ecc71;--warn:#f5a623;--bad:#ff5c5c}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--txt);font-size:14px}
+.top{display:flex;justify-content:space-between;align-items:center;padding:14px 22px;border-bottom:1px solid var(--line);background:var(--panel);position:sticky;top:0;z-index:9}
+.top h1{font-size:18px}.top .sub{color:var(--mut);font-size:12px}
+.wrap{max-width:1280px;margin:0 auto;padding:18px 22px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-bottom:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
+.card .lbl{color:var(--mut);font-size:12px}.card .val{font-size:24px;font-weight:700;margin-top:4px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:16px}
+.panel h2{font-size:15px;margin-bottom:12px}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);font-size:13px}th{color:var(--mut);font-size:12px}
+.btn{background:var(--acc);color:#fff;border:0;border-radius:7px;padding:8px 13px;font-size:13px;cursor:pointer;margin:2px}
+.btn.ok{background:var(--ok)}.btn.bad{background:var(--bad)}.btn.ghost{background:var(--panel2);border:1px solid var(--line)}
+.badge{padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
+.b-ok{background:rgba(46,204,113,.15);color:var(--ok)}.b-bad{background:rgba(255,92,92,.15);color:var(--bad)}.b-warn{background:rgba(245,166,35,.15);color:var(--warn)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+pre{background:#0d1320;border:1px solid var(--line);border-radius:8px;padding:12px;font-size:12px;white-space:pre-wrap;max-height:340px;overflow:auto}
+.tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}.tabs button{background:var(--panel);border:1px solid var(--line);color:var(--mut);padding:8px 14px;border-radius:7px;cursor:pointer}.tabs button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--panel2);border:1px solid var(--line);padding:12px 18px;border-radius:8px;display:none}
+</style></head><body>

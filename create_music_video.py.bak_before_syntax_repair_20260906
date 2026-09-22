@@ -1,0 +1,40 @@
+import numpy as np
+import cv2
+import os
+
+width = 1080
+height = 1920
+fps = 30
+duration = 15
+
+os.makedirs('output/music_videos', exist_ok=True)
+video_file = 'output/music_videos/ballad_visualizer.mp4'
+fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+out = cv2.VideoWriter(video_file, fourcc, fps, (width, height))
+
+frames = []
+for i in range(fps * duration):
+ t = i / fps
+ frame = np.zeros((height, width, 3), dtype=np.uint8)
+ y_values = np.arange(height).reshape(-1, 1)
+ ratio = y_values / height
+ frame[:, :, 0] = (30 * (1 - ratio)).astype(np.uint8)
+ frame[:, :, 1] = (20 * (1 - ratio)).astype(np.uint8)
+ frame[:, :, 2] = (60 + 100 * ratio).astype(np.uint8)
+ center_x = width // 2
+ center_y = height // 2
+ radii = [int(100 + 80 * j + 30 * np.sin(t * 2 + j)) for j in range(5)]
+ for radius in radii:
+ cv2.circle(frame, (center_x, center_y), radius, (255, 200, 255), 3)
+ x_values = np.arange(width)
+ y_positions = (center_y + 200 * np.sin(x_values / 100 + t)).astype(int)
+ valid = (y_positions >= 0) & (y_positions < height)
+ frame[y_positions[valid], x_values[valid]] = [255, 255, 255]
+ frames.append(frame)
+
+for frame in frames:
+ out.write(frame)
+
+out.release()
+print('Visualizer created:', video_file)
+print('File size:', os.path.getsize(video_file), 'bytes')

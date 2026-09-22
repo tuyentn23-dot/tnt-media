@@ -1,0 +1,44 @@
+{
+  "id": "template",
+  "name": "Template Channel",
+  "enabled": false,
+  "token_file": "config/token.pickle",
+  "style": {
+    "language": "vi",
+    "voice": "female_soft",
+    "music_genre": "mystery",
+    "color_primary": "#1a1a2e",
+    "color_accent": "#e94560",
+    "font": "Arial-Bold",
+    "font_size": 70,
+    "watermark": "@template",
+    "intro_seconds": 0.8,
+    "outro_seconds": 1.2,
+    "aspect": "9:16",
+    "max_duration_sec": 58
+  },
+  "content": {
+    "kinds": [
+      "whatif"
+    ],
+    "category_id": "28",
+    "tags_base": [
+      "shorts"
+    ],
+    "title_template": "{hook}",
+    "desc_template": "{body} {payoff}",
+    "topic_pool_file": "topic_pool.json"
+  },
+  "schedule": {
+    "enabled": false,
+    "interval_min": 60,
+    "batch": 2,
+    "post_hours": [
+      6,
+      11,
+      15,
+      19,
+      22
+    ]
+  }
+}

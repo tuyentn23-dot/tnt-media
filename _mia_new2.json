@@ -1,0 +1,56 @@
+[
+ {
+  "id": "anime_sailormoon",
+  "topic": "anime",
+  "hook": "Sailor Moon là anime biến hình đầu tiên nổi tiếng toàn cầu",
+  "body": "Thủy thủ Mặt Trăng mở đường cho dòng anime magical girl khắp thế giới.",
+  "payoff": "Nó truyền cảm hứng cho hàng nghìn bộ truyện sau này.",
+  "question": "Bạn thích nhân vật biến hình nào?",
+  "search_query": "anime magical girl colorful"
+ },
+ {
+  "id": "roblox_piggy",
+  "topic": "roblox",
+  "hook": "Bí mật đáng sợ trong Piggy",
+  "body": "Piggy là game kinh dị Roblox nổi tiếng, người chơi phải trốn con heo biến dị.",
+  "payoff": "Có nhiều ending bí ẩn ít ai đạt được.",
+  "question": "Bạn dám chơi một mình không?",
+  "search_query": "dark horror house night"
+ },
+ {
+  "id": "roblox_arsenal",
+  "topic": "roblox",
+  "hook": "Súng nào mạnh nhất Arsenal?",
+  "body": "Arsenal là game bắn súng Roblox với hàng trăm loại vũ khí.",
+  "payoff": "Một số súng chỉ mở khóa khi đạt level cao.",
+  "question": "Bạn thích súng nào?",
+  "search_query": "colorful toy weapons game"
+ },
+ {
+  "id": "roblox_jailbreak",
+  "topic": "roblox",
+  "hook": "Trốn tù trong Jailbreak khó cỡ nào?",
+  "body": "Jailbreak là game Roblox về trốn khỏi nhà tù và trốn cảnh sát.",
+  "payoff": "Người chơi giỏi có thể trốn trong vài giây.",
+  "question": "Bạn trốn giỏi không?",
+  "search_query": "police car city street"
+ },
+ {
+  "id": "animal_panda",
+  "topic": "cute_animals",
+  "hook": "Gấu trúc ăn 12 tiếng mỗi ngày",
+  "body": "Gấu trúc dành gần nửa ngày để ăn tre, vì tre ít dinh dưỡng.",
+  "payoff": "Đó là lý do nó lười và dễ thương.",
+  "question": "Bạn thích gấu trúc không?",
+  "search_query": "panda eating bamboo cute"
+ },
+ {
+  "id": "animal_fennec",
+  "topic": "cute_animals",
+  "hook": "Cáo Fennec có tai to hơn đầu",
+  "body": "Tai to giúp Fennec tản nhiệt và nghe được con mồi dưới cát.",
+  "payoff": "Nó là loài cáo nhỏ nhất thế giới.",
+  "question": "Bạn thấy tai nó đáng yêu không?",
+  "search_query": "fennec fox desert cute"
+ }
+]

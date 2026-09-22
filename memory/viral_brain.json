@@ -1,0 +1,55 @@
+{
+  "updated": "2026-09-12 22:27",
+  "winners": [
+    {
+      "id": "76obObOgiLs",
+      "views": 1262,
+      "likes": 12,
+      "comments": 1,
+      "status": "public",
+      "score": 801.0
+    },
+    {
+      "id": "I3sMT5Ha-sQ",
+      "views": 1277,
+      "likes": 11,
+      "comments": 0,
+      "status": "public",
+      "score": 748.5
+    },
+    {
+      "id": "Ep0B2Q8w_s4",
+      "views": 1237,
+      "likes": 11,
+      "comments": 0,
+      "status": "public",
+      "score": 728.5
+    },
+    {
+      "id": "ZA_HunSMw_Y",
+      "views": 1143,
+      "likes": 8,
+      "comments": 0,
+      "status": "public",
+      "score": 651.5
+    },
+    {
+      "id": "bibhwcv4-9g",
+      "views": 921,
+      "likes": 7,
+      "comments": 0,
+      "status": "public",
+      "score": 530.5
+    },
+    {
+      "id": "oMx4qZFlRq0",
+      "views": 936,
+      "likes": 4,
+      "comments": 0,
+      "status": "public",
+      "score": 508.0
+    }
+  ],
+  "losers": 0,
+  "total": 7
+}

@@ -1,0 +1,52 @@
+{
+  "lifestyle": [
+    {
+      "id": "life_morning_1",
+      "topic": "lifestyle",
+      "hook": "Buổi sáng của người Nhật có gì đặc biệt?",
+      "body": "Người Nhật thường dậy từ 5h sáng, dọn dẹp nhà cửa và chuẩn bị bữa sáng tỉ mỉ cho gia đình.",
+      "payoff": "Thói quen này giúp họ sống khỏe mạnh và bình an hơn!",
+      "question": "Bạn dậy lúc mấy giờ?"
+    }
+  ],
+  "food": [
+    {
+      "id": "food_pho_1",
+      "topic": "food",
+      "hook": "Phở Việt Nam có từ bao giờ?",
+      "body": "Phở xuất hiện đầu thế kỷ 20 tại miền Bắc, kết hợp văn hóa ẩm thực Pháp và Việt.",
+      "payoff": "Đến nay phở đã thành biểu tượng ẩm thực toàn cầu!",
+      "question": "Bạn thích phở bò hay phở gà?"
+    }
+  ],
+  "animals": [
+    {
+      "id": "animal_dolphin_1",
+      "topic": "animals",
+      "hook": "Cá heo có thật sự giao tiếp bằng tên gọi?",
+      "body": "Cá heo phát ra âm thanh riêng để gọi tên nhau, giống như con người.",
+      "payoff": "Chúng có văn hóa xã hội phức tạp hơn ta tưởng!",
+      "question": "Bạn có tin điều này không?"
+    }
+  ],
+  "nostalgia": [
+    {
+      "id": "nost_90s_1",
+      "topic": "nostalgia",
+      "hook": "Tuổi thơ 9x Việt Nam có gì?",
+      "body": "Kẹo kéo, bi ve, nhảy dây, truyện tranh Đôrêmôn là những ký ức không thể quên.",
+      "payoff": "Thời đó nghèo mà vui hơn bây giờ!",
+      "question": "Bạn nhớ nhất điều gì?"
+    }
+  ],
+  "curiosity": [
+    {
+      "id": "cur_why_sky_1",
+      "topic": "curiosity",
+      "hook": "Vì sao bầu trời màu xanh?",
+      "body": "Ánh sáng mặt trời tán xạ qua khí quyển, màu xanh lam bị tán xạ mạnh nhất.",
+      "payoff": "Đó là lý do bầu trời xanh và hoàng hôn đỏ!",
+      "question": "Bạn có từng tự hỏi điều này?"
+    }
+  ]
+}

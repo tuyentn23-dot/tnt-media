@@ -1,0 +1,21 @@
+import json, os
+from datetime import datetime
+
+class MusicPDCA:
+def setup(self):
+self.path = 'memory/music_pdca_cycles.json'
+self.cycles = []
+
+def run_cycle(self):
+cycle = {
+'id': 'PDCA-' + str(len(self.cycles) + 1).zfill(4),
+'start': datetime.now().isoformat(),
+'status': 'running'
+}
+self.cycles.append(cycle)
+return cycle
+
+pdca = MusicPDCA()
+pdca.setup()
+cycle = pdca.run_cycle()
+print('PDCA Cycle:', cycle['id'])

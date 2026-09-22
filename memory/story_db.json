@@ -1,0 +1,100 @@
+{
+  "stories": [
+    {
+      "id": "octopus",
+      "topic": "animal",
+      "hook": "Con bach tuoc co 3 trai tim.",
+      "body": "Nhung do khong phai dieu ky la nhat. Mau cua no trong xanh vi dua tren dong, khong phai sat nhu con nguoi.",
+      "payoff": "Va no co the tu cat 1 canh tay de thoat hiem, roi moc lai canh moi.",
+      "emotion": "awe"
+    },
+    {
+      "id": "brain_bear",
+      "topic": "psychology",
+      "hook": "Dung co nghi den con gau trang ngay bay gio.",
+      "body": "Ban vua nghi roi dung khong? Do la ironic process theory. Nao cang co ngan cam, cang lam dieu do xuat hien.",
+      "payoff": "Bi quyet that su: dung tranh no. Hay thay the bang 1 suy nghi khac.",
+      "emotion": "surprise"
+    },
+    {
+      "id": "heart_blue",
+      "topic": "animal",
+      "hook": "Trai tim con ca voi xanh to bang 1 chiec xe hoi.",
+      "body": "Nhung no dap chi 8 lan 1 phut. Cham den muc ban co the nghe thay tu 3km duoi nuoc.",
+      "payoff": "Va dong mach cua no rong den muc 1 nguoi co the boi qua.",
+      "emotion": "awe"
+    },
+    {
+      "id": "sleep_8sec",
+      "topic": "science",
+      "hook": "Ban mat 8 giay de ngu.",
+      "body": "Trong 8 giay do, nao ban tao ra 1 the gioi ma ban khong he biet. Do la luc ban mo.",
+      "payoff": "Nhung neu ban thuc day trong luc mo, ban co the dieu khien duoc giac mo. Goi la lucid dreaming.",
+      "emotion": "wonder"
+    },
+    {
+      "id": "shark_older",
+      "topic": "animal",
+      "hook": "Ca map gia hon cay coi.",
+      "body": "Ca map xuat hien truoc cay xanh 150 trieu nam. Chung song sot qua 5 cuoc dai tuyet dien.",
+      "payoff": "Va moi nam chung thay 30.000 rang. Ca doi co the thay 50.000 cai.",
+      "emotion": "awe"
+    },
+    {
+      "id": "dunbar",
+      "topic": "psychology",
+      "hook": "Ban chi co the co 150 nguoi ban that su.",
+      "body": "Do la so Dunbar. Na boc cua ban khong the xu ly nhieu hon. Vuot qua, ban bat dau quen.",
+      "payoff": "Nhung trong 150 do, chi 5 nguoi that su quan trong. Ban dang lang phi thoi gian cho ai?",
+      "emotion": "realization"
+    },
+    {
+      "id": "ant_super",
+      "topic": "animal",
+      "hook": "Kien co the nang gap 50 lan trong luong co the.",
+      "body": "Neu con nguoi manh nhu kien, 1 nguoi co the nang 1 chiec xe tai.",
+      "payoff": "Nhung kien khong co phoi. Chung tho qua nhung lo hong tren co the. Do la ly do chung song duoc moi noi.",
+      "emotion": "awe"
+    },
+    {
+      "id": "dark_side",
+      "topic": "psychology",
+      "hook": "Moi nguoi deu co 1 phan toi.",
+      "body": "Do la shadow self theo Jung. Nhung gi ban ghet o nguoi khac, thuong la thu ban khong dam thua nhan o chinh minh.",
+      "payoff": "Khi ban chap nhan no, ban khong con bi no dieu khien nua.",
+      "emotion": "realization"
+    },
+    {
+      "id": "water_memory",
+      "topic": "science",
+      "hook": "Nuoc co the nho.",
+      "body": "Khong phai theo cach huyen bi. Nhung phan tu nuoc lien ket voi nhau, tao thanh 1 mang thong tin khong lo.",
+      "payoff": "Co the cua ban cung vay. 60% cua ban la nuoc dang ghi lai moi thu.",
+      "emotion": "wonder"
+    },
+    {
+      "id": "crow_funeral",
+      "topic": "animal",
+      "hook": "Qua to chuc dam tang.",
+      "body": "Khi 1 con qua chet, dan qua tu tap lai. Chung khong chi thuong tiec. Chung dang dieu tra.",
+      "payoff": "Neu chung thay nguoi gay ra cai chet, chung se ghi nho khuon mat do suot doi.",
+      "emotion": "fear"
+    },
+    {
+      "id": "tetris",
+      "topic": "psychology",
+      "hook": "Choi game co the thay doi cach ban nhin the gioi.",
+      "body": "Sau khi choi Tetris nhieu, nao ban tu dong ghep cac vat the thanh hang. Goi la Tetris effect.",
+      "payoff": "Dieu nay co nghia: ban co the \"cai dat\" nao minh bang cach lam 1 viec lap di lap lai.",
+      "emotion": "wonder"
+    },
+    {
+      "id": "moon_smell",
+      "topic": "science",
+      "hook": "Mat trang co mui.",
+      "body": "Do la mui thuoc sung va bot da chay trong khong khi. Khi nguoi dat buoc len, mui nay bam vao do.",
+      "payoff": "Cac phi hanh gia noi rang no giong mui thubet sung sau khi ban.",
+      "emotion": "surprise"
+    }
+  ]
+}

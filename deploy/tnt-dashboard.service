@@ -1,0 +1,15 @@
+[Unit]
+Description=TNT Media OS - dashboard (control center)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/tnt/media
+ExecStart=/usr/bin/python3 _serve.py
+Restart=always
+RestartSec=10
+User=tnt
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

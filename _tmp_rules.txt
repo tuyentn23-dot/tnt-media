@@ -1,0 +1,53 @@
+0: # AGENT RULES — Hiến pháp làm việc của TNT Media OS
+1: 
+2: Áp dụng cho MỌI phiên agent. Đọc trước khi làm bất cứ gì.
+3: 
+4: ## 5 QUY TẮC BẤT DI BẤT DỊCH
+5: 
+6: ### QT1 — Mục tiêu trước, giải pháp sau
+7: Trước khi viết gì, tự hỏi: "User muốn KẾT QUẢ gì?" (không phải CÁCH gì).
+8: Kết quả là cái bất biến. Cách là cái thay được.
+9: 
+10: ### QT2 — Chọn cách đơn giản nhất chạy được
+11: Thứ tự ưu tiên (chọn bậc THẤP NHẤT đủ dùng):
+12: 1. File tĩnh (JSON/MD) — đọc được là xong
+13: 2. Script 1 lần (python x.py) — cần logic
+14: 3. Script chạy nền — chỉ khi bắt buộc
+15: 4. Server / daemon — chỉ khi 3 cái trên không đủ
+16: 5. Cloud — chỉ khi máy tắt vẫn cần chạy
+17: 
+18: Không được nhảy bậc. Bậc 2 đủ thì KHÔNG dùng bậc 4.
+19: 
+20: ### QT3 — Fail 2 lần thì ĐỔI CÁCH
+21: Cùng 1 cách fail 2 lần:
+22: - KHÔNG sửa tiếp cách đó
+23: - DỪNG, phân tích vì sao fail
+24: - Chọn cách khác ở bậc thấp hơn (QT2)
+25: 
+26: ### QT4 — Tôn trọng giới hạn kênh
+27: Wrapper này có giới hạn VẬT LÝ (xem WRAPPER_RULES.md).
+28: Khi chọn cách, hỏi: "Cách này có vượt giới hạn không?"
+29: Nếu có → chọn cách khác. KHÔNG cố lách.
+30: 
+31: ### QT5 — Fail 3 lần thì BÁO USER
+32: Sau 3 lần thử fail:
+33: - DỪNG
+34: - Nói thẳng: "Cách X không khả thi. Đề xuất cách Y."
+35: - Để user quyết
+36: Không tự đâm tiếp.
+37: 
+38: ## CHECKLIST TRƯỚC MỌI VIỆC LỚN
+39: 
+40: 1. Kết quả user muốn là gì? (1 câu)
+41: 2. Cách đơn giản nhất đạt kết quả đó? (bậc thấp nhất — QT2)
+42: 3. Cách đó có vượt giới hạn kênh không? (QT4)
+43: 4. Nếu fail 2 lần, tôi đổi sang cách nào? (QT3)
+44: 5. Khi nào tôi báo user? (sau 3 lần — QT5)
+45: 
+46: ## NGUYÊN TẮC BỔ SUNG
+47: 
+48: - Kết quả > Cách. Kết quả > Code đẹp. Kết quả > Sự hoàn hảo.
+49: - Cái gì chạy được và đơn giản > cái gì đẹp và phức tạp.
+50: - Ghi mọi quyết định vào file để phiên sau đọc. Trí nhớ agent KHÔNG tồn tại giữa các phiên.
+51: - Nếu không chắc, chọn cách đơn giản hơn và hỏi user.
+52: - Không bao giờ sửa file ngoài workspace media/ mà không hỏi.

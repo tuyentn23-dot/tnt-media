@@ -1,0 +1,56 @@
+[
+ {
+  "id": "food_banhmi",
+  "topic": "food",
+  "hook": "Bánh mì Việt Nam được cả thế giới mê",
+  "body": "Bánh mì từng được bình chọn là một trong những món sandwich ngon nhất hành tinh.",
+  "payoff": "Sự kết hợp giữa Pháp và Việt tạo nên huyền thoại.",
+  "question": "Bạn thích bánh mì nhân gì?",
+  "search_query": "vietnamese banh mi sandwich street food"
+ },
+ {
+  "id": "food_pho",
+  "topic": "food",
+  "hook": "Phở mất 12 tiếng để nấu nước dùng",
+  "body": "Nước dùng phở truyền thống ninh xương bò suốt nhiều giờ với quế hồi.",
+  "payoff": "Đó là lý do phở ngon khó quên.",
+  "question": "Bạn thích phở bò hay gà?",
+  "search_query": "vietnamese pho noodle soup"
+ },
+ {
+  "id": "life_rain",
+  "topic": "lifestyle",
+  "hook": "Nghe tiếng mưa giúp ngủ ngon hơn",
+  "body": "Tiếng mưa là white noise tự nhiên giúp não thư giãn và dễ ngủ.",
+  "payoff": "Đó là lý do nhiều người mở tiếng mưa để ngủ.",
+  "question": "Bạn có thích nghe mưa không?",
+  "search_query": "rain window cozy relaxing"
+ },
+ {
+  "id": "life_coffee",
+  "topic": "lifestyle",
+  "hook": "Cà phê Việt đậm nhất thế giới",
+  "body": "Cà phê phin Việt dùng robusta đậm gấp đôi arabica thông thường.",
+  "payoff": "Một ly cà phê sữa đá đánh thức cả buổi sáng.",
+  "question": "Bạn uống cà phê mấy ly một ngày?",
+  "search_query": "vietnamese coffee drip"
+ },
+ {
+  "id": "nost_tet",
+  "topic": "nostalgia",
+  "hook": "Tết xưa có gì mà ai cũng nhớ?",
+  "body": "Pháo hoa, bánh chưng, lì xì đỏ - những ký ức Tết khó phai.",
+  "payoff": "Càng lớn càng thấy Tết quý giá.",
+  "question": "Ký ức Tết của bạn là gì?",
+  "search_query": "vietnamese tet festival red"
+ },
+ {
+  "id": "cur_why_yawh",
+  "topic": "curiosity",
+  "hook": "Vì sao chúng ta ngáp?",
+  "body": "Ngáp có thể giúp điều hòa nhiệt độ não và tăng tỉnh táo.",
+  "payoff": "Ngáp còn lây sang người khác vì đồng cảm.",
+  "question": "Bạn vừa ngáp khi xem không?",
+  "search_query": "person yawning tired"
+ }
+]

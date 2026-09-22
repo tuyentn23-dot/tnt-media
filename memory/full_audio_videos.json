@@ -1,0 +1,23 @@
+{
+  "videos": [
+    {
+      "id": "OnXaScuuf_A",
+      "title": "Nho Em (Full Audio + Lyrics)",
+      "genre": "Ballad",
+      "has_audio": true
+    },
+    {
+      "id": "pMnsH04KD1w",
+      "title": "Hy Vong (Full Audio + Lyrics)",
+      "genre": "Pop",
+      "has_audio": true
+    },
+    {
+      "id": "awuC9IPiPcY",
+      "title": "Binh Yen (Full Audio + Lyrics)",
+      "genre": "Lofi",
+      "has_audio": true
+    }
+  ],
+  "total": 3
+}

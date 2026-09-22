@@ -1,0 +1,85 @@
+{
+  "productions": [
+    {
+      "id": "MUSIC-0001",
+      "title": "love_ballad",
+      "genre": "ballad",
+      "emotion": "love",
+      "bpm": 65,
+      "created_at": "2026-09-06T00:17:42.319697",
+      "status": "published"
+    },
+    {
+      "id": "MUSIC-0002",
+      "title": "joy_pop",
+      "genre": "pop",
+      "emotion": "joy",
+      "bpm": 110,
+      "created_at": "2026-09-06T00:17:42.319755",
+      "status": "published"
+    },
+    {
+      "id": "MUSIC-0003",
+      "title": "sadness_edm",
+      "genre": "edm",
+      "emotion": "sadness",
+      "bpm": 128,
+      "created_at": "2026-09-06T00:17:42.319762",
+      "status": "published"
+    },
+    {
+      "id": "MUSIC-0004",
+      "title": "love_ballad",
+      "genre": "ballad",
+      "emotion": "love",
+      "bpm": 65,
+      "created_at": "2026-09-06T00:19:50.052507",
+      "status": "published"
+    },
+    {
+      "id": "MUSIC-0005",
+      "title": "joy_pop",
+      "genre": "pop",
+      "emotion": "joy",
+      "bpm": 110,
+      "created_at": "2026-09-06T00:19:50.052561",
+      "status": "published"
+    },
+    {
+      "id": "MUSIC-0006",
+      "title": "sadness_edm",
+      "genre": "edm",
+      "emotion": "sadness",
+      "bpm": 128,
+      "created_at": "2026-09-06T00:19:50.052568",
+      "status": "published"
+    },
+    {
+      "id": "MUSIC-0007",
+      "title": "love_ballad",
+      "genre": "ballad",
+      "emotion": "love",
+      "bpm": 65,
+      "created_at": "2026-09-06T08:16:07.087597",
+      "status": "published"
+    },
+    {
+      "id": "MUSIC-0008",
+      "title": "joy_pop",
+      "genre": "pop",
+      "emotion": "joy",
+      "bpm": 110,
+      "created_at": "2026-09-06T08:16:07.087673",
+      "status": "published"
+    },
+    {
+      "id": "MUSIC-0009",
+      "title": "sadness_edm",
+      "genre": "edm",
+      "emotion": "sadness",
+      "bpm": 128,
+      "created_at": "2026-09-06T08:16:07.087682",
+      "status": "published"
+    }
+  ]
+}

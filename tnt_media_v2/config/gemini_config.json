@@ -1,0 +1,27 @@
+{
+  "api_keys": [
+    {
+      "key": "AQ.Ab8RN6LxCSkWQlEjMxRTzzLYxvwjQEKin9dvTnIsHWCJWPPCNg",
+      "note": "Primary key - Gemini 2.5 Flash",
+      "status": "valid",
+      "priority": 1
+    },
+    {
+      "key": "AQ.Ab8RN6KLRNWeZr3yF09EtVo3Cvaxkhy_n8qIBFupJMTLbWcmmw",
+      "note": "Backup key - Gemini 2.5 Flash",
+      "status": "valid",
+      "priority": 2
+    }
+  ],
+  "preferred_model": "gemini-2.5-flash",
+  "fallback_model": "gemini-2.5-flash-lite",
+  "temperature": 0.7,
+  "max_output_tokens": 4096,
+  "features": {
+    "script_writer": true,
+    "seo_optimizer": true,
+    "research_agent": true,
+    "lyrics_generator": true,
+    "content_analyzer": true
+  }
+}

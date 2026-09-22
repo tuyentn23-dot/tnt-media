@@ -1,0 +1,16 @@
+services:
+ tnt-media:
+ build: .
+ container_name: tnt-media
+ restart: unless-stopped
+ ports:
+ - "8787:8787"
+ env_file:
+ - .env
+ volumes:
+ - ./memory:/app/memory
+ - ./system:/app/system
+ - ./logs:/app/logs
+ - ./output:/app/output
+ - ./config:/app/config
+ mem_limit: 4g

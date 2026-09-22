@@ -1,0 +1,12 @@
+{
+  "whatif": [
+    {
+      "id": "sample_1",
+      "topic": "example",
+      "hook": "Vi du hook.",
+      "body": "Noi dung.",
+      "payoff": "Ket luan.",
+      "question": "Ban nghi sao?"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "name": "TNT Music AI Composer",
+  "version": "2.0",
+  "sample_rate": 44100,
+  "genres": [
+    "ballad",
+    "pop",
+    "edm",
+    "lofi",
+    "rap",
+    "rnb",
+    "folk"
+  ],
+  "emotions": [
+    "love",
+    "sadness",
+    "joy",
+    "hope",
+    "peace",
+    "nostalgia"
+  ],
+  "chord_progressions": {
+    "ballad": [
+      "C-Am-F-G",
+      "C-G-Am-F"
+    ],
+    "pop": [
+      "C-G-Am-F",
+      "F-C-G-Am"
+    ],
+    "lofi": [
+      "Am-F-C-G",
+      "Dm-C-Bb-F"
+    ]
+  },
+  "vocal_settings": {
+    "voice": "vi-VN-HoaiMyNeural",
+    "rate": "-10%",
+    "pitch": "+5Hz",
+    "vibrato_freq": 4.5,
+    "vibrato_depth": 0.015,
+    "reverb_taps": 7,
+    "dry_wet_ratio": 0.65
+  }
+}

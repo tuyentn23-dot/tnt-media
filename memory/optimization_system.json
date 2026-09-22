@@ -1,0 +1,40 @@
+{
+  "video_id": "FEzBQf2QDI4",
+  "algorithm_hacks": {
+    "watch_time": "Loop the video content to increase watch time",
+    "engagement_rate": "High like ratio triggers algorithm",
+    "comment_velocity": "Fast comments in first hour boosts ranking",
+    "share_ratio": "Shares are weighted highest by algorithm",
+    "retention": "Above 70% retention = viral trigger"
+  },
+  "posting_schedule": {
+    "peak_hours": [
+      "12:00",
+      "18:00",
+      "21:00"
+    ],
+    "best_days": [
+      "Friday",
+      "Saturday",
+      "Sunday"
+    ],
+    "consistency": "Post at same time daily"
+  },
+  "audience_targeting": {
+    "age_groups": [
+      "13-17",
+      "18-24",
+      "25-34"
+    ],
+    "regions": [
+      "Vietnam",
+      "USA",
+      "Global"
+    ],
+    "interests": [
+      "Entertainment",
+      "Music",
+      "Viral Content"
+    ]
+  }
+}

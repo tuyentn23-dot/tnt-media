@@ -1,0 +1,94 @@
+{
+  "videos": [
+    {
+      "path": "output\\short_magic_gated.mp4",
+      "size": 14287837,
+      "size_h": "13.6MB",
+      "mtime": "2026-09-12T11:28:19.075123"
+    },
+    {
+      "path": "output\\short_dog_gated.mp4",
+      "size": 20392975,
+      "size_h": "19.4MB",
+      "mtime": "2026-09-12T11:27:08.011471"
+    },
+    {
+      "path": "output\\short_cat_gated.mp4",
+      "size": 1849458,
+      "size_h": "1.8MB",
+      "mtime": "2026-09-12T11:25:49.785257"
+    },
+    {
+      "path": "output\\short_dog_raw.mp4",
+      "size": 21307704,
+      "size_h": "20.3MB",
+      "mtime": "2026-09-12T11:22:25.631217"
+    },
+    {
+      "path": "output\\short_magic_raw.mp4",
+      "size": 14096026,
+      "size_h": "13.4MB",
+      "mtime": "2026-09-12T11:22:15.483270"
+    },
+    {
+      "path": "output\\short_cat_raw.mp4",
+      "size": 1683327,
+      "size_h": "1.6MB",
+      "mtime": "2026-09-12T11:19:52.153663"
+    },
+    {
+      "path": "output\\short_food_vertical_gated.mp4",
+      "size": 2291206,
+      "size_h": "2.2MB",
+      "mtime": "2026-09-12T11:00:53.644781"
+    },
+    {
+      "path": "output\\short_food_16d6508844.mp4",
+      "size": 5007040,
+      "size_h": "4.8MB",
+      "mtime": "2026-09-12T10:58:36.285621"
+    },
+    {
+      "path": "output\\cycle_satisfying_095317.mp4",
+      "size": 4571673,
+      "size_h": "4.4MB",
+      "mtime": "2026-09-12T09:53:41.445048"
+    },
+    {
+      "path": "output\\cycle_satisfying_095205.mp4",
+      "size": 263789,
+      "size_h": "257.6KB",
+      "mtime": "2026-09-12T09:52:09.475347"
+    },
+    {
+      "path": "output\\cycle_satisfying_095134.mp4",
+      "size": 263789,
+      "size_h": "257.6KB",
+      "mtime": "2026-09-12T09:51:38.722884"
+    },
+    {
+      "path": "output\\cycle_satisfying_094932.mp4",
+      "size": 263789,
+      "size_h": "257.6KB",
+      "mtime": "2026-09-12T09:49:36.146976"
+    },
+    {
+      "path": "output\\cycle_satisfying_094912.mp4",
+      "size": 263789,
+      "size_h": "257.6KB",
+      "mtime": "2026-09-12T09:49:16.501147"
+    },
+    {
+      "path": "output\\cycle_satisfying_231222.mp4",
+      "size": 13574,
+      "size_h": "13.3KB",
+      "mtime": "2026-09-11T23:12:24.389324"
+    },
+    {
+      "path": "output\\cycle_satisfying_231154.mp4",
+      "size": 13574,
+      "size_h": "13.3KB",
+      "mtime": "2026-09-11T23:11:56.086207"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+s=open('os_app/ui/index.html',encoding='utf-8',errors='replace').read()
+i=s.find('async function dash(')
+print(s[i:i+700].encode('ascii','replace').decode('ascii'))
+print('---API---')
+j=s.find('async function api(')
+print(s[j:j+400].encode('ascii','replace').decode('ascii'))

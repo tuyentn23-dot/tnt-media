@@ -1,0 +1,58 @@
+{
+  "project": "TNT Media",
+  "version": 2,
+  "isolation": {
+    "workspace": "venture_foundry/media",
+    "allow_modify_outside_workspace": false,
+    "protected_systems": [
+      "backend",
+      "extension",
+      "Monolux",
+      "venture_foundry/trader",
+      "PickleballOS"
+    ]
+  },
+  "orchestration": {
+    "single_final_orchestrator": true,
+    "specialist_agents_can_publish": false,
+    "specialist_agents_can_modify_canonical_memory": false
+  },
+  "publishing": {
+    "require_human_approval": false,
+    "auto_publish_enabled": true,
+    "max_auto_publishes_per_day": 4,
+    "platform_approval": {
+      "youtube": {
+        "enabled": true,
+        "oauth_required": true
+      },
+      "tiktok": {
+        "enabled": false,
+        "reason": "API not configured"
+      }
+    }
+  },
+  "content_rules": {
+    "max_duration_seconds": 60,
+    "allowed_formats": [
+      "shorts",
+      "reels"
+    ],
+    "prohibited_topics": [
+      "violence",
+      "hate_speech",
+      "copyrighted_material"
+    ],
+    "quality_thresholds": {
+      "min_resolution": "1080x1920",
+      "min_fps": 30
+    }
+  },
+  "evolution": {
+    "auto_optimize_prompts": true,
+    "learning_rate": 0.1,
+    "ab_testing_enabled": true,
+    "telemetry_enabled": true
+  },
+  "updated_at": "2026-09-05"
+}

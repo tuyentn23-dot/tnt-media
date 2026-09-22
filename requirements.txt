@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+pillow
+google-api-python-client
+google-auth-oauthlib
+requests
+httpx
+pydantic
+python-dotenv
+numpy
+pyyaml
+edge-tts
+pydub

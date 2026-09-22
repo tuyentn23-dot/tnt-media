@@ -1,0 +1,19 @@
+.git
+.venv
+venv
+__pycache__
+.pytest_cache
+.vscode
+output
+_trash
+backups
+logs
+.pyc
+.bak
+archive
+tnt_media_v3
+abstract_voice.mp3
+# media nang - upload rieng qua File Browser
+library
+music_bank
+assets

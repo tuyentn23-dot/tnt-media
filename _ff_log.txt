@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "D:\TNT_AI\venture_foundry\media\_bg_ff.py", line 12, in <module>
+    print("RESULT", r, os.path.getsize(r) if os.path.exists(r) else 0, round(time.time()-t0,1))
+                                             ~~~~~~~~~~~~~~^^^
+TypeError: _path_exists: path should be string, bytes, os.PathLike or integer, not tuple

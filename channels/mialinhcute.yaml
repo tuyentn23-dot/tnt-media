@@ -1,0 +1,22 @@
+name: Mialinhcute
+platform: youtube
+active: true
+aspect: '9:16'
+maxSeconds: 20
+voice:
+ preset: female_cute
+ id: HoaiMy
+colors:
+ primary: '#ff69b4'
+ accent: '#ffd700'
+watermark: '@Mialinhcute'
+topics:
+ - anime
+ - roblox
+ - cute_animals
+ - meme
+ - gacha
+audience: kids
+romance: forbidden
+tokenPath: memory/token_new_channel.json
+scheduleCron: '0 9,15,21 * * *'

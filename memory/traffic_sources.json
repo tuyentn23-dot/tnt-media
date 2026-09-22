@@ -1,0 +1,59 @@
+{
+  "target": "FEzBQf2QDI4",
+  "backlink_platforms": [
+    {
+      "platform": "reddit",
+      "subreddits": [
+        "r/videos",
+        "r/youtubeshorts",
+        "r/viral"
+      ]
+    },
+    {
+      "platform": "facebook",
+      "groups": [
+        "Viral Videos",
+        "YouTube Creators",
+        "Trending"
+      ]
+    },
+    {
+      "platform": "telegram",
+      "channels": [
+        "Viral Hub",
+        "YouTube Shorts"
+      ]
+    },
+    {
+      "platform": "discord",
+      "servers": [
+        "YouTube Creators",
+        "Viral Hub"
+      ]
+    },
+    {
+      "platform": "quora",
+      "topics": [
+        "YouTube",
+        "Viral Videos"
+      ]
+    },
+    {
+      "platform": "pinterest",
+      "boards": [
+        "Viral",
+        "YouTube Shorts"
+      ]
+    }
+  ],
+  "comment_marketing": "Leave engaging comments on popular videos",
+  "collaboration": "Reach out to similar creators",
+  "trending_tags": [
+    "#shorts",
+    "#viral",
+    "#trending",
+    "#fyp",
+    "#youtube",
+    "#amazing"
+  ]
+}

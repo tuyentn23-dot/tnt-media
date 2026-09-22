@@ -1,0 +1,7 @@
+async function pbRun(){const cid=document.getElementById('pbCh').value;const per=document.getElementById('pbPer').value;const o=document.getElementById('pbOut');o.textContent='Dang chay...';
+try{const r=await fetch('/os/api/channels/'+cid+'/publish?count='+per,{method:'POST'});const d=await r.json();o.textContent=JSON.stringify(d,null,2);toast('Xong','ok')}catch(e){o.textContent='Loi: '+e.message}}
+async function runAll(){toast('Dang auto dang tat ca kenh...');
+try{const r=await fetch('/os/api/multichannel/run',{method:'POST'});const d=await r.json();toast('Xong','ok');alert(JSON.stringify(d,null,2))}catch(e){toast('Loi: '+e.message,'bad')}}
+async function runOne(cid){toast('Dang dang '+cid);
+try{const r=await fetch('/os/api/channels/'+cid+'/publish?count=2',{method:'POST'});const d=await r.json();alert(JSON.stringify(d,null,2));toast('Xong','ok')}catch(e){toast('Loi: '+e.message,'bad')}}
+async function tog(id,en){await fetch('/os/api/channels/'+id+'/toggle?enabled='+en,{method:'POST'});toast('Da cap nhat '+id,'ok');render()}

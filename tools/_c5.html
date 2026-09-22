@@ -1,0 +1,12 @@
+async function ct(){const ch=await api('channels');let opts=(ch.items||[]).map(x=>'<option value="'+x.id+'">'+esc(x.name||x.id)+'</option>').join('');
+let h='<div class=panel><h2>Xem noi dung kenh</h2><div class=row><select id=ctCh onchange=ctLoad()>'+opts+'</select></div><div id=ctBody></div></div>';
+document.getElementById('view').innerHTML=h;ctLoad()}
+async function ctLoad(){const cid=document.getElementById('ctCh').value;const d=await api('channels/'+cid+'/content');
+let body='';const it=d.items||{};for(const k in it){const arr=it[k];if(!Array.isArray(arr))continue;
+body+='<h3 style="margin:12px 0 6px">'+esc(k)+' ('+arr.length+')</h3><table><thead><tr><th>ID</th><th>Hook</th><th>Trang thai</th></tr></thead><tbody>';
+arr.forEach(o=>{body+='<tr><td>'+esc(o.id||'')+'</td><td>'+esc(o.hook||'')+'</td><td>'+(o.published?'<span class="badge b-ok">DA DANG</span>':'<span class="badge b-warn">MOI</span>')+'</td></tr>'});
+body+='</tbody></table>'}
+document.getElementById('ctBody').innerHTML=body||'<p>Khong co du lieu</p>'}
+async function pub(){const ch=await api('channels');let opts=(ch.items||[]).map(x=>'<option value="'+x.id+'">'+esc(x.name||x.id)+'</option>').join('');
+let h='<div class=panel><h2>Dang bai thu cong</h2><div class=row><select id=pbCh>'+opts+'</select><input id=pbPer value=2 style=width:60px><button class="btn ok" onclick=pbRun()>Dang</button></div><pre id=pbOut></pre></div>';
+document.getElementById('view').innerHTML=h}

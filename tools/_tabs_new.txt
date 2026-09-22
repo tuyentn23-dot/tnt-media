@@ -1,0 +1,1 @@
+const TABS=[["dashboard","Dashboard","DASH","Tong quan"],["channels","Kenhe","CH","Quan ly kenh"]];

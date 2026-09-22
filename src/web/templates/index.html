@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>TNT Media Dashboard</title>
+<style>
+body{background:#111827;color:#e5e7eb;font-family:system-ui;margin:0}
+#app{display:flex;min-height:100vh}
+#sidebar{width:220px;background:#1f2937;padding:20px}
+#main{flex:1;padding:24px}
+h1{color:#f59e0b;font-size:18px}
+h2{margin:0 0 10px;color:#f59e0b}
+.btn{display:block;width:100%;background:none;border:none;color:#d1d5db;padding:12px;margin:4px 0;text-align:left;border-radius:8px;cursor:pointer}
+.btn:hover{background:#374151}
+.btn.on{background:#f59e0b;color:#111}
+.btn-act{background:#f59e0b;color:#111;border:none;padding:10px 16px;border-radius:8px;cursor:pointer;margin:4px}
+.card{background:#1f2937;border-radius:10px;padding:20px;margin-bottom:16px}
+</style>
+</head>
+<body>
+<div id="app">
+<div id="sidebar"></div>
+<div id="main"><div id="header"></div><div id="out"></div></div>
+</div>
+<script>
+var page = "home";
+
+function api(url, opt) {
+  return fetch(url, opt).then(function(r){return r.json()});
+}
+
+function nav() {
+  var items = [
+    ["home", "Dashboard"],
+    ["wf", "Workflows"],
+    ["svc", "Services"],
+    ["music", "Music Studio"]
+  ];
+  var h = "<h1>TNT Media</h1>";
+  for (var i=0; i<items.length; i++) {
+    var c = items[i][0] === page ? " on" : "";
+    h += "<button class='btn" + c + "' onclick='go("" + items[i][0] + "")'>" + items[i][1] + "</button>";
+  }
+  document.getElementById("sidebar").innerHTML = h;
+}
+
+function go(p) {
+  page = p;
+  nav();
+  if (p === "home") home();
+  if (p === "wf") wf();
+  if (p === "svc") svc();
+  if (p === "music") music();
+}
+
+function home() {
+  document.getElementById("header").innerHTML = "<h2>Dashboard</h2>";
+  document.getElementById("out").innerHTML =
+    "<div class='card'>" +
+    "<button class='btn-act' onclick='taoMusic()'>Tao Nhac</button>" +
+    "<button class='btn-act' onclick='taoVideo()'>Tao Video</button>" +
+    "</div>";
+}
+
+function wf() {
+  document.getElementById("header").innerHTML = "<h2>Workflows</h2>";
+  api("/api/workflows").then(function(d){
+    document.getElementById("out").innerHTML = "<div class='card'>Tong workflows: " + (d.count || 0) + "</div>";
+  });
+}
+
+function svc() {
+  document.getElementById("header").innerHTML = "<h2>Services</h2>";
+  api("/api/services").then(function(d){
+    var list = d.services || [];
+    var h = "<div class='card'>";
+    for (var i=0; i<list.length; i++) {
+      h += "<div>" + list[i].name + "</div>";
+    }
+    h += "</div>";
+    document.getElementById("out").innerHTML = h;
+  });
+}
+
+function music() {
+  document.getElementById("header").innerHTML = "<h2>Music Studio</h2>";
+  document.getElementById("out").innerHTML = "<div class='card'>Chon thong so va tao nhac.</div>";
+}
+
+function taoMusic() {
+  api("/api/workflow/start", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({type: "music", params: {source: "dashboard"}})
+  }).then(function(d) {
+    document.getElementById("out").innerHTML = "<div class='card'>Da tao workflow: <b>" + d.workflow_id + "</b></div>";
+  });
+}
+
+function taoVideo() {
+  api("/api/workflow/start", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({type: "video", params: {source: "dashboard"}})
+  }).then(function(d) {
+    document.getElementById("out").innerHTML = "<div class='card'>Da tao workflow: <b>" + d.workflow_id + "</b></div>";
+  });
+}
+
+nav();
+home();
+</script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+{
+  "target_video": "FEzBQf2QDI4",
+  "url": "https://youtube.com/shorts/FEzBQf2QDI4",
+  "strategies": {
+    "seo_optimization": {
+      "title_keywords": [
+        "shorts",
+        "viral",
+        "trending",
+        "ai",
+        "music"
+      ],
+      "description_keywords": [
+        "amazing",
+        "must watch",
+        "viral video",
+        "trending now"
+      ],
+      "hashtags": [
+        "#shorts",
+        "#viral",
+        "#trending",
+        "#fyp",
+        "#music",
+        "#ai"
+      ]
+    },
+    "social_sharing": {
+      "platforms": [
+        "facebook",
+        "twitter",
+        "reddit",
+        "telegram",
+        "discord"
+      ],
+      "message_template": "Check out this amazing video! {url} #viral #shorts"
+    },
+    "engagement_boost": {
+      "comment_strategy": "Engage with comments to boost algorithm",
+      "like_strategy": "Encourage likes through CTA",
+      "watch_time": "Optimize for longer watch time"
+    }
+  },
+  "tracking": {
+    "metrics": [
+      "views",
+      "likes",
+      "comments",
+      "shares",
+      "watch_time"
+    ],
+    "update_interval_hours": 6
+  }
+}

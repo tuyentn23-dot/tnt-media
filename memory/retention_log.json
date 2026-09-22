@@ -1,0 +1,114 @@
+[
+  {
+    "ts": "2026-09-10T05:56:36.143107",
+    "input": "output/final_master_short.mp4",
+    "output": "output/retention_test.mp4",
+    "orig": 25.43,
+    "final": 5.45
+  },
+  {
+    "ts": "2026-09-11T22:57:11.831681",
+    "input": "output/tiny_test.mp4",
+    "output": "output/tiny_retention.mp4",
+    "orig": 30.0,
+    "final": 15.0
+  },
+  {
+    "ts": "2026-09-11T22:57:48.709353",
+    "input": "output/tiny_test.mp4",
+    "output": "output/tiny_ret3.mp4",
+    "orig": 30.0,
+    "final": 15.0
+  },
+  {
+    "ts": "2026-09-11T23:11:56.107996",
+    "input": "library\\satisfying\\aaa_tiny.mp4",
+    "output": "output/cycle_satisfying_231154.mp4",
+    "orig": 30.0,
+    "final": 15.0
+  },
+  {
+    "ts": "2026-09-11T23:12:24.411824",
+    "input": "library\\satisfying\\aaa_tiny.mp4",
+    "output": "output/cycle_satisfying_231222.mp4",
+    "orig": 30.0,
+    "final": 15.0
+  },
+  {
+    "ts": "2026-09-11T23:19:51.480131",
+    "input": "output/cycle_satisfying_231154.mp4",
+    "output": "output/viral_test_mid.mp4",
+    "orig": 15.0,
+    "final": 15.0
+  },
+  {
+    "ts": "2026-09-12T09:49:14.673938",
+    "input": "library\\satisfying\\aaa_tiny.mp4",
+    "output": "output/cycle_satisfying_094912_mid.mp4",
+    "orig": 30.0,
+    "final": 15.0
+  },
+  {
+    "ts": "2026-09-12T09:49:34.391356",
+    "input": "library\\satisfying\\aaa_tiny.mp4",
+    "output": "output/cycle_satisfying_094932_mid.mp4",
+    "orig": 30.0,
+    "final": 15.0
+  },
+  {
+    "ts": "2026-09-12T09:51:36.160942",
+    "input": "library\\satisfying\\aaa_tiny.mp4",
+    "output": "output/cycle_satisfying_095134_mid.mp4",
+    "orig": 30.0,
+    "final": 15.0
+  },
+  {
+    "ts": "2026-09-12T09:52:07.378817",
+    "input": "library\\satisfying\\aaa_tiny.mp4",
+    "output": "output/cycle_satisfying_095205_mid.mp4",
+    "orig": 30.0,
+    "final": 15.0
+  },
+  {
+    "ts": "2026-09-12T09:53:28.582308",
+    "input": "library\\satisfying\\8ca89b2ef9_720.mp4",
+    "output": "output/cycle_satisfying_095317_mid.mp4",
+    "orig": 15.0,
+    "final": 15.0
+  },
+  {
+    "ts": "2026-09-12T10:58:36.571236",
+    "input": "library/food/16d6508844.mp4",
+    "output": "output/short_food_16d6508844.mp4",
+    "orig": 10.01,
+    "final": 15
+  },
+  {
+    "ts": "2026-09-12T11:19:52.230987",
+    "input": "D:/TNT_AI/venture_foundry/media/library/cat/8944053-sd_540_960_25fps.mp4",
+    "output": "D:/TNT_AI/venture_foundry/media/output/short_cat_raw.mp4",
+    "orig": 16.28,
+    "final": 15
+  },
+  {
+    "ts": "2026-09-12T11:22:16.543964",
+    "input": "D:/TNT_AI/venture_foundry/media/library/magic/6259136-uhd_2160_3840_25fps.mp4",
+    "output": "D:/TNT_AI/venture_foundry/media/output/short_magic_raw.mp4",
+    "orig": 8.84,
+    "final": 15
+  },
+  {
+    "ts": "2026-09-12T11:22:25.958720",
+    "input": "D:/TNT_AI/venture_foundry/media/library/dog/9314158-uhd_2160_3840_25fps.mp4",
+    "output": "D:/TNT_AI/venture_foundry/media/output/short_dog_raw.mp4",
+    "orig": 10.32,
+    "final": 15
+  },
+  {
+    "ts": "2026-09-12T12:12:34.040981",
+    "input": "library/dog/14703092_2160_3840_30fps.mp4",
+    "output": "output/short_dog_v2.mp4",
+    "orig": 20.65,
+    "final": 15
+  }
+]

@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "policy": "Media providers are isolated adapters. Do not modify TNT AI core provider code for Media-specific capabilities.",
+  "capabilities": {
+    "text": {
+      "status": "available_via_tnt_ai",
+      "preferred_path": "existing TNT AI ProviderRouter"
+    },
+    "vision_input": {
+      "status": "available_via_tnt_ai",
+      "preferred_path": "existing TNT AI ProviderRouter image_paths"
+    },
+    "image_output": {
+      "status": "not_detected_in_tnt_ai_core",
+      "adapter_required": true
+    },
+    "video_output": {
+      "status": "not_detected_in_tnt_ai_core",
+      "adapter_required": true
+    },
+    "audio_output": {
+      "status": "not_detected_in_tnt_ai_core",
+      "adapter_required": true
+    },
+    "local_video_render": {
+      "status": "ffmpeg_not_found_in_path",
+      "adapter_required": true
+    }
+  },
+  "rules": [
+    "Reuse stable TNT AI interfaces where capability already exists.",
+    "Add Media-only adapters under venture_foundry/media/providers for missing capabilities.",
+    "Never patch TNT AI core merely to support Media experiments.",
+    "Provider credentials must not be committed to project files.",
+    "Every generated asset must record provider, model, prompt/version, timestamp, and provenance.",
+    "Publishing remains human-approved."
+  ],
+  "next_required_adapter": "image_output"
+}

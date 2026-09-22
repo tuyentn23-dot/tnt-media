@@ -1,0 +1,15 @@
+[Unit]
+Description=TNT Media OS - scheduler + worker
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/tnt/media
+ExecStart=/usr/bin/python3 ops/scheduler_cc.py
+Restart=always
+RestartSec=10
+User=tnt
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

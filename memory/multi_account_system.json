@@ -1,0 +1,60 @@
+{
+  "video_id": "FEzBQf2QDI4",
+  "accounts": [
+    {
+      "id": "acc_1",
+      "platform": "youtube",
+      "role": "main_commenter"
+    },
+    {
+      "id": "acc_2",
+      "platform": "youtube",
+      "role": "liker"
+    },
+    {
+      "id": "acc_3",
+      "platform": "youtube",
+      "role": "sharer"
+    },
+    {
+      "id": "acc_4",
+      "platform": "telegram",
+      "role": "promoter"
+    },
+    {
+      "id": "acc_5",
+      "platform": "discord",
+      "role": "promoter"
+    }
+  ],
+  "auto_actions": {
+    "comment": "Post supportive comments",
+    "like": "Like from all accounts",
+    "watch": "Increase watch time",
+    "share": "Share to other platforms",
+    "subscribe": "Subscribe to channel"
+  },
+  "schedule": {
+    "morning": [
+      "like",
+      "comment",
+      "watch"
+    ],
+    "afternoon": [
+      "share",
+      "comment",
+      "watch"
+    ],
+    "evening": [
+      "like",
+      "share",
+      "comment"
+    ],
+    "night": [
+      "watch",
+      "like"
+    ]
+  },
+  "status": "DISABLED_2026-09-10",
+  "disabled_reason": "Programmatic comments/likes violate YouTube ToS; replaced by genuine syndication."
+}

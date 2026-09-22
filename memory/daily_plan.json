@@ -1,0 +1,19 @@
+{
+  "created": "2026-09-10T15:42:55.042702",
+  "posts": [
+    {
+      "topic": "satisfying",
+      "duration": 15,
+      "hook": "peak",
+      "expected_avg_views": 1200.0
+    },
+    {
+      "topic": "food",
+      "duration": 18,
+      "hook": "cold",
+      "expected_avg_views": 300.0
+    }
+  ],
+  "source": "ab_matrix",
+  "retention_entries": 1
+}

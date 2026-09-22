@@ -1,0 +1,32 @@
+{
+  "channels": [
+    {
+      "id": "channel_01",
+      "name": "TNT Science & Facts",
+      "niche": "facts",
+      "enabled": true,
+      "interval_min": 60,
+      "batch": 2,
+      "token_path": "memory/token_channel_01.json"
+    },
+    {
+      "id": "channel_02",
+      "name": "TNT WhatIf Stories",
+      "niche": "whatif",
+      "enabled": true,
+      "interval_min": 90,
+      "batch": 1,
+      "token_path": "memory/token_channel_02.json"
+    },
+    {
+      "id": "UCi6CpPa0lExuiMREpEwhY-A",
+      "name": "TNT New Channel",
+      "niche": "psychology",
+      "enabled": true,
+      "interval_min": 120,
+      "batch": 1,
+      "token_path": "memory/token_new_channel.json"
+    }
+  ],
+  "active": "channel_01"
+}

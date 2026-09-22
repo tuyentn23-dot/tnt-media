@@ -1,0 +1,24 @@
+FROM python:3.11-slim
+
+ENV PYTHONUNBUFFERED=1 \
+ PIP_NO_CACHE_DIR=1 \
+ DEBIAN_FRONTEND=noninteractive
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+ ffmpeg \
+ fonts-dejavu-core \
+ curl \
+ && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+COPY . .
+
+RUN mkdir -p logs output memory system config
+
+EXPOSE 8787
+
+CMD ["bash", "deploy/start.sh"]

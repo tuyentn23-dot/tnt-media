@@ -1,0 +1,8 @@
+print("==================================================")
+print("[AUTOPILOT UPLOAD SIMULATOR]")
+print("Dang chuan bi video ngan (Shorts) de dang len kenh: TNT New Channel (UCi6CpPa0lExuiMREpEwhY-A)...")
+print("Niche: Psychology / Motivation")
+print("Su dung token xac thuc: memory/token_new_channel.json")
+print("Trang thai: Dang tai thanh cong video len YouTube Shorts!")
+print("Link video mau: https://youtube.com/shorts/mock_upload_success_miacute")
+print("==================================================")
