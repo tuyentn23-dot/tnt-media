@@ -44,3 +44,32 @@
 - Scheduler tu dong chay Mialinhcute 9/15/21h, vilevi5676 8/12/18/21h (gio VM)
 - Moi lan chay: build 1 clip moi + publish + ghi ledger
 - Dashboard xem quota/kenh/token
+
+---
+
+## OPTION B: GitHub Actions (mien phi 100%, khong can the)
+
+### Buoc 1: Them Secrets
+Mo https://github.com/tuyentn23-dot/tnt-media/settings/secrets/actions
+Them 4 secrets (lay gia tri tu deploy/GH_SECRETS.txt):
+
+- TOKEN_PICKLE_B64 (config/token.pickle)
+- TOKEN_NEW_CHANNEL_B64 (memory/token_new_channel.json)
+- CLIENT_SECRETS_JSON_B64 (config/client_secrets.json)
+- TOKEN_MIALINHCUTE_B64 (channels/Mialinhcute/token.pickle)
+
+### Buoc 2: Them GROQ_API_KEY
+Them secret thu 5: GROQ_API_KEY = <key cua ban>
+
+### Buoc 3: Bat workflow
+Workflow da co tai .github/workflows/publish.yml
+Cron: 02:00, 08:00, 14:00 UTC moi ngay (9h, 15h, 21h VN)
+Hoac bam Run workflow de chay tay.
+
+### Buoc 4: Kiem tra
+Vao tab Actions -> TNT Media Publish -> xem log
+Moi lan chay: build + publish 4 video/kenh cho 2 kenh.
+
+### Gioi han
+- 2000 phut/thang mien phi (du dung ~350 phut/thang)
+- Runner co ffmpeg san, RAM 7GB -> build video OK

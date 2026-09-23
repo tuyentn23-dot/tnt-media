@@ -1,0 +1,34 @@
+name: TNT Media Publish
+
+on:
+  schedule:
+    - cron: '0 2,8,14 * * *'
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+          pip install -r requirements.txt
+      - name: Restore tokens
+        run: |
+          mkdir -p config memory
+          echo "${{ secrets.TOKEN_PICKLE_B64 }}" | base64 -d > config/token.pickle
+          echo "${{ secrets.TOKEN_NEW_CHANNEL_B64 }}" | base64 -d > memory/token_new_channel.json
+          echo "${{ secrets.CLIENT_SECRETS_JSON_B64 }}" | base64 -d > config/client_secrets.json
+          mkdir -p channels/Mialinhcute
+          echo "${{ secrets.TOKEN_MIALINHCUTE_B64 }}" | base64 -d > channels/Mialinhcute/token.pickle
+      - name: Publish 4 per channel
+        run: python ops/multichannel_runner.py 4
+        env:
+          TNT_COOLDOWN_MIN: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}

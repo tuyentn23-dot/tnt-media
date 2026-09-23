@@ -71,7 +71,7 @@ def publish_one_channel(cid, per_channel=2):
             _log('publish blocked ' + cid + ' ' + item['id'] + ' ' + json.dumps(res, ensure_ascii=False)[:150])
     return {'ok': True, 'id': cid, 'published': done}
 
-def run_all(per_channel=2, cooldown_min=180):
+def run_all(per_channel=2, cooldown_min=int(os.environ.get('TNT_COOLDOWN_MIN', '180'))):
     st = _load_state()
     now = time.time()
     results = []

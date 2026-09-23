@@ -78,3 +78,7 @@ tools/gh.zip
 output/gh_
 output/git_
 output/fresh*
+
+deploy/GH_SECRETS.txt
+_run_publish.py
+_tmp_count_fresh.py
