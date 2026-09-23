@@ -191,6 +191,30 @@
       "file": "D:\\TNT_AI\\venture_foundry\\media\\output\\chvilevi5676_v_streetfood_hanoi_20260923_181037.mp4",
       "ts": "2026-09-23T18:14:10",
       "channel": "vilevi5676"
+    },
+    "food|v_coffee_egg|cà phê trứng - đặc sản chỉ hà nội có": {
+      "youtube_id": "mrit1ybOpR8",
+      "topic": "chvilevi5676_food_v_coffee_egg",
+      "kind": "food",
+      "file": "D:\\TNT_AI\\venture_foundry\\media\\output\\chvilevi5676_v_coffee_egg_20260923_185129.mp4",
+      "ts": "2026-09-23T18:53:17",
+      "channel": "vilevi5676"
+    },
+    "nostalgia|v_rain_saigon|mưa sài gòn có mùi rất riêng": {
+      "youtube_id": "fjXg8bGUx-w",
+      "topic": "chvilevi5676_nostalgia_v_rain_saigon",
+      "kind": "nostalgia",
+      "file": "D:\\TNT_AI\\venture_foundry\\media\\output\\chvilevi5676_v_rain_saigon_20260923_185317.mp4",
+      "ts": "2026-09-23T18:55:06",
+      "channel": "vilevi5676"
+    },
+    "curiosity|v_why_dejavu|vì sao bạn thấy việc này từng xảy ra": {
+      "youtube_id": "ntFIGBhVogM",
+      "topic": "chvilevi5676_curiosity_v_why_dejavu",
+      "kind": "curiosity",
+      "file": "D:\\TNT_AI\\venture_foundry\\media\\output\\chvilevi5676_v_why_dejavu_20260923_185506.mp4",
+      "ts": "2026-09-23T18:57:03",
+      "channel": "vilevi5676"
     }
   }
 }
