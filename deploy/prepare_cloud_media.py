@@ -5,8 +5,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(sys.argv[0])))
 if not os.path.isdir(os.path.join(ROOT, 'ops')):
 	ROOT = os.getcwd()
 DEST = os.path.join(ROOT, 'cloud_media')
-KEEP = 3
-MAX_MB = 25
+KEEP = 6
+MAX_MB = 9
 
 def topics_needed():
 	need = set()
