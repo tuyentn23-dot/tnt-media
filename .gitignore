@@ -82,3 +82,7 @@ output/fresh*
 deploy/GH_SECRETS.txt
 _run_publish.py
 _tmp_count_fresh.py
+
+_kill_tray.py
+memory/tray_state.json
+TEMP_MPY*
