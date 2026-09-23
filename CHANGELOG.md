@@ -48,3 +48,21 @@ Xem SESSION_HANDOFF.md de biet chi tiet day du.
 - Tao requirements.txt, deploy/push_to_vm.sh, deploy/CHECKLIST.md cho YC5
 - YC5 cho tai khoan Oracle (cho credit card)
 - state_sync A->B: videos=263 publishes=243
+
+## 2026-09-23 (phien 6 - chuan bi deploy cloud khong the)
+- Tao git repo RIENG trong media/ (tach khoi D:/TNT_AI), commit 1065 files, 0 secrets
+- Chan secrets: token.pickle, config/client_secrets.json, .env, *.db
+- cloud_media/ 313MB (36 clip + 10 nhac) cho cloud build
+- Dockerfile + start.sh + docker-compose + requirements.txt
+- deploy/prepare_cloud_media.py, git_push_cloud.sh, README_CLOUD.md
+- Huong dan: ClawCloud (~8GB, khong the) / Zeabur / Koyeb(512MB->OOM)
+- Buoc tiep: user push len GitHub -> deploy ClawCloud
+
+## 2026-09-23 (phien 6 - chuan bi deploy cloud khong the)
+- Tao git repo RIENG trong media/ (tach khoi D:/TNT_AI), commit 1065 files, 0 secrets
+- Chan secrets: token.pickle, config/client_secrets.json, .env, *.db
+- cloud_media/ 313MB (36 clip + 10 nhac) cho cloud build
+- Dockerfile + start.sh + docker-compose + requirements.txt
+- deploy/prepare_cloud_media.py, git_push_cloud.sh, README_CLOUD.md
+- Huong dan: ClawCloud (~8GB, khong the) / Zeabur / Koyeb(512MB->OOM)
+- Buoc tiep: user push len GitHub -> deploy ClawCloud

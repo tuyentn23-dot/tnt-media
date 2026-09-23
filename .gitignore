@@ -57,3 +57,24 @@ _archive/
 .bak
 _run_fresh4.py
 _run_fresh_both.py
+
+# Secrets bo sung
+token.pickle
+**/token.pickle
+channels//token.pickle
+.env
+
+# OAuth secrets - KHONG BAO GIO push
+config/client_secrets.json
+**/client_secrets.json
+client_secret.json
+config/.json
+!config/scripts_vi.json
+channels/*/*.pickle
+
+# gh CLI (khong push)
+tools/gh/
+tools/gh.zip
+output/gh_
+output/git_
+output/fresh*
