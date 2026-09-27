@@ -18,6 +18,34 @@ def log(msg):
 	print('[runner] ', msg, flush=True)
 
 
+HEARTBEAT = {'stop': None, 'thread': None}
+
+
+def _start_heartbeat(job_id, interval=60):
+	import threading
+	stop = threading.Event()
+	def _beat():
+		while not stop.wait(interval):
+			try:
+				c = state.init()
+				c.execute('UPDATE jobs SET updated_at=? WHERE id=?', (state.now(), job_id))
+				c.commit()
+			except Exception:
+				pass
+	t = threading.Thread(target=_beat, daemon=True)
+	t.start()
+	HEARTBEAT['stop'] = stop
+	HEARTBEAT['thread'] = t
+
+
+def _stop_heartbeat():
+	stop = HEARTBEAT.get('stop')
+	if stop:
+		stop.set()
+	HEARTBEAT['stop'] = None
+	HEARTBEAT['thread'] = None
+
+
 def run_job(job, dry_run=False, item_id=None):
 	try:
 		from pipeline import recovery as _rec
@@ -25,6 +53,7 @@ def run_job(job, dry_run=False, item_id=None):
 	except Exception:
 		pass
 	log('start job: ' + job.job_id + ' channel=' + job.channel_id)
+	_start_heartbeat(job.job_id, 60)
 	errs = job.validate()
 	if errs:
 		log('validate FAIL: ' + str(errs))
@@ -133,7 +162,10 @@ def main():
 	else:
 		log('can --job-json hoac --channel')
 		return 1
-	r = run_job(j, dry_run=args.dry_run, item_id=getattr(args, 'item_id', None))
+	try:
+		r = run_job(j, dry_run=args.dry_run, item_id=getattr(args, 'item_id', None))
+	finally:
+		_stop_heartbeat()
 	try:
 		if notify:
 			if r.get('ok'):
