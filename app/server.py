@@ -332,16 +332,13 @@ def killswitch():
 
 @app.post('/api/backup')
 def backup():
-	import shutil
+	from ops import backup_state as _bs
 	bk = os.path.join(ROOT, 'state', 'backup')
-	os.makedirs(bk, exist_ok=True)
-	dst = os.path.join(bk, 'pipeline_' + time.strftime('%Y%m%d_%H%M%S') + '.db')
 	try:
-		shutil.copy2(state.DB, dst)
-		return {'ok': True, 'file': os.path.basename(dst)}
+		dst = _bs.backup_sqlite(state.DB, bk)
+		return {'ok': True, 'file': os.path.basename(dst), 'bytes': os.path.getsize(dst)}
 	except Exception as e:
 		return JSONResponse({'ok': False, 'error': str(e)[:200]}, status_code=500)
-
 
 @app.get('/api/backup/list')
 def backup_list():
