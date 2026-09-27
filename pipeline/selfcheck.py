@@ -208,6 +208,23 @@ def c25():
 	return (len(miss) == 0), 'miss=' + str(miss)
 
 
+@check('ui_local_assets')
+def c_p1a():
+	t = open(os.path.join(ROOT, 'app/ui/index.html'), encoding='utf-8').read()
+	need = ['/ui/tnt.css', '/ui/tnt-alpine.js']
+	miss = [k for k in need if k not in t]
+	if 'cdn.tailwindcss' in t or 'cdn.jsdelivr' in t:
+		return False, 'still depends on CDN'
+	return (len(miss) == 0), 'miss=' + str(miss)
+
+
+@check('api_config_preview')
+def c_p1b():
+	src = open(os.path.join(ROOT, 'app/server.py'), encoding='utf-8').read()
+	need = ['/api/config', '/api/media/preview/', 'scheduler_error']
+	miss = [k for k in need if k not in src]
+	return (len(miss) == 0), 'miss=' + str(miss)
+
 def run(target=None):
 	print('=== SELFCHECK ===')
 	ok = 0

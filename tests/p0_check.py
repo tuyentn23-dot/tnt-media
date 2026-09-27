@@ -46,6 +46,17 @@ if os.path.exists(src_db):
  r = rc.execute('PRAGMA integrity_check').fetchone()[0]
  rc.close()
  ok('db_copy_integrity', r == 'ok', r)
+t = open(os.path.join(ROOT, 'app/ui/index.html'), encoding='utf-8').read()
+ok('ui_no_cdn', ('cdn.tailwindcss' not in t) and ('cdn.jsdelivr' not in t))
+ok('ui_local_assets', ('/ui/tnt.css' in t) and ('/ui/tnt-alpine.js' in t))
+ok('ui_config_wired', '/api/config' in t)
+ok('ui_preview_wired', '/api/media/preview/' in t)
+ok('ui_interval_guarded', 'this._tick' in t)
+srv = open(os.path.join(ROOT, 'app/server.py'), encoding='utf-8').read()
+ok('server_config_api', '/api/config' in srv)
+ok('server_preview_api', '/api/media/preview/' in srv)
+ok('server_health_identity', 'TNT Media OS' in srv and 'scheduler_error' in srv)
+ok('tray_uses_run_stop_event', 'stop_event=SCHED_STOP' in open(os.path.join(ROOT, 'app/tray.py'), encoding='utf-8').read())
 f=[r for r in R if not r[1]]
 print("=== P0 RESULT: "+str(len(R)-len(f))+" PASS, "+str(len(f))+" FAIL ===")
 sys.exit(1 if f else 0)

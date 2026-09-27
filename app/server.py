@@ -36,8 +36,56 @@ def health():
 	c = state.connect()
 	pubs = c.execute('SELECT COUNT() FROM publications').fetchone()[0]
 	jobs = c.execute('SELECT COUNT() FROM jobs').fetchone()[0]
-	return {'ok': True, 'publications': pubs, 'jobs': jobs, 'db': state.DB}
+	sched_err = {}
+	try:
+		from pipeline import scheduler as _sch
+		sched_err = _sch.last_error()
+	except Exception:
+		pass
+	return {'ok': True, 'app': 'TNT Media OS', 'version': '0.2.0', 'publications': pubs, 'jobs': jobs, 'db': state.DB, 'scheduler_error': sched_err}
 
+
+CONFIG_PATH = os.path.join(ROOT, 'state', 'ui_config.json')
+
+
+@app.get('/api/config')
+def get_ui_config():
+	if os.path.exists(CONFIG_PATH):
+		try:
+			return json.load(open(CONFIG_PATH, encoding='utf-8'))
+		except Exception:
+			pass
+	return {'publish_mode': 'approve'}
+
+
+@app.post('/api/config')
+def set_ui_config(payload: dict):
+	cur = {}
+	if os.path.exists(CONFIG_PATH):
+		try:
+			cur = json.load(open(CONFIG_PATH, encoding='utf-8'))
+		except Exception:
+			cur = {}
+	if payload and 'publish_mode' in payload:
+		cur['publish_mode'] = payload['publish_mode']
+	os.makedirs(os.path.dirname(CONFIG_PATH), exist_ok=True)
+	json.dump(cur, open(CONFIG_PATH, 'w', encoding='utf-8'), ensure_ascii=False, indent=2)
+	return {'ok': True, 'config': cur}
+
+@app.get('/api/media/preview/{pub_id}')
+def media_preview(pub_id: int):
+	from fastapi.responses import FileResponse
+	c = state.connect()
+	row = c.execute('SELECT file_path FROM publications WHERE id=?', (pub_id,)).fetchone()
+	if not row or not row['file_path']:
+		return JSONResponse({'ok': False, 'error': 'no file'}, status_code=404)
+	fp = os.path.abspath(row['file_path'])
+	allowed = [os.path.abspath(os.path.join(ROOT, 'output')), os.path.abspath(os.path.join(ROOT, 'work'))]
+	if not any(fp.startswith(a + os.sep) or fp == a for a in allowed):
+		return JSONResponse({'ok': False, 'error': 'path not allowed'}, status_code=403)
+	if not os.path.exists(fp):
+		return JSONResponse({'ok': False, 'error': 'file missing'}, status_code=404)
+	return FileResponse(fp, media_type='video/mp4')
 
 @app.get('/api/channels')
 def channels():
