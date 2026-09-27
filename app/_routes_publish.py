@@ -29,8 +29,10 @@ def publish_pub(pub_id: int, privacy: str = 'public', force: bool = False):
 	vp = row['file_path']
 	if not vp or not os.path.exists(vp):
 		return JSONResponse({'ok': False, 'error': 'file khong ton tai: ' + str(vp)}, status_code=400)
-	c.execute('UPDATE publications SET status=? WHERE id=?', ('publishing', pub_id))
+	cur2 = c.execute('UPDATE publications SET status=? WHERE id=? AND status=?', ('publishing', pub_id, cur))
 	c.commit()
+	if cur2.rowcount != 1:
+		return JSONResponse({'ok': False, 'error': 'publication da duoc xu ly boi request khac', 'status': 'publishing'}, status_code=409)
 	try:
 		from ops import os_publish
 		os_publish.set_channel(row['channel_id'])
