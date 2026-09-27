@@ -32,7 +32,7 @@ def _expand_cron_field(field, lo, hi):
 			rng = range(int(a), int(b) + 1)
 		else:
 			rng = [int(part)]
-		out.update(v for v in rng if lo <= v <= hi)
+		out.update(v for v in rng if lo <= v <= hi and ((v - lo) % step == 0 or step == 1))
 	return out
 
 
