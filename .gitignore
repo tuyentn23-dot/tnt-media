@@ -133,3 +133,12 @@ state/pipeline.db-shm
 state/.db-wal
 state/*.db-shm
 state/ui_config.json
+state/scheduler_status.json
+tests/_ui.js
+tests/_ui_raw.txt
+tests/_modal_backup.html
+tests/_dump.txt
+tests/_probe.py
+tests/_probe2.py
+tests/_fix_indent.py
+tests/_fix.py

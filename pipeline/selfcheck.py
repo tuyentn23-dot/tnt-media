@@ -211,7 +211,7 @@ def c25():
 @check('ui_local_assets')
 def c_p1a():
 	t = open(os.path.join(ROOT, 'app/ui/index.html'), encoding='utf-8').read()
-	need = ['/ui/tnt.css', '/ui/tnt-alpine.js']
+	need = ['/ui/tnt.css', '/ui/vendor/alpinejs.min.js']
 	miss = [k for k in need if k not in t]
 	if 'cdn.tailwindcss' in t or 'cdn.jsdelivr' in t:
 		return False, 'still depends on CDN'

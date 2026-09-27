@@ -10,6 +10,9 @@ sys.path.insert(0, ROOT)
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from pipeline import state
+if os.environ.get('TNT_TEST_DB'):
+	state.DB = os.environ['TNT_TEST_DB']
+ROOT = os.environ.get('TNT_TEST_ROOT') or ROOT
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
 
@@ -37,15 +40,28 @@ def health():
 	pubs = c.execute('SELECT COUNT() FROM publications').fetchone()[0]
 	jobs = c.execute('SELECT COUNT() FROM jobs').fetchone()[0]
 	sched_err = {}
+	status_path = os.path.join(ROOT, 'state', 'scheduler_status.json')
 	try:
-		from pipeline import scheduler as _sch
-		sched_err = _sch.last_error()
-	except Exception:
-		pass
+		if os.path.exists(status_path):
+			st = json.load(open(status_path, encoding='utf-8'))
+			alive = bool(st.get('alive'))
+			last_tick = st.get('last_tick') or ''
+			stale = False
+			try:
+				import datetime as _dt
+				lt = _dt.datetime.fromisoformat(last_tick) if last_tick else None
+				stale = (lt is None) or ((_dt.datetime.now() - lt).total_seconds() > 180)
+			except Exception:
+				stale = True
+			sched_err = {'alive': alive, 'stale': stale, 'last_tick': last_tick, 'last_error': st.get('last_error') or {}, 'pid': st.get('pid')}
+		else:
+			sched_err = {'alive': False, 'stale': True, 'last_tick': '', 'last_error': {}, 'pid': None}
+	except Exception as _e:
+		sched_err = {'alive': False, 'error': str(_e)[:120]}
 	return {'ok': True, 'app': 'TNT Media OS', 'version': '0.2.0', 'publications': pubs, 'jobs': jobs, 'db': state.DB, 'scheduler_error': sched_err}
 
 
-CONFIG_PATH = os.path.join(ROOT, 'state', 'ui_config.json')
+CONFIG_PATH = os.environ.get('TNT_TEST_CONFIG') or os.path.join(ROOT, 'state', 'ui_config.json')
 
 
 @app.get('/api/config')
@@ -80,7 +96,7 @@ def media_preview(pub_id: int):
 	if not row or not row['file_path']:
 		return JSONResponse({'ok': False, 'error': 'no file'}, status_code=404)
 	fp = os.path.abspath(row['file_path'])
-	allowed = [os.path.abspath(os.path.join(ROOT, 'output')), os.path.abspath(os.path.join(ROOT, 'work'))]
+	test_out = os.environ.get('TNT_TEST_OUTPUT'); allowed = ([os.path.abspath(test_out)] if test_out else [os.path.abspath(os.path.join(ROOT, 'output')), os.path.abspath(os.path.join(ROOT, 'work'))])
 	if not any(fp.startswith(a + os.sep) or fp == a for a in allowed):
 		return JSONResponse({'ok': False, 'error': 'path not allowed'}, status_code=403)
 	if not os.path.exists(fp):

@@ -220,6 +220,39 @@ def _paused():
 	return os.path.exists(os.path.join(ROOT, 'state', 'paused.flag'))
 
 
+def drain_pending():
+	c = state.connect()
+	try:
+		rows = c.execute('SELECT id, status, run_at FROM jobs WHERE status IN (?,?) ORDER BY priority ASC, created_at ASC', ('pending','scheduled')).fetchall()
+	except Exception:
+		rows = []
+	c.close()
+	now_dt = _now_local()
+	due_rows = []
+	for r in rows:
+		if r['status'] == 'pending':
+			due_rows.append(r)
+		else:
+			dt = _parse_run_at(r['run_at'])
+			if dt is not None and dt <= now_dt:
+				due_rows.append(r)
+	started = []
+	for r in due_rows:
+		if dispatch_job(r['id']):
+			started.append(r['id'])
+	return len(started)
+
+STATUS_PATH = os.path.join(ROOT, 'state', 'scheduler_status.json')
+
+
+def _write_status(alive=True, last_tick_created=0):
+	payload = {'alive': bool(alive), 'last_tick': state.now(), 'last_created': int(last_tick_created), 'last_error': dict(LAST_ERROR), 'pid': os.getpid()}
+	try:
+		os.makedirs(os.path.dirname(STATUS_PATH), exist_ok=True)
+		json.dump(payload, open(STATUS_PATH, 'w', encoding='utf-8'), ensure_ascii=False)
+	except Exception:
+		pass
+
 def tick():
 	if _paused():
 		return 0
@@ -233,13 +266,8 @@ def tick():
 		).fetchall()
 	except Exception:
 		rows_at = []
-	for r in rows_at:
-		due = parse_run_at(r['run_at'])
-		if due is None:
-			continue
-		if due <= now:
-			if dispatch_job(r['id']):
-				created.append(r['id'])
+	# run_at jobs duoc xu ly boi drain_pending() (chi dispatch job due), tranh trung
+	pass
 	rows = c.execute('SELECT id, schedule FROM channels WHERE enabled=1').fetchall()
 	for r in rows:
 		try:
@@ -265,7 +293,9 @@ def tick():
 		except Exception as e:
 			_note_error('create job fail ' + str(r['id']) + ': ' + str(e))
 	c.close()
-	return len(created)
+	drained = drain_pending()
+	_write_status(True, len(created) + drained)
+	return len(created) + drained
 
 
 def run(interval=30, stop_event=None):

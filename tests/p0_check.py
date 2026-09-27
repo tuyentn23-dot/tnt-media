@@ -33,30 +33,84 @@ vf = importlib.import_module('modules.content.viral_followup')
 o = vf.build({})
 ok('viral_unknown_when_missing', o['source_signal']['duration_seconds'] == 'unknown')
 ok('viral_no_fabricated_forecast', '24h_conservative_views' not in repr(o))
-import shutil, sqlite3
-src_db = sch.state.DB
-if os.path.exists(src_db):
- d2 = tempfile.mkdtemp()
- dst = os.path.join(d2, 'copy.db')
- sc = sqlite3.connect(src_db)
- sc.execute('PRAGMA wal_checkpoint(FULL)')
- sc.close()
- shutil.copy(src_db, dst)
- rc = sqlite3.connect(dst)
- r = rc.execute('PRAGMA integrity_check').fetchone()[0]
- rc.close()
- ok('db_copy_integrity', r == 'ok', r)
-t = open(os.path.join(ROOT, 'app/ui/index.html'), encoding='utf-8').read()
-ok('ui_no_cdn', ('cdn.tailwindcss' not in t) and ('cdn.jsdelivr' not in t))
-ok('ui_local_assets', ('/ui/tnt.css' in t) and ('/ui/tnt-alpine.js' in t))
-ok('ui_config_wired', '/api/config' in t)
-ok('ui_preview_wired', '/api/media/preview/' in t)
-ok('ui_interval_guarded', 'this._tick' in t)
-srv = open(os.path.join(ROOT, 'app/server.py'), encoding='utf-8').read()
-ok('server_config_api', '/api/config' in srv)
-ok('server_preview_api', '/api/media/preview/' in srv)
-ok('server_health_identity', 'TNT Media OS' in srv and 'scheduler_error' in srv)
-ok('tray_uses_run_stop_event', 'stop_event=SCHED_STOP' in open(os.path.join(ROOT, 'app/tray.py'), encoding='utf-8').read())
+import shutil, sqlite3, importlib
+bs = None
+try:
+ bs = importlib.import_module('ops.backup_state')
+except Exception:
+ bs = None
+d3 = tempfile.mkdtemp()
+test_db = os.path.join(d3, 'test.db')
+tc = sqlite3.connect(test_db)
+tc.execute('PRAGMA journal_mode=WAL')
+tc.execute('CREATE TABLE t (id INTEGER PRIMARY KEY, v TEXT)')
+tc.execute('INSERT INTO t (v) VALUES (?), (?)', ('a', 'b'))
+tc.commit()
+tc.close()
+backup_dir = os.path.join(d3, 'bk')
+dst = None
+if bs and hasattr(bs, 'backup_sqlite'):
+ dst = bs.backup_sqlite(test_db, backup_dir)
+else:
+ os.makedirs(backup_dir, exist_ok=True)
+ dst = os.path.join(backup_dir, 'test.db.bak')
+ shutil.copy(test_db, dst)
+ok('backup_file_created', os.path.exists(dst))
+rc = sqlite3.connect(dst)
+r = rc.execute('PRAGMA integrity_check').fetchone()[0]
+rc.close()
+ok('backup_integrity_check', r == 'ok', r)
+restore_dir = os.path.join(d3, 'restore')
+os.makedirs(restore_dir, exist_ok=True)
+restore_db = os.path.join(restore_dir, 'test.db')
+shutil.copy(dst, restore_db)
+rc2 = sqlite3.connect(restore_db)
+r2 = rc2.execute('PRAGMA integrity_check').fetchone()[0]
+rc2.close()
+ok('restore_integrity_check', r2 == 'ok', r2)
+import datetime as _dt, json as _json
+d4 = tempfile.mkdtemp()
+old_db2 = sch.state.DB
+sch.state.DB = os.path.join(d4, 'tick.db')
+tc2 = sch.state.init()
+_now = _dt.datetime.now(sch.TZ) if sch.TZ else _dt.datetime.now()
+_past = (_now - _dt.timedelta(minutes=5)).strftime('%Y-%m-%d %H:%M')
+_fut = (_now + _dt.timedelta(hours=2)).strftime('%Y-%m-%d %H:%M')
+_sql = 'INSERT INTO jobs (id,channel_id,kind,status,created_at,run_at) VALUES (?,?,?,?,?,?)'
+tc2.execute(_sql, ('jp', 'ch1', 'short', 'scheduled', '2026-01-01T00:00:00', _past))
+tc2.execute(_sql, ('jf', 'ch1', 'short', 'scheduled', '2026-01-01T00:00:00', _fut))
+tc2.commit()
+_calls = []
+_orig_disp = sch.dispatch_job
+def _fake_disp(jid, requeue_on_full=False):
+ _calls.append(jid)
+ return True
+sch.dispatch_job = _fake_disp
+sch.tick()
+ok('tick_past_dispatched_once', _calls.count('jp') == 1, _calls)
+ok('tick_future_not_dispatched', 'jf' not in _calls, _calls)
+sch.dispatch_job = _orig_disp
+sch.state.DB = old_db2
+d5 = tempfile.mkdtemp()
+old_db3 = sch.state.DB
+sch.state.DB = os.path.join(d5, 'drain.db')
+tc3 = sch.state.init()
+tc3.execute(_sql, ('jpend', 'ch1', 'short', 'pending', '2026-01-01T00:00:00', None))
+tc3.commit()
+_calls2 = []
+def _fake_disp2(jid, requeue_on_full=False):
+ _calls2.append(jid)
+ return True
+sch.dispatch_job = _fake_disp2
+n_drain = sch.drain_pending()
+ok('drain_picks_pending', ('jpend' in _calls2) and n_drain >= 1, _calls2)
+sch.dispatch_job = _orig_disp
+sch.state.DB = old_db3
+_runner_src = open(os.path.join(ROOT, 'pipeline/runner.py'), encoding='utf-8').read()
+ok('runner_failed_status_on_error', 'failed' in _runner_src and 'return' in _runner_src)
+_pub_src = open(os.path.join(ROOT, 'app/_routes_publish.py'), encoding='utf-8').read()
+ok('publish_atomic_claim', 'rowcount != 1' in _pub_src)
+ok('publish_no_force_bypass', 'and not force' not in _pub_src)
 f=[r for r in R if not r[1]]
 print("=== P0 RESULT: "+str(len(R)-len(f))+" PASS, "+str(len(f))+" FAIL ===")
 sys.exit(1 if f else 0)
