@@ -6,7 +6,7 @@ import tempfile
 
 MODULE = {
     "name": "render.viral_15s",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "interface": "render(item: dict, out: str, style: dict = None) -> str",
     "config_schema": {"item": "dict", "out": "str", "style": "dict"},
     "deps": ["render.video"],
@@ -29,15 +29,23 @@ def render(item, out, style=None):
     try:
         if os.path.exists(tmp):
             os.remove(tmp)
-        base.render(item, tmp, style=style or {})
+        import ops.ffmpeg_render as fr
+        original_pool = fr._fresh_or_pool
+        def local_pool(local_item, seed):
+            return fr.pickpool(local_item.get("topic", ""), seed)
+        fr._fresh_or_pool = local_pool
+        try:
+            base.render(item, tmp, style=style or {})
+        finally:
+            fr._fresh_or_pool = original_pool
         if not os.path.exists(tmp) or os.path.getsize(tmp) < 300000:
             raise RuntimeError("base render output missing or too small")
 
         cmd = [
-            FFMPEG, -"y", -"stream_loop", "-1", "-i", tmp,
+            FFMPEG, "-y", "-stream_loop", "-1", "-i", tmp,
             "-t", "15", "-c:v", "libx264", "-preset", "veryfast",
             "-crf", "21", "-pix_fmt", "yuv420p", "-r", "30",
-            "-c:a", "aac", "-b:a", "192h", "-shortest", out_abs,
+            "-c:a", "aac", "-b:a", "192k", "-shortest", out_abs,
         ]
         r = subprocess.run(cmd, capture_output=True, text=True)
         if r.returncode != 0 or not os.path.exists(out_abs) or os.path.getsize(out_abs) < 300000:
