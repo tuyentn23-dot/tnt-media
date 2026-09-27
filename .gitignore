@@ -1,5 +1,4 @@
-# Git ignore - TNT Media
-
+# TNT Media .gitignore
 # Secrets
 .pickle
 client_secret.json
@@ -8,137 +7,57 @@ api_keys.json
 .env.local
 temp_gemini_key.txt
 memory/token.json
-memory/token_channel_01.json
-memory/token_channel_02.json
-memory/token_new_channel.json
 
 # Python
-__pycache__/
-.py[cod]
-.pyo
+pycache/
 .venv/
 venv/
 
-# Database
+# DB runtime
 .db
 .sqlite
 .sqlite3
-system/state.db
+state/
 memory/tnt_media.db
 
 # Logs
 logs/
 .log
 
-# Output / heavy media
+# Heavy media
 output/
-_trash/
 backups/
 library/
 music_bank/
 assets/
 tnt_media_v3/
+cloud_media/
 
-# NHUNG cho phep cloud_media (subset nhe de deploy)
-!cloud_media/
-!cloud_media/**
+# Archives/work
+_archive*/
+work/
+attic/
+work/
 
-# IDE / OS
-.vscode/
-.idea/
-.swp
-.DS_Store
-Thumbs.db
-
-# Temp
-temp/
-tmp/
-_archive/
-.bak
-_run_fresh4.py
-_run_fresh_both.py
-
-# Secrets bo sung
+# Sensitive
 token.pickle
-**/token.pickle
-channels//token.pickle
-.env
-
-# OAuth secrets - KHONG BAO GIO push
+config/token.pickle
 config/client_secrets.json
-**/client_secrets.json
-client_secret.json
-config/.json
-!config/scripts_vi.json
-channels/*/*.pickle
-
-# gh CLI (khong push)
-tools/gh/
-tools/gh.zip
-output/gh_
-output/git_
-output/fresh*
-
+channels/*/token.pickle
 deploy/GH_SECRETS.txt
-_run_publish.py
-_tmp_count_fresh.py
 
-_kill_tray.py
-memory/tray_state.json
-TEMP_MPY*
-
-/ch.mp4
-/vo_.mp3
-TEMP_MPY
-/.mp4
-/.mp3
-
-# Temp/archive 2026-09-27
-_work/
-_archive_tmp_20260927/
-archive_root_20260927/
-archive_root.py
-archive_root2.py
-TEMP_MPY*.mp4
-
-# Unsplash/Chrome profile (khong commit)
-state/browser_profile/
-state/.db-shm
-state/.db-wal
-state/tray.lock
-state/snapshots/
-state/backup/
-tmp_*.py
-tnt_run.py
-audit_report.json
-client_secret.json
-make_client_secret.py
-main_pipeline.py
-pick2.py
-pub_list.json
+# Temp noise
+tmp*
+pub*.json
 pub_log.txt
-pub_result.json
-dashboard.html
-final_dashboard.html
-test_short_canvas.html
-test_short_prototype.html
+_audit_log.txt
+.vscode/
+tools/gh.zip
+tools/gh/
 do_pub.py
-oauth_analytics.py
+pick2.py
 run_batch_6.py
-scheduler.py
-
-# Runtime DB artifacts (precise)
-state/pipeline.db-wal
-state/pipeline.db-shm
-state/.db-wal
-state/*.db-shm
-state/ui_config.json
-state/scheduler_status.json
-tests/_ui.js
-tests/_ui_raw.txt
-tests/_modal_backup.html
-tests/_dump.txt
-tests/_probe.py
-tests/_probe2.py
-tests/_fix_indent.py
-tests/_fix.py
+tnt_run.py
+pub_list.json
+pub_result.json
+memory/tray_state.json
