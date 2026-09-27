@@ -6,7 +6,7 @@ import tempfile
 
 MODULE = {
     "name": "render.viral_15s",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "interface": "render(item: dict, out: str, style: dict = None) -> str",
     "config_schema": {"item": "dict", "out": "str", "style": "dict"},
     "deps": ["render.video"],
@@ -15,7 +15,6 @@ MODULE = {
 
 
 def render(item, out, style=None):
-    from modules.render import video as base
     from ops.ffmpeg_render import FFMPEG
 
     target = float(item.get("duration_seconds") or 15.0)
@@ -35,7 +34,8 @@ def render(item, out, style=None):
             return fr.pickpool(local_item.get("topic", ""), seed)
         fr._fresh_or_pool = local_pool
         try:
-            base.render(item, tmp, style=style or {})
+            st = style or {}
+            fr.render(item, tmp, voice=st.get("voice", "female_north"), preset=st.get("preset", st.get("voice_preset", "cute")), seed=st.get("seed"), music=st.get("music_mood") or st.get("music"), scenes=4)
         finally:
             fr._fresh_or_pool = original_pool
         if not os.path.exists(tmp) or os.path.getsize(tmp) < 300000:
