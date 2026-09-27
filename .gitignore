@@ -65,3 +65,4 @@ tnt_run.py
 pub_list.json
 pub_result.json
 memory/tray_state.json
+memory/footage_cache.json
