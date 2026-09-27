@@ -205,6 +205,22 @@ def main():
 			open_window()
 		except Exception as e:
 			print('[tray] reconnect ERR: ' + str(e)[:120])
+	def on_open_logs(icon=None, item=None):
+		try:
+			logdir = os.path.join(ROOT, 'logs')
+			os.makedirs(logdir, exist_ok=True)
+			os.startfile(logdir)
+		except Exception as e:
+			print('[tray] open logs ERR: ' + str(e)[:120])
+	def on_backup_now(icon=None, item=None):
+		try:
+			from ops import backup_state as _bs
+			from pipeline import state as _st
+			bk = os.path.join(ROOT, 'state', 'backup')
+			dst = _bs.backup_sqlite(_st.DB, bk)
+			print('[tray] backup: ' + dst)
+		except Exception as e:
+			print('[tray] backup ERR: ' + str(e)[:120])
 	def on_quit(icon, item):
 		try:
 			SCHED_STOP.set()
@@ -231,9 +247,10 @@ def main():
 	m3 = pystray.MenuItem('Tam dung', on_pause)
 	m4 = pystray.MenuItem('Tiep tuc', on_resume)
 	m5 = pystray.MenuItem('Khoi phuc ket noi', on_reconnect)
-	m6 = pystray.MenuItem('Xem loi (log)', on_open)
+	m6 = pystray.MenuItem('Xem log', on_open_logs)
+	m6b = pystray.MenuItem('Backup ngay', on_backup_now)
 	m7 = pystray.MenuItem('Thoat', on_quit)
-	menu = pystray.Menu(m1, m2, pystray.Menu.SEPARATOR, m3, m4, pystray.Menu.SEPARATOR, m5, m6, pystray.Menu.SEPARATOR, m7)
+	menu = pystray.Menu(m1, m2, pystray.Menu.SEPARATOR, m3, m4, pystray.Menu.SEPARATOR, m5, m6, m6b, pystray.Menu.SEPARATOR, m7)
 	icon = pystray.Icon('tnt', img, 'TNT Media', menu)
 	icon.run()
 	return 0
