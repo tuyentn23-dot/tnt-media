@@ -1,4 +1,4 @@
-# TNT Media .gitignore
+# TNT Media gitignore
 # Secrets
 .pickle
 client_secret.json
@@ -7,22 +7,25 @@ api_keys.json
 .env.local
 temp_gemini_key.txt
 memory/token.json
+memory/token_channel_*.json
+memory/token_new_channel.json
 
 # Python
-pycache/
+__pycache__/
+*.pyc
 .venv/
 venv/
 
 # DB runtime
-.db
-.sqlite
-.sqlite3
+*.db
+*.sqlite
+*.sqlite3
 state/
 memory/tnt_media.db
 
 # Logs
 logs/
-.log
+*.log
 
 # Heavy media
 output/
@@ -32,11 +35,12 @@ music_bank/
 assets/
 tnt_media_v3/
 cloud_media/
+_trash/
 
 # Archives/work
 _archive*/
-work/
-attic/
+_work/
+_attic/
 work/
 
 # Sensitive
@@ -47,8 +51,8 @@ channels/*/token.pickle
 deploy/GH_SECRETS.txt
 
 # Temp noise
-tmp*
-pub*.json
+tmp_*
+pub_*.json
 pub_log.txt
 _audit_log.txt
 .vscode/
