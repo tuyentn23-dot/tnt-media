@@ -140,7 +140,7 @@ th{background:#f9fafb;font-weight:600}
 	<div x-show='tab=="analytics"'>
 		<div class="grid grid-cols-2 gap-4">
 			<div class="card"><div class="text-gray-500">Total</div><div class="text-3xl font-bold" x-text="analytics.total"></div></div>
-			<div class="card"><div class="text-gray-500">By Channel</div><template x-for="c in analytics.by_channel"><div x-text="c.ch+": "+c.n"></div></template></div>
+			<div class="card"><div class="text-gray-500">By Channel</div><template x-for="c in analytics.by_channel"><div x-text="c.ch + ': ' + c.n"></div></template></div>
 		</div>
 	</div>
 	<div x-show='tab=="audit"'>
@@ -238,7 +238,7 @@ th{background:#f9fafb;font-weight:600}
 
 
 </main><div x-show="previewUrl" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50" @click="previewUrl=null">
-<div class="bg-white p-3 rounded max-w-2xl w-full" @click.stop="">
+<div class="bg-white p-3 rounded max-w-2xl w-full" @click.stop>
 <video :src="previewUrl" controls style="width:100%;max-height:70vh"></video>
 <div class="text-sm text-gray-600 mt-2" x-text="previewId || ''"></div>
 <button @click="previewUrl=null" class="mt-3 px-3 py-1 bg-gray-500 text-white rounded">Đóng</button>
