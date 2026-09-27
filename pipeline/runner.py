@@ -140,8 +140,13 @@ def run_job(job, dry_run=False, item_id=None):
 		c.execute('UPDATE jobs SET status=?, error=?, updated_at=? WHERE id=?', ('failed', msg, state.now(), job.job_id))
 		c.commit()
 		return {'ok': False, 'error': msg, 'errors': errors, 'rendered': 0}
+	# Do not overwrite a cancelled terminal state (killswitch) with done.
+	cur = c.execute('SELECT status FROM jobs WHERE id=?', (job.job_id,)).fetchone()
+	cur_status = cur['status'] if cur else None
+	if cur_status == 'cancelled':
+		return {'ok': False, 'job_id': job.job_id, 'rendered': len(rendered), 'status': cur_status, 'errors': errors}
 	status = 'done'
-	c.execute('UPDATE jobs SET status=?, updated_at=? WHERE id=?', (status, state.now(), job.job_id))
+	c.execute('UPDATE jobs SET status=?, updated_at=? WHERE id=? AND status != ?', (status, state.now(), job.job_id, 'cancelled'))
 	c.commit()
 	return {'ok': True, 'job_id': job.job_id, 'rendered': len(rendered), 'status': status, 'errors': errors}
 

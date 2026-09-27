@@ -12,8 +12,8 @@ MODULE = {
 
 
 def build(source_metrics):
- views = int(source_metrics.get('views') or 0)
- duration = int(source_metrics.get('duration_seconds') or 15)
+ views = source_metrics.get('views') if isinstance(source_metrics.get('views'), int) else 'unknown'
+ duration = source_metrics.get('duration_seconds') if isinstance(source_metrics.get('duration_seconds'), int) else 'unknown'
  return {
  'source_signal': {
  'views': views,
@@ -43,14 +43,8 @@ def build(source_metrics):
  'replicate_story_structure': True
  },
  'measurement': {
- '24h_conservative_views': 18486,
- '24h_working_views': 20742,
- '24h_momentum_views': 22998,
- 'interpretation': {
- 'below_conservative': 'distribution_slowing',
- 'between_conservative_and_momentum': 'healthy',
- 'above_momentum': 'strong_acceleration'
- }
+ 'status': 'no_model_no_forecast',
+ 'reason': 'no trained model; no view numbers fabricated',
  }
  }
 

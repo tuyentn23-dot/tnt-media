@@ -22,9 +22,9 @@ def publish_pub(pub_id: int, privacy: str = 'public', force: bool = False):
 	if row['youtube_id']:
 		return {'ok': True, 'already_published': True, 'youtube_id': row['youtube_id']}
 	cur = row['status']
-	if cur != 'approved' and not force:
+	if cur != 'approved':
 		return JSONResponse({'ok': False, 'error': 'publication chua duoc duyet (status=' + str(cur) + ')', 'status': cur}, status_code=409)
-	if not jobmod.valid_transition(jobmod.PUB_TRANSITIONS, cur, 'publishing') and not force:
+	if not jobmod.valid_transition(jobmod.PUB_TRANSITIONS, cur, 'publishing'):
 		return JSONResponse({'ok': False, 'error': 'transition khong hop le: ' + str(cur) + ' -> publishing'}, status_code=409)
 	vp = row['file_path']
 	if not vp or not os.path.exists(vp):

@@ -99,10 +99,7 @@ _archive_tmp_20260927/
 archive_root_20260927/
 archive_root.py
 archive_root2.py
-ops/*.py
-ops/.txt
 TEMP_MPY*.mp4
-*.txt
 
 # Unsplash/Chrome profile (khong commit)
 state/browser_profile/
@@ -117,17 +114,21 @@ audit_report.json
 client_secret.json
 make_client_secret.py
 main_pipeline.py
-requirements.txt
 pick2.py
 pub_list.json
 pub_log.txt
 pub_result.json
 dashboard.html
 final_dashboard.html
-index.html
 test_short_canvas.html
 test_short_prototype.html
 do_pub.py
 oauth_analytics.py
 run_batch_6.py
 scheduler.py
+
+# Runtime DB artifacts (precise)
+state/pipeline.db-wal
+state/pipeline.db-shm
+state/.db-wal
+state/*.db-shm

@@ -130,7 +130,7 @@ def c15():
 	if not os.path.exists(p):
 		return False, 'app/tray.py missing'
 	t = open(p, encoding='utf-8').read()
-	need = ['pystray', 'Dashboard', 'Start Server']
+	need = ['pystray', 'scheduler', 'stop_event', 'SCHED_STOP']
 	miss = [k for k in need if k not in t]
 	return (len(miss) == 0), 'miss=' + str(miss)
 
@@ -171,7 +171,7 @@ def c20():
 @check('api_run_schedule')
 def c21():
 	src = open(os.path.join(ROOT, 'app/server.py'), encoding='utf-8').read()
-	need = ['/run', '/schedule', '/publish']
+	need = ['/run', '/schedule', '_routes_publish']
 	miss = [k for k in need if k not in src]
 	return (len(miss) == 0), 'miss=' + str(miss)
 
@@ -186,8 +186,8 @@ def c22():
 
 @check('publish_wired')
 def c23():
-	src = open(os.path.join(ROOT, 'app/server.py'), encoding='utf-8').read()
-	need = ['op.publish', 'op.set_channel']
+	src = open(os.path.join(ROOT, 'app/_routes_publish.py'), encoding='utf-8').read()
+	need = ['os_publish.set_channel', 'os_publish.publish']
 	miss = [k for k in need if k not in src]
 	return (len(miss) == 0), 'miss=' + str(miss)
 
