@@ -88,3 +88,43 @@ c4e8e5a fix(P0): remove force=True in publish route
 4. Kiem tra UI 7777 tren browser that (khong chi curl)
 5. Chay pipeline.selfcheck dinh ky
 6. Them unit test cho parse_cron, atomic publish, backup
+
+
+---
+
+## PHIEN 2026-09-27 (sau P0)
+
+Da hoan tat:
+- Muc 1: Doi soat pending_approval -> 27 cu mark cancelled, giu 44 hop le (2026-09-26)
+- Muc 2: Don 101 file tam ops/_*.py + 6 txt -> _archive_tmp_20260927/
+- Muc 3: End-to-end render anime PASS (1080x1920, qgate=80, health ok)
+- Muc 4: UI 7777 OK (index 200, 5 API endpoint 200, 50 publications)
+- Muc 5: pipeline/selfcheck.py 17/17 PASS
+- Muc 6: ops/test_p0.py 7/7 PASS (parse_cron */5, backup_sqlite)
+
+Bug phat hien va fix trong phien:
+- ffmpeg_render.py: import tempfile (thieu sau patch)
+- ffmpeg_render.py ffpath: dung relative path tu ROOT tranh ffmpeg hieu sai dau : Windows
+- scheduler.py _expand_cron_field: ap dung step */n (truoc do bo qua)
+
+Commit phien nay: 8 commit (P0 + test + docs + cleanup)
+
+
+---
+
+## PHIEN 2026-09-27 (sau P0)
+
+Da hoan tat:
+- Muc 1: Doi soat pending_approval -> 27 cu mark cancelled, giu 44 hop le (2026-09-26)
+- Muc 2: Don 101 file tam ops/_*.py + 6 txt -> _archive_tmp_20260927/
+- Muc 3: End-to-end render anime PASS (1080x1920, qgate=80, health ok)
+- Muc 4: UI 7777 OK (index 200, 5 API endpoint 200, 50 publications)
+- Muc 5: pipeline/selfcheck.py 17/17 PASS
+- Muc 6: ops/test_p0.py 7/7 PASS (parse_cron */5, backup_sqlite)
+
+Bug phat hien va fix trong phien:
+- ffmpeg_render.py: import tempfile (thieu sau patch)
+- ffmpeg_render.py ffpath: dung relative path tu ROOT tranh ffmpeg hieu sai dau : Windows
+- scheduler.py _expand_cron_field: ap dung step */n (truoc do bo qua)
+
+Commit phien nay: 8 commit (P0 + test + docs + cleanup)
