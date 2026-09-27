@@ -43,6 +43,8 @@ def render(item, out, style=None):
     titlef = os.path.join(td, "title.txt")
     open(titlef, "w", encoding="utf-8").write(item["title"])
     filters = ["scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,fps=30"]
+    if item.get('hook_boost'):
+        filters.append('eq=brightness=0.16:enable=between(t\\,0\\,0.45)')
     filters.append(_drawtext(titlef, 0, 1.4, "0.12*h", 58, "0xFFEB3B"))
     for i, cap in enumerate(item["captions"]):
         start, end, text = cap
