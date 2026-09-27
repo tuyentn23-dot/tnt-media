@@ -92,3 +92,14 @@ TEMP_MPY*
 TEMP_MPY
 /.mp4
 /.mp3
+
+# Temp/archive 2026-09-27
+_work/
+_archive_tmp_20260927/
+archive_root_20260927/
+archive_root.py
+archive_root2.py
+ops/*.py
+ops/.txt
+TEMP_MPY*.mp4
+*.txt
