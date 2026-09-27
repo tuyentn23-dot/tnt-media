@@ -16,6 +16,29 @@ VIRAL_WEIGHT = dict([
 ])
 DEFAULT_WEIGHT = 50
 
+
+def trend_scores():
+	import json, os as _os
+	p = _os.path.join(ROOT, 'memory', 'topic_pool.json')
+	if not _os.path.exists(p):
+		return {}
+	try:
+		return json.load(open(p, encoding='utf-8')).get('topics', {}) or {}
+	except Exception:
+		return {}
+
+
+def trend_boost(topic, scores):
+	t = (topic or '').strip().lower()
+	if not t or not scores:
+		return 0.0
+	best = 0.0
+	for term, sc in scores.items():
+		tl = term.lower()
+		if t in tl or tl in t:
+			best = max(best, float(sc))
+	return round(best * 3.0, 3)
+
 def library_topics():
     base = os.path.join(ROOT, 'library')
     out = []
@@ -46,11 +69,12 @@ def pick(exclude=None, prefer_viral=True):
         cand = [(t, n) for (t, n) in topics if t.lower() not in ex]
     if not cand:
         return None
+    _ts = trend_scores()
     if prefer_viral:
         def score(item):
             t, n = item
             w = VIRAL_WEIGHT.get(t.lower(), DEFAULT_WEIGHT)
-            return w + min(n, 10)
+            return w + min(n, 10) + trend_boost(t, _ts)
         cand.sort(key=score, reverse=True)
     return cand[0][0]
 

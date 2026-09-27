@@ -61,12 +61,31 @@ def save(cid, cfg):
 
 def load_content(cid, kind=None):
 	p = os.path.join(CHANNELS_DIR, cid, 'content_db.json')
-	if not os.path.exists(p):
-		return [] if kind else {}
-	db = json.load(io.open(p, encoding='utf-8'))
+	static = {}
+	if os.path.exists(p):
+		try:
+			static = json.load(io.open(p, encoding='utf-8'))
+		except Exception:
+			static = {}
 	if kind is None:
-		return db
-	return db.get(kind, [])
+		return static
+	items = list(static.get(kind, []))
+	try:
+		from ops import live_content as lc
+		live = lc.generate(cid, kind, limit=20)
+		if live:
+			ids = set(it.get('id') for it in items)
+			for it in live:
+				if it.get('id') and it['id'] not in ids:
+					items.insert(0, it)
+	except Exception as e:
+		print('[loader] live err:', str(e)[:80])
+	try:
+		from ops import live_content as _lc2
+		items = _lc2.filter_items(items)
+	except Exception:
+		pass
+	return items
 
 
 def load_topic_pool(cid):

@@ -17,6 +17,8 @@ def run(script,args=None):
         return False, str(e)
 if __name__ == "__main__":
     log("PDCA start")
+    ot,rt=run("ops/trend_engine.py"); log("PLAN trend "+str(ot))
+    oi,ri=run("ops/idea_generator.py"); log("PLAN ideas "+str(oi))
     o1,r1=run("ops/scheduler.py"); log("DO scheduler "+str(o1))
     o2,r2=run("ops/perf_tracker.py"); log("CHECK perf "+str(o2))
     log("ACT review winners")

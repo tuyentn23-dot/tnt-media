@@ -43,8 +43,14 @@ def _save(dd):
 
 
 def signature(item, kind):
-	h = (item.get('hook') or '').strip().lower()[:40]
-	return kind + '|' + str(item.get('id', '')) + '|' + h
+	import hashlib
+	h = (item.get('hook') or '').strip().lower()
+	b = (item.get('body') or '').strip().lower()
+	p = (item.get('payoff') or '').strip().lower()
+	t = str(item.get('topic') or '').strip().lower()
+	core = h + '||' + b + '||' + p + '||' + t
+	dig = hashlib.sha1(core.encode('utf-8')).hexdigest()[:24]
+	return kind + '|' + str(item.get('id', '')) + '|' + dig
 
 
 def is_published(sig):

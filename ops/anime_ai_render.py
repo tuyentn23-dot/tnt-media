@@ -19,6 +19,9 @@ def make_mv(images, out, dur=12.0, fps=8):
 	seg = n_frames / n_img
 	tmpdir = 'output/_mv_tmp'
 	os.makedirs(tmpdir, exist_ok=True)
+	import glob as _g, shutil as _sh
+	for _f in _g.glob(os.path.join(tmpdir, '*.png')):
+		os.remove(_f)
 	# preload + fit cover
 	covers = [fit_cover(Image.open(p).convert('RGB'), BW, BH) for p in images]
 	for i in range(n_frames):

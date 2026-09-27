@@ -1,0 +1,71 @@
+import ast
+NL = chr(10)
+TB = chr(9)
+TB2 = TB+TB
+Q = chr(39)
+p = 'pipeline/scheduler.py'
+src = open(p, encoding='utf-8').read()
+
+# Ensure file ends cleanly - replace truncated section
+tail_marker = "rows_at = c.execute('SELECT id FROM jobs WHERE status=? AND run_at IS NOT NULL AND run_at <= ?', ('scheduled', state.now())).fetchall()"
+i = src.find(tail_marker)
+assert i > 0
+head = src[:i + len(tail_marker)] + NL
+
+rest_lines = []
+rest_lines.append(TB + 'except Exception:')
+rest_lines.append(TB2 + 'rows_at = []')
+rest_lines.append(TB + 'for r in rows_at:')
+rest_lines.append(TB2 + 'if dispatch_job(r[' + Q + 'id' + Q + ']):')
+rest_lines.append(TB2 + TB + 'created.append(r[' + Q + 'id' + Q + '])')
+rest_lines.append('')
+rest_lines.append(TB + '# 2) cron-based channels')
+rest_lines.append(TB + "rows = c.execute('SELECT id, schedule FROM channels WHERE enabled=1').fetchall()")
+rest_lines.append(TB + 'for r in rows:')
+rest_lines.append(TB2 + 'try:')
+rest_lines.append(TB2 + TB + "sched = json.loads(r['schedule'] or '{}')")
+rest_lines.append(TB2 + 'except Exception:')
+rest_lines.append(TB2 + TB + 'sched = {}')
+rest_lines.append(TB2 + "cron = sched.get('cron') or sched.get('scheduleCron') or ''")
+rest_lines.append(TB2 + 'if not due_now(cron, now):')
+rest_lines.append(TB2 + TB + 'continue')
+rest_lines.append(TB2 + 'try:')
+rest_lines.append(TB2 + TB + "jid = 'sch' + str(r['id']) + '' + time.strftime('%Y%m%d%H%M')")
+rest_lines.append(TB2 + TB + "existing = c.execute('SELECT id FROM jobs WHERE id=?', (jid,)).fetchone()")
+rest_lines.append(TB2 + TB + 'if existing:')
+rest_lines.append(TB2 + TB + TB + 'continue')
+rest_lines.append(TB2 + TB + 'c.execute(')
+rest_lines.append(TB2 + TB + TB + "'INSERT INTO jobs (id, channel_id, kind, topic, status, created_at, count, require_approval) VALUES (?,?,?,?,?,?,?,?)',")
+rest_lines.append(TB2 + TB + TB + "(jid, r['id'], sched.get('kind', 'short'), sched.get('topic', ''), 'pending', state.now(), int(sched.get('count', 1)), int(sched.get('require_approval', 0)))")
+rest_lines.append(TB2 + TB + ')')
+rest_lines.append(TB2 + TB + 'c.commit()')
+rest_lines.append(TB2 + TB + 'created.append(jid)')
+rest_lines.append(TB2 + TB + 'dispatch_job(jid)')
+rest_lines.append(TB2 + 'except Exception as e:')
+rest_lines.append(TB2 + TB + "print('[scheduler] create job ERR: ' + str(e)[:120])")
+rest_lines.append(TB + 'return len(created)')
+rest_lines.append('')
+rest_lines.append('')
+rest_lines.append('def loop_forever(interval=30):')
+rest_lines.append(TB + 'while True:')
+rest_lines.append(TB2 + 'try:')
+rest_lines.append(TB2 + TB + 'n = tick()')
+rest_lines.append(TB2 + TB + 'if n:')
+rest_lines.append(TB2 + TB + TB + "print('[scheduler] tick created=' + str(n))")
+rest_lines.append(TB2 + 'except Exception as e:')
+rest_lines.append(TB2 + TB + "print('[scheduler] tick ERR: ' + str(e)[:200])")
+rest_lines.append(TB2 + 'time.sleep(interval)')
+rest_lines.append('')
+rest_lines.append('')
+rest_lines.append("if name == 'main':")
+rest_lines.append(TB + 'loop_forever()')
+rest_lines.append('')
+
+out = head + NL.join(rest_lines)
+open(p, 'w', encoding='utf-8', newline='').write(out)
+print('APPENDED')
+try:
+ ast.parse(out)
+ print('AST OK')
+except SyntaxError as e:
+ print('AST ERR line', e.lineno, ':', e.msg)

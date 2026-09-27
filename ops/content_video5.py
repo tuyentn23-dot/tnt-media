@@ -31,7 +31,7 @@ def _wrap(draw, text, font, maxw):
 	return lines
 
 
-def text_frame(text, fs, color, W=720, H=1280, y=300):
+def text_frame(text, fs, color, W=540, H=960, y=225):
 	img = Image.new("RGBA", (W, H), (0, 0, 0, 0))
 	dr = ImageDraw.Draw(img)
 	font = ImageFont.truetype(FONT, fs)
@@ -46,45 +46,75 @@ def text_frame(text, fs, color, W=720, H=1280, y=300):
 	return np.array(img)
 
 
+
+
+# make_scene v3 - co fallback neu clip corrupt
+
 def make_scene(cpath, text, color, fs, dur, y, seed=0):
 	from ops.compat import get_video_clip, concat as cc
 	from ops.compat import _editor as _cmp_editor
 	ColorClip = _cmp_editor()[5]
 	from moviepy.video.VideoClip import VideoClip
+	from PIL import Image
+	import numpy as np
 	V = get_video_clip()
+	col = (255, 255, 0) if color == 'yellow' else ((0, 255, 204) if color == '#00ffcc' else (255, 255, 255))
+	overlay = text_frame(text, fs, col, 540, 960, y)
+	if not isinstance(overlay, Image.Image):
+		overlay = Image.fromarray(overlay).convert('RGBA')
+	_c = None
 	if cpath:
-		_c = V(cpath)
-		b = (_c.resized(height=1280) if hasattr(_c, "resized") else _c.resize(height=1280))
-	else:
-		b = ColorClip((720, 1280), color=(8, 10, 25), duration=dur)
-	if b.w >= 720:
-		b = (b.cropped(width=720, x_center=b.w / 2) if hasattr(b, "cropped") else b.crop(x1=(b.w-720)//2, width=720))
-	else:
-		b = (b.resized(width=720) if hasattr(b, "resized") else b.resize(width=720))
-	if b.h < 1280:
-		b = b.resized(height=1280)
-	if b.duration < dur:
-		n = int(dur / b.duration) + 1
-		b = cc([b] + [b] * (n - 1))
-	b = (b.subclipped(0, dur) if hasattr(b, "subclipped") else b.subclip(0, dur))
-	b = (b.cropped(width=720, height=1280, x_center=b.w / 2, y_center=b.h / 2) if hasattr(b, "cropped") else b.crop(x1=(b.w-720)//2, y1=(b.h-1280)//2, width=720, height=1280))
-	col = (255, 255, 0) if color == "yellow" else ((0, 255, 204) if color == "#00ffcc" else (255, 255, 255))
-	overlay = text_frame(text, fs, col, 720, 1280, y)
+		try:
+			try:
+				_c = V(cpath, target_resolution=(360, 640), audio=False)
+			except Exception:
+				_c = V(cpath, target_resolution=(360, 640), audio=False)
+			_ = _c.get_frame(0)
+		except Exception as e:
+			print('[make_scene] clip fail:', cpath, str(e)[:100])
+			_c = None
+	if _c is None:
+		_c = ColorClip((540, 960), color=(8, 10, 25), duration=dur)
 	def mk(get, t):
-		fr = get(t)
-		ov = overlay.astype("float32") / 255.0
-		fr = fr.astype("float32")
-		out = fr * (1 - ov[..., 3:4]) + ov[..., :3] * 255 * ov[..., 3:4]
-		return out.astype("uint8")
-	vid = VideoClip(lambda t: mk(b.get_frame, t))
-	vid = (vid.with_duration(dur).with_fps(30) if hasattr(vid, "with_fps") else vid.set_fps(30).set_duration(dur))
+		try:
+			fr = get(t)
+		except Exception:
+			fr = np.zeros((960, 540, 3), dtype=np.uint8)
+		if fr.dtype != np.uint8:
+			fr = fr.astype(np.uint8)
+		img = Image.fromarray(fr)
+		if img.mode != "RGB":
+			img = img.convert("RGB")
+		if img.size != (540, 960):
+			img = img.resize((540, 960), Image.LANCZOS)
+		img.paste(overlay, (0, 0), overlay)
+		return np.asarray(img, dtype=np.uint8)
+	vid = VideoClip(lambda t: mk(_c.get_frame, t))
+	vid = (vid.with_duration(dur).with_fps(30) if hasattr(vid, 'with_fps') else vid.set_fps(30).set_duration(dur))
 	return vid
 
 
-def tts(text, out):
-	from gtts import gTTS
-	gTTS(text=text, lang="vi").save(out)
 
+def tts(text, out, voice=None, preset=None):
+	try:
+		from ops import voice_engine as VE
+		v = voice or chr(102)+chr(101)+chr(109)+chr(97)+chr(108)+chr(101)+chr(95)+chr(110)+chr(111)+chr(114)+chr(116)+chr(104)
+		pr = preset or chr(115)+chr(116)+chr(111)+chr(114)+chr(121)
+		VE.tts(text, out, voice=v, preset=pr, pause_ms=200)
+		if os.path.exists(out) and os.path.getsize(out) > 1000:
+			return out
+	except Exception as e:
+		print(chr(91)+chr(116)+chr(116)+chr(115)+chr(93), str(e)[:80])
+	try:
+		from ops import voice_synth
+		voice_synth.synth(text, out, voice=chr(102)+chr(101)+chr(109)+chr(97)+chr(108)+chr(101)+chr(95)+chr(110)+chr(111)+chr(114)+chr(116)+chr(104), preset=chr(115)+chr(116)+chr(111)+chr(114)+chr(121), maxlen=4000)
+		if os.path.exists(out) and os.path.getsize(out) > 1000:
+			return out
+	except Exception:
+		pass
+	from gtts import gTTS
+	gTTS(text=text, lang=chr(118)+chr(105)).save(out)
+	return out
 
 def build(item, out, seed=None):
 	from ops.compat import get_audio_clip, concat as cc

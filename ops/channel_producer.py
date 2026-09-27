@@ -8,6 +8,7 @@ except Exception:
 from ops import channel_render as CR
 from ops import quality_gate as QG
 from ops import os_publish as OP
+from ops import mialinh_content_gate as MCG
 from os_app import db
 ROOT = os.getcwd()
 
@@ -24,6 +25,10 @@ def produce(cid, topic, item, live=True):
 	iid = str(item.get('id'))
 	out = 'output/' + cid + '_' + iid + '.mp4'
 	t0 = time.time()
+	gate_item = dict(item); gate_item['_bucket'] = topic
+	content_gate = MCG.score(gate_item) if cid == 'Mialinhcute' else {'passes': True, 'score': None, 'reasons': []}
+	if not content_gate.get('passes'):
+		return {'channel': cid, 'id': iid, 'ok': False, 'stage': 'content_gate', 'content_score': content_gate.get('score'), 'reasons': content_gate.get('reasons'), 'sec': round(time.time()-t0,1)}
 	r = CR.render_for(cid, dict(item), out, scenes=5)
 	ok = isinstance(r, str) and os.path.exists(r)
 	q = QG.evaluate(r) if ok else {}
@@ -45,6 +50,10 @@ def run_many(cid, limit=5, live=True):
 	for k, it in items:
 		hook = it.get('hook', '').strip().rstrip('.') + ' #shorts'
 		if hook not in pubd:
+			if cid == 'Mialinhcute':
+				gate_item = dict(it); gate_item['_bucket'] = k
+				if not MCG.score(gate_item).get('passes'):
+					continue
 			fresh.append((k, it))
 	fresh = fresh[:limit]
 	rows = []
