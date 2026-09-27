@@ -70,7 +70,14 @@ def write_chunk_files(chunks, tmp):
  _ = [open(data[i][0], 'w', encoding='utf-8').write(chunks[i][0]) for i in range(n)]
  return data
 def ffpath(p):
- return p.replace(chr(92), chr(47))
+ s = p.replace(chr(92), chr(47))
+ try:
+  rel = os.path.relpath(s, ROOT)
+  if not rel.startswith(chr(46) + chr(46)):
+   return rel.replace(chr(92), chr(47))
+ except Exception:
+  pass
+ return s
 
 def one_dt(fp, a, b, font):
  tf = ffpath(fp)
