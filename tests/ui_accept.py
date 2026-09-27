@@ -29,6 +29,7 @@ def main():
 	with sync_playwright() as pw:
 		b = pw.chromium.launch()
 		pg = b.new_page()
+		pg.add_init_script("document.addEventListener('alpine:init',function(){var o=Alpine.evaluate;Alpine.evaluate=function(el,e){try{return o.call(Alpine,el,e)}catch(err){console.log('ALPINE_FAIL:'+e+'::'+err.message);throw err}}})")
 		pg.add_init_script("window.addEventListener('error', e => console.error('ERRSTACK', e.error && e.error.stack, e.message))")
 		pg.on('pageerror', lambda e: errs.append(str(e)+chr(124)+(getattr(e,chr(39)+chr(115)+chr(116)+chr(97)+chr(99)+chr(107)+chr(39), chr(39)+chr(39)) or chr(39)+chr(39))))
 		pg.goto('http://127.0.0.1:' + PORT + '/ui/index.html')
