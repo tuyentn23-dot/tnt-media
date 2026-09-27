@@ -61,7 +61,7 @@ def publish(video_path, title, description="", tags=None, privacy="public", topi
         if not _h.get('ok'):
             return {'ok': False, 'blocked': True, 'reason': 'video-health', 'health': _h}
     except Exception as _he:
-        pass
+        return {'ok': False, 'blocked': True, 'reason': 'video-health-exception', 'error': str(_he)}
 
     from ops import quality_rules as _qr
     try:
