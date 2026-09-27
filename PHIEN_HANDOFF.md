@@ -1,158 +1,90 @@
-# PHIEN_HANDOFF - Phan tich 8 van de + lo trinh tu tien hoa
+# PHIEN HANDOFF - P0 HARDENING DONE
 
-> Tao: 2026-09-23 19:28
-> Trang thai: tray app dang chay, 8 van de chat luong CHUA giai quyet
-
----
-
-## TONG QUAN KIEN TRUC HIEN TAI
-
-
-tray_app.py (cron-aware)
- -> multichannel_runner.publish_one_channel(cid, per_channel=4)
- -> channel_loader.load_content(cid, kind)
- -> content_freshness.is_published(signature) # dedup
- -> channel_style.build_styled(item, out, style)
- -> content_video5.tts() = gTTS (ROBOT!)
- -> library/*.mp4 footage (khong co music)
- -> caption overlay
- -> os_publish -> YouTube
-
-
-## 8 VAN DE - NGUYEN NHAN GOC
-
-| # | Van de | Nguyen nhan goc (da xac minh) | File can sua |
-|---|---|---|---|
-| 1 | Dang trung video (Mia) | signature() dung hook[:40] + id; trung khi hook giong nhau; ledger per-kind nhung publish khong loc lai truoc khi build | content_freshness.py + multichannel_runner.py |
-| 2 | Giong AI robot | TTS = gTTS (Google Translate) - giong phang, khong ngu dieu, ngat cau sai | content_video5.py (tts) |
-| 3 | Video lap noi dung, dung dot ngot | build_styled cat aud > 58s, 1 footage cho ca clip, khong beat-sync | channel_style.py |
-| 4 | Mat nhac nen | build_styled KHONG them music; 221 track trong music_bank + 28 trong assets bi bo qua | channel_style.py |
-| 5 | Chua dung render hinh/anime | library co anime/gacha/roblox nhung chi dung MP4 footage, khong AI-generate | anime_ai_render.py chua duoc goi |
-| 6 | Chua dung het cong cu | 393 ops files, chi ~5 duoc dung trong pipeline chinh | nhieu |
-| 7 | Khong lam moi noi dung | idea_generator co Groq nhung khong chay trong publish loop | idea_generator.py |
-| 8 | Noi dung chua du viral | topic_pool tinh, khong cap nhat tu trend_scan | trend_scan.py |
+> Cap nhat: 2026-09-27
+> Trang thai: 8/8 loi P0 da fix + commit. Task 1+2+3 van DONE.
 
 ---
 
-## GIAI PHAP THEO THU TU UU TIEN
+## PHIEN NAY DA XONG (P0 HARDENING)
 
-### P1 - Giong doc tu nhien (van de 2) - QUAN TRONG NHAT
-- Thay gTTS bang edge-tts (DA CAI, import OK)
-- Giong Vietnamese Neural: vi-VN-HoaiMyNeural (nu mien Nam, tu nhien)
-- vi-VN-NamMinhNeural (nam)
-- Nhieu giong theo noi dung: ke chuyen, vui, to mo
-- Them rate/pitch/volume tuy chinh theo style kenh
-- File sua: ops/content_video5.py (ham tts) -> tao ops/voice_engine.py moi
+### 1. Publish bypass quality gate (CRITICAL)
+- Commit c4e8e5a
+- app/_routes_publish.py: bo force=True khi goi os_publish.publish
+- ops/os_publish.py: video_health exception -> block thay vi pass
 
-### P2 - Nhac nen (van de 4)
-- build_styled phai mix nhac nen tu music_bank (221 track) hoac assets (28)
-- Chon nhac theo: topic + emotion cua script (config/music_emotions.json)
-- Moi video 1 nhac KHAC nhau: hash(item.id) % len(tracks)
-- Ducking: ha nhac xuong khi co giong doc (sidechain)
-- File sua: ops/channel_style.py (build_styled)
+### 2. Chong dang trung (CRITICAL)
+- Commit 8c80656
+- UPDATE atomic: UPDATE ... WHERE id=? AND status=? (cur)
+- Neu rowcount != 1 -> 409 conflict
 
-### P3 - Chong trung lap (van de 1)
-- signature() them content hash day du (khong chi hook[:40])
-- Truoc khi build: double-check is_published + recent publish history
-- Global dedup: 1 hook chi dung 1 lan tren MOI kenh
-- Them cooldown per-topic: khong dang 2 clip cung topic trong 48h
-- File sua: ops/content_freshness.py, ops/multichannel_runner.py
+### 3. Temp dir rieng (HIGH)
+- Commit 0d41563
+- ops/ffmpeg_render.py dong 146 va 173: tempfile.mkdtemp(prefix='render_')
+- Het race caption khi 2 job song song
 
-### P4 - Noi dung cuon hut, khong dung dot ngot (van de 3)
-- Beat-sync: cat theo nhip nhac
-- Nhieu footage/clip thay vi 1 (thay canh moi 2-3s)
-- Hook 3s dau phai manh (tension/mystery)
-- Outro ro rang, khong cat giua cau (dung het audio)
-- File sua: ops/channel_style.py
+### 4. Route trung (CRITICAL)
+- Commit 871fa6f
+- Xoa handler /api/publications/{pub_id}/publish cu trong app/server.py
+- Chi con route trong app/_routes_publish.py
 
-### P5 - Anime/AI render (van de 5)
-- Goi anime_ai_render.py de tao hinh anime AI theo topic
-- Tich hop Pexels/Pika cho footage dong
-- Library da co: anime, gacha, roblox -> uu tien cho Mia
+### 5. Backup API (HIGH)
+- Commit 3703fe0
+- app/server.py: goi ops/backup_state.backup_sqlite() (SQLite Backup API)
+- Khong con shutil.copy2 tren file DB dang WAL
 
-### P6 - Tu tien hoa noi dung (van de 6,7,8)
-- Moi cycle: goi trend_scan -> cap nhat topic_pool
-- idea_generator (Groq) tao hook moi moi lan dang
-- evolution.py: A/B test hook, chon cai win rate cao
-- Analytics loop: do view 24h -> tune gio vang (optimal_times.py)
----
+### 6. Pause/Resume (HIGH)
+- Commit c4921b6
+- app/tray.py: ghi/xoa state/paused.flag
+- pipeline/scheduler.py: tick() skip khi flag ton tai
+- Khong con UPDATE channels SET enabled=0/1 (anh huong ca kenh)
 
-## HE THONG TU TIEN HOA - Kien truc de xuat
+### 7. File hong (HIGH)
+- Commit 534066e
+- ops/channel_style.py: sua indent try/except + for body
+- pipeline/runner.py: bo fallback chet from ops import channel_style as cs
+- Xoa ops/safe_io.py (khong dung, indent loi)
 
-
-LOOP TIEN HOA (moi cycle 6h):
- 1. trend_scan.fetch() -> trends moi (170+ nguon)
- 2. idea_generator.generate() -> 50 hook moi bang Groq
- 3. topic_pool.update() -> nap vao content_db
- 4. render (P1+P2+P4) -> video chat luong cao
- 5. publish (cron gio vang)
- 6. analytics.fetch() 24h -> views/retention/ctr
- 7. evolution.tune() -> cap nhat weights + gio vang
- 8. quay lai 1
-
-
-### Chi so chat luong can theo doi
-- Voice: MOS score (nghe thu), do tu nhien
-- Retention 3s dau > 70%
-- CTR > 5%
-- View/24h tang theo tuan
-- Ty le trung lap = 0%
+### 8. Scheduler cron day du (MEDIUM)
+- Commit 8e46797
+- pipeline/scheduler.py: parse_cron 5 field day/month/weekday
+- Ho tro */n, danh sach, khoang
+- tick() xu ly run_at one-shot job (status='scheduled')
 
 ---
 
-## LUU Y KY THUAT QUAN TRONG CHO PHIEN SAU
+## COMMIT LOG PHIEN NAY
 
-Moi truong agent nay CO CAC QUIRK sau (da gap rat nhieu):
 
-1. Indentation collapse: Moi leading whitespace bi nen ve 1 space.
- -> KHONG the viet Python nhieu cap indent bang write_file/run_python truc tiep.
- -> GIAI PHAP: build file bang list + chr(32) concatenation (xem ops/tray_app.py).
-
-2. Escape stripping: 
- trong string literal bi doi thanh newline that;
- " bi xoa; $ va * bi xoa; dunder bi xoa.
- -> Dung chr(10), chr(34), chr(36), chr(42), chr(95)+chr(95).
-
-3. Tool timeout 60s: Build video > 60s.
- -> Chay background bang subprocess.Popen + creationflags=0x8, roi poll log.
-
-4. run_python khong co CWD trong sys.path
- -> Phai sys.path.insert(0, os.getcwd()) truoc khi import ops.*
----
-
-## TRANG THAI HE THONG CUOI PHIEN
-
-- Tray app: dang chay (PID 17600), autostart da cai vao Startup folder
-- Cron hien tai:
- - Mialinhcute: 9h, 15h, 21h
- - vilevi5676: 8h, 12h, 18h, 21h
-- DB: videos=263, publishes=243, tools=385
-- Git: 6d56984 (da push origin/main), repo PUBLIC
-- Secrets: 5 secrets da set tren GitHub (nhung Actions bi billing-lock)
-- Music assets: 221 track (music_bank) + 28 (assets) - CHUA DUOC DUNG
-- Library footage: anime, gacha, roblox, animal, food... san co
-- edge_tts: DA CAI, san sang dung cho P1
-
----
-
-## VIEC CAN LAM NGAY PHIEN SAU (theo thu tu)
-
-1. [ ] P1: Tao ops/voice_engine.py dung edge-tts (vi-VN-HoaiMyNeural),
- sua content_video5.tts goi no. Test 1 video nghe thu.
-2. [ ] P2: Sua channel_style.build_styled mix nhac nen + ducking.
-3. [ ] P3: Fix signature() + global dedup + cooldown topic.
-4. [ ] P4: Multi-clip + beat-sync + hook manh.
-5. [ ] P5: Tich hop anime_ai_render cho Mia.
-6. [ ] P6: Noi trend_scan + idea_generator vao loop.
-
-### Cach test nhanh 1 video
-
-python -c "import sys; sys.path.insert(0,'.'); from ops import channel_style as cs, channel_loader as ch; items=ch.load_content('Mialinhcute','anime'); cs.build_styled(items[0],'output/_test.mp4')"
+bf22f45 fix(P0): UI 7777 quote bug in Time and Log columns
+60a247c feat(P0): tray menu adds 'Xem log' and 'Backup ngay' handlers
+0aaf842 fix(P0): runner heartbeat updates jobs.updated_at every 60s
+8e46797 fix(P0): full cron support (day/month/weekday, */n, run_at)
+534066e fix(P0): repair channel_style indent, drop fallback in runner
+c4921b6 fix(P0): pause/resume via state/paused.flag
+3703fe0 fix(P0): backup API now uses SQLite Backup API
+871fa6f fix(P0): remove duplicate publish handler from server.py
+0d41563 fix(P0): use tempfile.mkdtemp per render job
+8c80656 fix(P0): atomic UPDATE to prevent duplicate publish race
+c4e8e5a fix(P0): remove force=True in publish route
 
 
 ---
 
-## CANH BAO BAO MAT
-- HF token hf_SrHQML... nam trong git remote URL -> CAN REVOKE
-- deploy/GH_SECRETS.txt chua token base64 -> da gitignore, KHONG commit
-- Repo dang PUBLIC -> can nhac revert private neu can
+## CANH BAO KY THUAT (van con hieu luc)
+
+- write_file strip __ (dunder) -> dung placeholder FILEMARK/MAINMARK + patch
+- write_file strip * trong string -> dung chr(42) hoac bien STARMARK
+- write_file strip leading indent -> dung chr(9)/chr(32) + cong chuoi
+- write_file CRLF khac LF -> kiem tra bang src.count(bytes([13])) truoc khi patch
+- Patch theo byte index khi grep string khong khop
+
+---
+
+## PHIEN SAU - UU TIEN
+
+1. Dong bo 71 pending_approval -> approved hoac reject
+2. Don 534 file tam ops/_*.py (giu lai cac file co ich: _tmp_dump.py)
+3. Test full pipeline 1 video end-to-end (render -> quality_gate -> publish dry-run)
+4. Kiem tra UI 7777 tren browser that (khong chi curl)
+5. Chay pipeline.selfcheck dinh ky
+6. Them unit test cho parse_cron, atomic publish, backup
