@@ -9,9 +9,9 @@ FONT = 'tools/font_arial.ttf'
 CAP_COLOR = 'white'
 HOOK_COLOR = '0xFFEB3B'
 BAR_COLOR = '0xe94560'
-W, H, FPS = 720, 1280, 30
+W, H, FPS = 1080, 1920, 30
 SQ_BAR = ';'
-COLOR_SRC = 'color=c=0x080a19:s=720x1280:d='
+COLOR_SRC = 'color=c=0x080a19:s=1080x1920:d='
 def durf(path):
  return VM.duration(path)
 
@@ -80,8 +80,8 @@ def one_dt(fp, a, b, font):
  s = 'drawtext=fontfile=' + ff
  s += ':textfile=' + tf
  s += ':enable=' + qt + en + qt
- s += ':fontsize=52:fontcolor=' + CAP_COLOR + ':borderw=4:bordercolor=black:line_spacing=8'
- s += ':x=(w-text_w)/2:y=0.66 * h'
+ s += ':fontsize=60:fontcolor=' + CAP_COLOR + ':borderw=5:bordercolor=black:line_spacing=14:text_align=C'
+ s += ':x=(w-text_w)/2:y=0.62 * h'
  return s
 
 def all_dts(caps, tmp):
@@ -100,15 +100,15 @@ def hook_drawtext(text, tmp, fs=56):
 	en = 'between(t,0,2.6)'
 	s = 'drawtext=fontfile=' + ff + ':textfile=' + tf
 	s += ':enable=' + qt + en + qt
-	s += ':fontsize=' + str(fs) + ':fontcolor=' + HOOK_COLOR + ':borderw=5:bordercolor=black:line_spacing=12'
-	s += ':x=(w-text_w)/2:y=0.22 * h'
+	s += ':fontsize=' + str(fs) + ':fontcolor=' + HOOK_COLOR + ':borderw=6:bordercolor=black:line_spacing=14:text_align=C'
+	s += ':x=(w-text_w)/2:y=0.16 * h'
 	return s
 
 def drawbar(dur):
  return 'drawbox=x=0:y=ih-8:w=iw*t/' + str(dur) + ':h=8:color=' + BAR_COLOR + '@1:t=fill'
 def seg_chain(i, frames_per):
 	# GIU video motion: chi scale/crop, KHONG zoompan (zoompan lam mat chuyen dong)
-	s = '[' + str(i) + ':v]scale=720:1280:force_original_aspect_ratio=increase,crop=720:1280,setsar=1'
+	s = '[' + str(i) + ':v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,setsar=1'
 	s += ',eq=contrast=1.1:saturation=1.15,vignette=PI/5'
 	s += ',trim=duration=' + str(frames_per / 30.0)
 	s += ',setpts=PTS-STARTPTS[v' + str(i) + ']'
@@ -143,13 +143,15 @@ def render_gacha(item, out, voice='female_north', preset='cute', seed=None):
 	dur = min(VM.duration(vo), 58.0)
 	g = 'output/gacha' + cid + '.mp4'
 	GAR.make_anime(g, dur, seed=seed, pal_idx=(seed % 3), fps=6)
-	tmp = '_work'; os.makedirs(tmp, exist_ok=True)
+	base = os.path.join(ROOT, 'work')
+	os.makedirs(base, exist_ok=True)
+	tmp = tempfile.mkdtemp(prefix='render', dir=base)
 	caps = write_chunk_files(split_chunks(item, dur), tmp)
 	hook = item.get('hook', '')
 	tail = all_dts(caps, tmp) + ([hook_drawtext(hook, tmp)] if hook else []) + [drawbar(dur)]
 	vf = ','.join(tail)
-	fc = '[0:v]' + vf + '[v];[1:a]loudnorm=I=-14:TP=-1.5:LRA=11[a]'
-	cmd = [FFMPEG, '-y', '-i', g, '-i', vo, '-t', str(dur), '-filter_complex', fc, '-map', '[v]', '-map', '[a]', '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '21', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-shortest', out]
+	fc = '[0:v]scale=1080:1920:flags=lanczos,' + vf + '[v];[1:a]loudnorm=I=-14:TP=-1.5:LRA=11[a]'
+	cmd = [FFMPEG, '-y', '-i', g, '-i', vo, '-t', str(dur), '-filter_complex', fc, '-map', '[v]', '-map', '[a]', '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '21', '-pix_fmt', 'yuv420p', '-r', str(FPS), '-c:a', 'aac', '-shortest', out]
 	r = subprocess.run(cmd, capture_output=True, text=True)
 	return out if r.returncode == 0 else (out, r.stderr[-500:])
 def render(item, out, voice='female_north', preset='hype', seed=None, music=None, scenes=8):
@@ -168,12 +170,12 @@ def render(item, out, voice='female_north', preset='hype', seed=None, music=None
  music = music or pick_music(item.get('topic', ''))
  n = max(2, min(scenes, len(pool))) if pool else 0
  srcs = [os.path.relpath(pp, ROOT) for pp in pool[:n]]
- tmp = '_work'; os.makedirs(tmp, exist_ok=True)
+ base = os.path.join(ROOT, 'work'); os.makedirs(base, exist_ok=True); tmp = tempfile.mkdtemp(prefix='render', dir=base)
  caps = write_chunk_files(chunks, tmp)
  fper = max(1, int((dur / max(1, n)) * FPS))
  hook = item.get('hook', '')
  cta = item.get('question', '') or ''
- vf = build_filter_multi(srcs, caps, fper, dur, tmp, hook=hook, cta=cta) if srcs else 'scale=720:1280[vc];[vc]'+','.join(all_dts(caps, tmp) + [hook_drawtext(hook, tmp), drawbar(dur)])
+ vf = build_filter_multi(srcs, caps, fper, dur, tmp, hook=hook, cta=cta) if srcs else 'scale=1080:1920[vc];[vc]'+','.join(all_dts(caps, tmp) + [hook_drawtext(hook, tmp), drawbar(dur)])
  vin = []
  _ = [vin.extend(['-stream_loop', '-1', '-i', s]) for s in srcs]
  vin = vin or ['-f', 'lavfi', '-i', COLOR_SRC + str(dur)]
@@ -181,7 +183,7 @@ def render(item, out, voice='female_north', preset='hype', seed=None, music=None
  aidx = len(srcs); p1 = vf + ';[' + str(aidx) + ':a]loudnorm=I=-14:TP=-1.5:LRA=11[vo]'
  bidx = aidx + 1; p2 = (';[' + str(bidx) + ':a]volume=-14dB[bg];[bg][vo]amix=inputs=2:duration=first:weights=1 0.4[a]' if music else ';[vo]anull[a]')
  fc = p1 + p2
- enc = ['-t', str(dur), '-filter_complex', fc, '-map', '[v]', '-map', '[a]', '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '21', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '192k', '-shortest', out]
+ enc = ['-t', str(dur), '-filter_complex', fc, '-map', '[v]', '-map', '[a]', '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '21', '-pix_fmt', 'yuv420p', '-r', str(FPS), '-c:a', 'aac', '-b:a', '192k', '-shortest', out]
  cmd = [FFMPEG, '-y'] + vin + ['-i', vo] + music_in + enc
  r = subprocess.run(cmd, capture_output=True, text=True)
  return out if r.returncode == 0 else (out, r.stderr[-600:])
