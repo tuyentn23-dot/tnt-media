@@ -5,38 +5,73 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 from pipeline import state
 
+STARMARK = chr(42)
+SLASHMARK = chr(47)
+
+
+def _expand_cron_field(field, lo, hi):
+	if field == STARMARK:
+		return set(range(lo, hi + 1))
+	out = set()
+	for part in field.split(','):
+		part = part.strip()
+		if not part:
+			continue
+		step = 1
+		if SLASHMARK in part:
+			base, sp = part.split(SLASHMARK, 1)
+			try:
+				step = int(sp)
+			except Exception:
+				step = 1
+			part = base
+		if part == STARMARK:
+			rng = range(lo, hi + 1)
+		elif '-' in part:
+			a, b = part.split('-', 1)
+			rng = range(int(a), int(b) + 1)
+		else:
+			rng = [int(part)]
+		out.update(v for v in rng if lo <= v <= hi)
+	return out
+
 
 def parse_cron(expr):
 	p = (expr or '').split()
 	if len(p) != 5:
 		return None
-	out = {'minute': set(), 'hour': set()}
-	def expand(field, lo, hi):
-		if field == '*': return set(range(lo, hi+1))
-		s = set()
-		for part in field.split(','):
-			if '-' in part:
-				a, b = part.split('-', 1)
-				s.update(range(int(a), int(b)+1))
-			else:
-				s.add(int(part))
-		return s
 	try:
-		out['minute'] = expand(p[0], 0, 59)
-		out['hour'] = expand(p[1], 0, 23)
+		return {
+			'minute': _expand_cron_field(p[0], 0, 59),
+			'hour': _expand_cron_field(p[1], 0, 23),
+			'day': _expand_cron_field(p[2], 1, 31),
+			'month': _expand_cron_field(p[3], 1, 12),
+			'weekday': _expand_cron_field(p[4], 0, 6),
+		}
 	except Exception:
 		return None
-	return out
 
 
 def due_now(cron, now):
-	c = parse_cron(cron)
-	if not c: return False
-	return (now.tm_min in c['minute'] and now.tm_hour in c['hour'])
+	parsed = parse_cron(cron)
+	if not parsed:
+		return False
+	if now.tm_min not in parsed['minute']:
+		return False
+	if now.tm_hour not in parsed['hour']:
+		return False
+	if now.tm_mday not in parsed['day']:
+		return False
+	if now.tm_mon not in parsed['month']:
+		return False
+	cron_to_tm = {0: 6, 1: 0, 2: 1, 3: 2, 4: 3, 5: 4, 6: 5}
+	allowed_tm = {cron_to_tm[c] for c in parsed['weekday']}
+	if now.tm_wday not in allowed_tm:
+		return False
+	return True
 
 
 def dispatch_job(job_id):
-	"""Spawn runner cho job nay o tien trinh rieng, log vao logs/."""
 	c = state.connect()
 	row = c.execute('SELECT id, channel_id, kind, topic, length_override, voice_override, music_mood, count, require_approval FROM jobs WHERE id=?', (job_id,)).fetchone()
 	if not row:
@@ -54,7 +89,7 @@ def dispatch_job(job_id):
 		flags = flags | getattr(subprocess, nm, 0)
 	logdir = os.path.join(ROOT, 'logs')
 	os.makedirs(logdir, exist_ok=True)
-	log = os.path.join(logdir, 'runner_' + job_id + '.log')
+	log = os.path.join(logdir, 'runner' + job_id + '.log')
 	f = open(log, 'a', encoding='utf-8')
 	p = subprocess.Popen(cmd, stdout=f, stderr=subprocess.STDOUT, creationflags=flags, cwd=ROOT)
 	c.execute('UPDATE jobs SET status=?, error=? WHERE id=?', ('running', 'spawned pid=' + str(p.pid), job_id))
@@ -65,15 +100,25 @@ def dispatch_job(job_id):
 def tick():
 	import time as tmod
 	import os as _os
-	_flag = _os.path.join(ROOT, 'state', 'paused.flag')
-	if _os.path.exists(_flag):
+	_flag = os.path.join(ROOT, 'state', 'paused.flag')
+	if os.path.exists(flag):
 		print('[scheduler] paused - skip tick')
 		return 0
 	now = tmod.localtime()
 	c = state.connect()
-	rows = c.execute('SELECT id, schedule FROM channels WHERE enabled=1').fetchall()
-	n = 0
 	created = []
+
+	# 1) run_at scheduled jobs (one-shot)
+	try:
+		rows_at = c.execute('SELECT id FROM jobs WHERE status=? AND run_at IS NOT NULL AND run_at <= ?', ('scheduled', state.now())).fetchall()
+	except Exception:
+		rows_at = []
+	for r in rows_at:
+		if dispatch_job(r['id']):
+			created.append(r['id'])
+
+	# 2) cron-based channels
+	rows = c.execute('SELECT id, schedule FROM channels WHERE enabled=1').fetchall()
 	for r in rows:
 		try:
 			sched = json.loads(r['schedule'] or '{}')
@@ -82,34 +127,33 @@ def tick():
 		cron = sched.get('cron') or sched.get('scheduleCron') or ''
 		if not due_now(cron, now):
 			continue
-		jid = 'sch_' + r['id'] + '' + tmod.strftime('%Y%m%d%H%M', now)
-		res = c.execute('INSERT OR IGNORE INTO jobs (id, channel_id, status, priority, created_by, created_at, updated_at) VALUES (?,?,?,?,?,?,?)', (jid, r['id'], 'pending', 7, 'scheduler', state.now(), state.now()))
-		if res.rowcount > 0:
-			n += 1
-			created.append(jid)
-	c.commit()
-	for jid in created:
 		try:
+			jid = 'sch' + str(r['id']) + '' + time.strftime('%Y%m%d%H%M')
+			existing = c.execute('SELECT id FROM jobs WHERE id=?', (jid,)).fetchone()
+			if existing:
+				continue
+			c.execute(
+				'INSERT INTO jobs (id, channel_id, kind, topic, status, created_at, count, require_approval) VALUES (?,?,?,?,?,?,?,?)',
+				(jid, r['id'], sched.get('kind', 'short'), sched.get('topic', ''), 'pending', state.now(), int(sched.get('count', 1)), int(sched.get('require_approval', 0)))
+			)
+			c.commit()
+			created.append(jid)
 			dispatch_job(jid)
-			time.sleep(1)
 		except Exception as e:
-			print('[scheduler] dispatch FAIL ' + jid + ': ' + str(e)[:120])
-	return n
+			print('[scheduler] create job ERR: ' + str(e)[:120])
+	return len(created)
 
 
-def run(interval=60, stop_event=None):
-	print('[scheduler] start, tick ' + str(interval) + 's')
+def loop_forever(interval=30):
 	while True:
-		if stop_event and stop_event.is_set():
-			break
 		try:
 			n = tick()
 			if n:
-				print('[scheduler] created+dispatched ' + str(n) + ' jobs')
+				print('[scheduler] tick created=' + str(n))
 		except Exception as e:
-			print('[scheduler] ERR: ' + str(e)[:120])
+			print('[scheduler] tick ERR: ' + str(e)[:200])
 		time.sleep(interval)
 
 
 if __name__ == '__main__':
-	run()
+	loop_forever()
