@@ -1,0 +1,110 @@
+[
+ {
+  "id": "anime_jujutsu",
+  "topic": "anime",
+  "hook": "Gojo mạnh nhất vì đôi mắt này",
+  "body": "Lục Nhãn cho phép Gojo thấy dòng chảy năng lượng và vô hạn trong không gian.",
+  "payoff": "Đó là lý do hắn gần như bất khả chiến bại.",
+  "question": "Bạn thích nhân vật nào nhất?",
+  "search_query": "anime japan city night"
+ },
+ {
+  "id": "anime_demon_slayer",
+  "topic": "anime",
+  "hook": "Thanh gươm đổi màu theo người dùng",
+  "body": "Trong Demon Slayer, gươm đổi màu dựa trên tính cách và sức mạnh của kiếm sĩ.",
+  "payoff": "Màu đỏ hiếm nhất, chỉ người mạnh nhất có.",
+  "question": "Gươm của bạn màu gì?",
+  "search_query": "anime sword japan temple"
+ },
+ {
+  "id": "roblox_pet_sim",
+  "topic": "roblox",
+  "hook": "Pet khủng nhất Pet Simulator 99",
+  "body": "Pet Huges có giá trị giao dịch cực cao và tỷ lệ nở cực thấp.",
+  "payoff": "Nhiều người chơi hàng năm vẫn chưa nở được.",
+  "question": "Bạn có pet hiếm chưa?",
+  "search_query": "colorful toys collection"
+ },
+ {
+  "id": "roblox_brookhaven",
+  "topic": "roblox",
+  "hook": "Bí mật trong Brookhaven",
+  "body": "Brookhaven có nhiều địa điểm ẩn và Easter egg mà ít người biết.",
+  "payoff": "Có căn phòng bí mật dưới hồ nước.",
+  "question": "Bạn khám phá hết chưa?",
+  "search_query": "suburban house neighborhood"
+ },
+ {
+  "id": "animal_capybara",
+  "topic": "cute_animals",
+  "hook": "Capybara thân thiện với mọi loài",
+  "body": "Capybara là động vật gặm nhấm lớn nhất, sống hòa bình với chim, khỉ, cả cá sấu.",
+  "payoff": "Nó được mệnh danh là động vật chill nhất hành tinh.",
+  "question": "Bạn muốn nuôi capybara không?",
+  "search_query": "capybara cute animal water"
+ },
+ {
+  "id": "animal_red_panda",
+  "topic": "cute_animals",
+  "hook": "Gấu trúc đỏ không phải gấu trúc",
+  "body": "Red panda là loài riêng, họ hàng gần với chồn hơn gấu.",
+  "payoff": "Nó dùng đuôi làm khăn quàng khi ngủ.",
+  "question": "Bạn thấy nó dễ thương không?",
+  "search_query": "red panda cute tree"
+ },
+ {
+  "id": "anime_solo_leveling",
+  "topic": "anime",
+  "hook": "Sung Jinwoo mạnh lên nhờ hệ thống",
+  "body": "Nhân vật chính Solo Leveling nhận nhiệm vụ từ hệ thống bí ẩn và lên cấp không giới hạn.",
+  "payoff": "Từ yếu nhất trở thành bóng tối mạnh nhất.",
+  "question": "Bạn xem chưa?",
+  "search_query": "anime dark fantasy city"
+ },
+ {
+  "id": "anime_ghibli",
+  "topic": "anime",
+  "hook": "Studio Ghibli vẽ tay từng khung hình",
+  "body": "Nhiều cảnh phim Ghibli mất hàng tháng để vẽ, không dùng CGI hoàn toàn.",
+  "payoff": "Đó là lý do phim đẹp đến từng chi tiết.",
+  "question": "Phim Ghibli bạn thích nhất?",
+  "search_query": "anime nature peaceful landscape"
+ },
+ {
+  "id": "roblox_murder",
+  "topic": "roblox",
+  "hook": "Bí mật Murder Mystery 2",
+  "body": "Dao Godly có tỷ lệ rơi cực thấp, nhiều người chơi mãi không có.",
+  "payoff": "Một số người bỏ hàng triệu Robux để sở hữu.",
+  "question": "Bạn có dao Godly chưa?",
+  "search_query": "colorful knife weapon toy"
+ },
+ {
+  "id": "meme_cat_vibing",
+  "topic": "meme",
+  "hook": "Mèo này đang vibe cực mạnh",
+  "body": "Mèo là loài được meme hóa nhiều nhất internet.",
+  "payoff": "Hơn 2 triệu video meme mèo mỗi ngày.",
+  "question": "Bạn có mèo không?",
+  "search_query": "funny cat playing cute"
+ },
+ {
+  "id": "cute_shiba_run",
+  "topic": "cute_animals",
+  "hook": "Shiba Inu chạy như tên lửa",
+  "body": "Shiba nổi tiếng với biểu cảm hài và tốc độ chạy đáng kinh ngạc.",
+  "payoff": "Được mệnh danh là meme quốc dân.",
+  "question": "Bạn thích shiba không?",
+  "search_query": "shiba inu dog running grass"
+ },
+ {
+  "id": "meme_dog_side_eye",
+  "topic": "meme",
+  "hook": "Chó này đang cười nhếch mép",
+  "body": "Chó có biểu cảm mặt đa dạng, đôi khi trông như đang cười.",
+  "payoff": "Đó là lý do chó chiếm nửa internet.",
+  "question": "Bạn có ảnh chó hài không?",
+  "search_query": "funny dog smiling face"
+ }
+]

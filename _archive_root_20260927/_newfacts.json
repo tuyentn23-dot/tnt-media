@@ -1,0 +1,92 @@
+[
+ {
+  "id": "octopus_escape",
+  "topic": "animal",
+  "hook": "Bạch tuộc có thể chui qua lỗ nhỏ bằng đồng xu.",
+  "body": "Nó không có xương, nên toàn bộ cơ thể có thể co lại tùy ý, chỉ giới hạn bởi cái mỏ.",
+  "payoff": "Đó là lý do bạch tuộc trốn thoát khỏi bể cá dễ dàng.",
+  "question": "Bạn biết con vật nào thoát giỏi hơn không?",
+  "search_query": "octopus underwater coral"
+ },
+ {
+  "id": "cheetah_speed",
+  "topic": "animal",
+  "hook": "Báo săn tăng tốc nhanh hơn siêu xe.",
+  "body": "Nó đạt 0-100km/h trong 3 giây, nhanh hơn nhiều xe thể thao đắt tiền.",
+  "payoff": "Nhưng chỉ giữ tốc độ đó được 30 giây trước khi quá nhiệt.",
+  "question": "Bạn nghĩ con gì nhanh nhất?",
+  "search_query": "cheetah running savanna"
+ },
+ {
+  "id": "everest_growth",
+  "topic": "nature",
+  "hook": "Everest cao thêm mỗi năm.",
+  "body": "Núi cao nhất thế giới mọc thêm khoảng 4mm mỗi năm do mảng kiến tạo đẩy lên.",
+  "payoff": "Vậy nó còn cao hơn nữa trong tương lai.",
+  "question": "Bạn muốn chinh phục Everest không?",
+  "search_query": "mount everest snow peak"
+ },
+ {
+  "id": "honeybee_dance",
+  "topic": "animal",
+  "hook": "Ong mật nhảy múa để chỉ đường.",
+  "body": "Khi tìm thấy hoa, ong thợ nhảy điệu lắc bụng chỉ hướng và khoảng cách cho đồng đội.",
+  "payoff": "Đó là một trong những ngôn ngữ phức tạp nhất trong tự nhiên.",
+  "question": "Bạn biết loài nào thông minh hơn?",
+  "search_query": "honey bee flower macro"
+ },
+ {
+  "id": "sea_salt",
+  "topic": "ocean",
+  "hook": "Đại dương chứa muối đủ lấp cả lục địa.",
+  "body": "Nếu rút hết nước biển, lượng muối còn lại sẽ phủ Trái Đất dày 166m.",
+  "payoff": "Muối đó đến từ đá và mưa suốt hàng tỷ năm.",
+  "question": "Bạn có biết nước biển mặn từ đâu?",
+  "search_query": "ocean waves salt water"
+ },
+ {
+  "id": "human_teeth",
+  "topic": "body",
+  "hook": "Răng bạn khỏe hơn răng cá mập.",
+  "body": "Men răng người là chất cứng nhất cơ thể, cứng hơn cả xương. Cá mập thay răng liên tục vì răng yếu.",
+  "payoff": "Nhưng răng người không mọc lại. Cá mập thì có hàng nghìn cái dự trữ.",
+  "question": "Bạn đánh răng mấy lần một ngày?",
+  "search_query": "human smile teeth closeup"
+ },
+ {
+  "id": "rain_smell",
+  "topic": "nature",
+  "hook": "Bạn ngửi được mùi mưa trước khi trời mưa.",
+  "body": "Mùi đó gọi là petrichor, do dầu từ thực vật và vi khuẩn đất tiết ra khi gặp độ ẩm.",
+  "payoff": "Mũi người nhạy tới mức phát hiện mùi này từ rất xa.",
+  "question": "Bạn có thích mùi mưa không?",
+  "search_query": "rain drops leaves green"
+ },
+ {
+  "id": "goldfish_memory",
+  "topic": "animal",
+  "hook": "Cá vàng nhớ được 3 tháng, không phải 3 giây.",
+  "body": "Nghiên cứu cho thấy cá vàng học được nhiệm vụ và nhớ hàng tháng.",
+  "payoff": "Định kiến 3 giây hoàn toàn sai.",
+  "question": "Bạn từng nuôi cá vàng chưa?",
+  "search_query": "goldfish aquarium swim"
+ },
+ {
+  "id": "cloud_weight",
+  "topic": "nature",
+  "hook": "Một đám mây nặng bằng 100 con voi.",
+  "body": "Mây tích trung bình chứa 500 tấn nước, tương đương khối lượng trăm con voi.",
+  "payoff": "Vậy mà nó vẫn bay được vì nước phân tán thành giọt nhỏ li ti.",
+  "question": "Bạn có tin mây nặng vậy không?",
+  "search_query": "white clouds blue sky"
+ },
+ {
+  "id": "sneeze_speed",
+  "topic": "body",
+  "hook": "Hắt hơi phóng ra không khí nhanh hơn bão.",
+  "body": "Một cú hắt hơi bắn không khí với tốc độ tới 160km/h.",
+  "payoff": "Đó là lý do bạn nên che miệng lại.",
+  "question": "Bạn hắt hơi to nhất khi nào?",
+  "search_query": "person sneezing tissue"
+ }
+]

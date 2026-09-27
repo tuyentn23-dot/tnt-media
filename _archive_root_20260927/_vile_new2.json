@@ -1,0 +1,56 @@
+[
+ {
+  "id": "v_streetfood_hanoi",
+  "topic": "food",
+  "hook": "Quán phở 50 năm không đổi giá",
+  "body": "Quán nhỏ ở Hà Nội bán phở suốt nửa thế kỷ, khách xếp hàng từ 5h sáng.",
+  "payoff": "Bí quyết nằm ở nồi nước dùng gia truyền.",
+  "search_query": "vietnamese street food pho hanoi",
+  "name": "Pho 50 nam"
+ },
+ {
+  "id": "v_coffee_egg",
+  "topic": "food",
+  "hook": "Cà phê trứng - đặc sản chỉ Hà Nội có",
+  "body": "Cà phê trứng ra đời từ thời thiếu sữa, dùng lòng đỏ trứng đánh bông.",
+  "payoff": "Giờ thành thức uống huyền thoại.",
+  "search_query": "vietnamese egg coffee drink",
+  "name": "Ca phe trung"
+ },
+ {
+  "id": "v_market_morning",
+  "topic": "lifestyle",
+  "hook": "Chợ sớm Sài Gòn nhộn nhịp thế nào",
+  "body": "Từ 4h sáng, chợ đầu mối đã tấp nập người mua kẻ bán.",
+  "payoff": "Nhịp sống Sài Gòn bắt đầu từ đây.",
+  "search_query": "morning market asia busy",
+  "name": "Cho som"
+ },
+ {
+  "id": "v_rain_saigon",
+  "topic": "nostalgia",
+  "hook": "Mưa Sài Gòn có mùi rất riêng",
+  "body": "Mưa chiều Sài Gòn mang mùi đất ẩm và khói xe, ai đi xa cũng nhớ.",
+  "payoff": "Đó là nỗi nhớ không tên.",
+  "search_query": "rain city street wet night",
+  "name": "Mua Saigon"
+ },
+ {
+  "id": "v_why_dejavu",
+  "topic": "curiosity",
+  "hook": "Vì sao bạn thấy việc này từng xảy ra",
+  "body": "Deja vu là cảm giác lạ quen, khoa học vẫn chưa giải thích hết.",
+  "payoff": "Não bạn có thể đang nhớ nhầm.",
+  "search_query": "person thinking confused portrait",
+  "name": "Deja vu"
+ },
+ {
+  "id": "v_why_hair_gray",
+  "topic": "curiosity",
+  "hook": "Tóc bạc vì đâu",
+  "body": "Tế bào tạo màu tóc chết dần theo tuổi, khiến tóc mất sắc tố.",
+  "payoff": "Căng thẳng có thể làm tóc bạc sớm.",
+  "search_query": "gray hair elderly portrait",
+  "name": "Toc bac"
+ }
+]

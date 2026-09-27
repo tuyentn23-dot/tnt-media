@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TNT Media Manager</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<style>
+body{font-family:system-ui,sans-serif}
+.tab{padding:8px 16px;cursor:pointer;border-bottom:2px solid transparent}
+.tab.active{border-color:#3b82f6;color:#3b82f6;font-weight:600}
+.card{background:white;border-radius:8px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,0.1)}
+table{width:100%;border-collapse:collapse}
+th,td{padding:8px;text-align:left;border-bottom:1px solid #e5e7eb}
+th{background:#f9fafb;font-weight:600}
+</style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+<div x-data="app()" x-init="init()">
+<div x-show="toast" class="fixed bottom-4 right-4 bg-black text-white px-4 py-2 rounded shadow-lg z-50" x-text="toast"></div>
+<header class="bg-white shadow">
+	<div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+		<h1 class="text-2xl font-bold text-gray-800">TNT Media Manager</h1>
+		<div class="text-sm text-gray-500" x-text="health"></div>
+	</div>
+	<nav class="max-w-7xl mx-auto px-4 flex gap-2">
+		<template x-for="t in tabs" :key="t.id">
+			<div class="tab" :class="{active: tab==t.id}" @click="tab=t.id" x-text="t.label"></div>
+		</template>
+	</nav>
+</header>
+<main class="max-w-7xl mx-auto p-4">
+<!-- Dashboard -->
+<div x-show='tab=="dashboard"'>
+<div class="grid grid-cols-4 gap-4 mb-4">
+	<div class="card"><div class="text-gray-500 text-sm">Publications</div><div class="text-3xl font-bold" x-text="stats.pubs"></div></div>
+	<div class="card"><div class="text-gray-500 text-sm">Jobs</div><div class="text-3xl font-bold" x-text="stats.jobs"></div></div>
+	<div class="card"><div class="text-gray-500 text-sm">Channels</div><div class="text-3xl font-bold" x-text="channels.length"></div></div>
+	<div class="card"><div class="text-gray-500 text-sm">Quota (con lai)</div><div class="text-3xl font-bold text-green-600" x-text="quotaInfo.remaining || '?'"></div></div>
+</div>
+<div class="card mb-4">
+	<h2 class="font-bold mb-2">Scheduler</h2>
+	<table><thead><tr><th>Channel</th><th>Cron</th></tr></thead>
+	<tbody><template x-for="s in schedulerStatus"><tr><td x-text="s.channel"></td><td x-text="s.cron || '(chua set)'"></td></tr></template></tbody></table>
+</div>
+
+
+	<div class="grid grid-cols-3 gap-4 mb-4">
+		<div class="card"><div class="text-gray-500 text-sm">Publications</div><div class="text-3xl font-bold" x-text="stats.pubs"></div></div>
+		<div class="card"><div class="text-gray-500 text-sm">Jobs</div><div class="text-3xl font-bold" x-text="stats.jobs"></div></div>
+		<div class="card"><div class="text-gray-500 text-sm">Channels</div><div class="text-3xl font-bold" x-text="channels.length"></div></div>
+	</div>
+	<div class="card">
+		<h2 class="font-bold mb-2">Modules</h2>
+		<table><thead><tr><th>Name</th><th>Version</th><th>Category</th><th>Valid</th></tr></thead>
+		<tbody><template x-for="m in modules">
+			<tr><td x-text="m.name"></td><td x-text="m.version"></td><td x-text="m.category"></td>
+			<td><span class="text-green-600" x-show="m.valid">OK</span><span class="text-red-600" x-show="!m.valid">FAIL</span></td></tr>
+		</template></tbody></table>
+	</div>
+</div>
+<!-- Channels -->
+<div x-show='tab=="channels"'>
+	<div class="card">
+		<h2 class="font-bold mb-2">Channels</h2>
+		<table><thead><tr><th>ID</th><th>Enabled</th></tr></thead>
+		<tbody><template x-for="c in channels">
+			<tr><td x-text="c.id"></td><td x-text="c.enabled"></td></tr>
+		</template></tbody></table>
+	</div>
+</div>
+<!-- Publications -->
+<div x-show='tab=="publications"'>
+	<div class="card">
+		<div class="flex justify-between mb-2"><h2 class="font-bold">Publications</h2>
+		<button @click="loadPublications()" class="px-3 py-1 bg-blue-500 text-white rounded text-sm">Refresh</button></div>
+		<table><thead><tr><th>ID</th><th>Channel</th><th>Kind</th><th>YouTube</th><th>Status</th><th>Action</th></tr></thead>
+		<tbody><template x-for="p in publications">
+			<tr><td x-text="p.id"></td><td x-text="p.channel_id"></td><td x-text="p.kind"></td>
+			<td><a :href="'https://youtu.be/'+p.youtube_id" target="_blank" class="text-blue-500" x-text="p.youtube_id"></a></td>
+			<td x-text="p.status"></td>
+			<td><button x-show="p.status=='approved'||p.status=='rendered'" @click="publishPub(p.id)" class="px-2 py-1 bg-red-500 text-white rounded text-xs">Publish</button></td></tr>
+		</template></tbody></table>
+	</div>
+</div>
+<!-- Jobs -->
+<div x-show='tab=="jobs"'>
+	<div class="card">
+		<h2 class="font-bold mb-2">Jobs</h2>
+		<table><thead><tr><th>ID</th><th>Channel</th><th>Kind</th><th>Status</th><th>Time</th><th>Progress</th><th>Actions</th></tr></thead>
+		<tbody><template x-for="j in jobs">
+			<tr><td x-text="j.id"></td><td x-text="j.channel_id"></td><td x-text="j.kind"></td>
+			<td x-text="j.status"></td>
+			<td class="text-xs text-gray-600" x-text="(j.elapsed_sec||0)+'s'"></td>
+			<td class="text-xs text-gray-500 max-w-xs truncate" :title="JSON.stringify(j.log_tail)" x-text="(j.log_tail||[]).slice(-1)[0] || ''"></td>
+			<td><button @click="runJob(j.id)" class="px-2 py-1 bg-blue-500 text-white rounded text-xs mr-1">Run</button>
+			<button @click="scheduleJob(j.id)" class="px-2 py-1 bg-yellow-500 text-white rounded text-xs mr-1">Schedule</button>
+			<button @click="deleteJob(j.id)" class="px-2 py-1 bg-red-500 text-white rounded text-xs">Del</button></td></tr>
+		</template></tbody></table>
+	</div>
+</div>
+	<div x-show='tab=="builder"'>
+		<div class="card">
+			<h2 class="font-bold mb-3">Create Job</h2>
+			<div class="grid grid-cols-2 gap-3">
+				<label>Channel<select x-model="form.channel_id" @change="loadKinds()" class="w-full border rounded p-2">
+					<template x-for="c in channels"><option :value="c.id" x-text="c.id"></option></template>
+				</select></label>
+				<label>Kind<select x-model="form.kind" class="w-full border rounded p-2">
+					<template x-for="k in kinds"><option :value="k" x-text="k"></option></template>
+					<option value="__other__">-- Khac --</option>
+				</select></label>
+				<label>Topic<input x-model="form.topic" class="w-full border rounded p-2"></label>
+				<label>Kind khac<input x-model="form.kind_custom" placeholder="neu chon Khac" class="w-full border rounded p-2"></label>
+			<label>Count<input type="number" x-model.number="form.count" class="w-full border rounded p-2"></label>
+			<label>Voice<select x-model="form.voice_override" class="w-full border rounded p-2">
+				<option value="">-- default --</option>
+				<template x-for="v in voices"><option :value="v" x-text="v"></option></template>
+			</select></label>
+			</div>
+			<label class="flex items-center gap-2 mt-3"><input type="checkbox" x-model="form.require_approval"> Require approval</label>
+			<div class="flex gap-2 mt-4">
+				<button @click="submitJob()" class="px-4 py-2 bg-green-500 text-white rounded">Create</button>
+				<button @click="submitJob(true)" class="px-4 py-2 bg-blue-500 text-white rounded">Create + Run ngay</button>
+			</div>
+			<div x-show="lastResult" class="mt-3 text-sm text-gray-700" x-text="lastResult"></div>
+		</div>
+	</div>
+	<div x-show='tab=="pending"'>
+		<div class="card"><h2 class="font-bold mb-2">Pending Approval</h2>
+			<table><thead><tr><th>ID</th><th>Channel</th><th>Kind</th><th>Topic</th><th>Actions</th></tr></thead>
+			<tbody><template x-for="p in pending"><tr><td x-text="p.id"></td><td x-text="p.channel_id"></td><td x-text="p.kind"></td><td x-text="p.topic"></td>
+			<td><button @click="approve(p.id)" class="px-2 py-1 bg-green-500 text-white rounded text-xs mr-1">Approve</button>
+			<button @click="reject(p.id)" class="px-2 py-1 bg-red-500 text-white rounded text-xs">Reject</button></td></tr></template></tbody></table>
+		</div>
+	</div>
+	<div x-show='tab=="analytics"'>
+		<div class="grid grid-cols-2 gap-4">
+			<div class="card"><div class="text-gray-500">Total</div><div class="text-3xl font-bold" x-text="analytics.total"></div></div>
+			<div class="card"><div class="text-gray-500">By Channel</div><template x-for="c in analytics.by_channel"><div x-text="c.ch+": "+c.n"></div></template></div>
+		</div>
+	</div>
+	<div x-show='tab=="audit"'>
+		<div class="card"><h2 class="font-bold mb-2">Audit Log</h2>
+			<table><thead><tr><th>TS</th><th>Actor</th><th>Action</th><th>Target</th><th>Reason</th></tr></thead>
+			<tbody><template x-for="a in audit"><tr><td x-text="a.ts"></td><td x-text="a.actor"></td><td x-text="a.action"></td><td x-text="a.target"></td><td x-text="a.reason"></td></tr></template></tbody></table>
+		</div>
+	</div>
+	<div x-show='tab=="settings"'>
+		<div class="card">
+			<h2 class="font-bold mb-3">Settings</h2>
+			<div class="space-y-3">
+				<div><label class="block text-sm text-gray-500">Publish mode</label>
+				<select x-model="settings.publish_mode" class="border rounded p-2 w-full">
+					<option value="approve">approve (duyet truoc)</option>
+					<option value="auto">auto (tu dong)</option>
+				</select></div>
+				<div><label class="block text-sm text-gray-500">API URL</label>
+				<input x-model="settings.api_url" class="border rounded p-2 w-full" readonly></div>
+				<div class="flex gap-2 mt-4">
+					<button @click="refreshAll()" class="px-4 py-2 bg-blue-500 text-white rounded">Refresh All</button>
+					<button @click="runCleanup()" class="px-4 py-2 bg-red-500 text-white rounded">Cleanup Output</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div x-show='tab=="topics"'>
+		<div class="card">
+			<h2 class="font-bold mb-3">Topic Pool</h2>
+			<div class="flex gap-2 mb-3 flex-wrap">
+				<select x-model="topicForm.channel_id" class="border rounded p-2">
+					<template x-for="c in channels"><option :value="c.id" x-text="c.id"></option></template>
+				</select>
+				<input x-model="topicForm.kind" placeholder="kind" class="border rounded p-2">
+				<input x-model="topicForm.topic" placeholder="chu de" class="border rounded p-2 flex-1">
+				<button @click="addTopic()" class="px-4 py-2 bg-green-500 text-white rounded">Them</button>
+				<button @click="expandIdea()" class="px-4 py-2 bg-purple-500 text-white rounded">Idea</button>
+			</div>
+			<div x-show="ideaHooks.length" class="mb-3 p-2 bg-purple-50 rounded">
+				<div class="text-sm font-bold mb-1">Goi y hook:</div>
+				<template x-for="h in ideaHooks"><div class="text-sm" x-text="h"></div></template>
+			</div>
+			<table><thead><tr><th>ID</th><th>Channel</th><th>Kind</th><th>Topic</th><th>Score</th><th>Action</th></tr></thead>
+			<tbody><template x-for="t in topics"><tr>
+				<td x-text="t.id"></td><td x-text="t.channel_id"></td>
+				<td x-text="t.kind"></td><td x-text="t.topic"></td><td x-text="t.score"></td>
+				<td><button @click="delTopic(t.id)" class="px-2 py-1 bg-red-500 text-white rounded text-xs">Xoa</button></td>
+			</tr></template></tbody></table>
+		</div>
+	</div>
+	<div x-show='tab=="diagnostics"'>
+		<div class="card mb-4">
+			<h2 class="font-bold mb-3">Diagnostics</h2>
+			<div class="flex gap-2 flex-wrap">
+				<button @click="runSelfcheck()" class="px-3 py-2 bg-blue-500 text-white rounded">Run Selfcheck</button>
+				<button @click="loadLogs()" class="px-3 py-2 bg-gray-500 text-white rounded">Load Logs</button>
+				<button @click="doBackup()" class="px-3 py-2 bg-green-500 text-white rounded">Backup DB</button>
+				<button @click="doKill()" class="px-3 py-2 bg-red-600 text-white rounded">KILLSWITCH</button>
+			</div>
+			<pre x-show="diagOut" class="mt-3 bg-black text-green-400 p-3 rounded text-xs overflow-auto max-h-96" x-text="diagOut"></pre>
+		</div>
+		<div class="card">
+			<div class="flex justify-between mb-2"><h3 class="font-bold">Logs</h3>
+				<select x-model="logFile" @change="loadLogs()" class="border rounded p-1 text-sm">
+					<template x-for="f in logFiles"><option :value="f.name" x-text="f.name"></option></template>
+				</select></div>
+			<pre class="bg-black text-gray-300 p-3 rounded text-xs overflow-auto max-h-80" x-text="logContent"></pre>
+		</div>
+	</div>
+<div x-show="tab==='assets'">
+	<div class="card">
+		<h2 class="font-bold mb-3">Assets (Music + Footage)</h2>
+		<div class="flex gap-2 mb-3">
+			<button @click="loadAssets('music')" class="px-3 py-1 bg-blue-500 text-white rounded text-sm">Music</button>
+			<button @click="loadAssets('footage')" class="px-3 py-1 bg-green-500 text-white rounded text-sm">Footage</button>
+			<span class="text-sm text-gray-500 self-center" x-text="assets.length + ' items'"></span>
+		</div>
+		<table><thead><tr><th>Dir</th><th>Name</th><th>Size</th></tr></thead>
+		<tbody><template x-for="a in assets.slice(0,100)"><tr>
+			<td x-text="a.dir"></td><td x-text="a.name"></td><td x-text="(a.size/1024).toFixed(0)+' KB'"></td>
+		</tr></template></tbody></table>
+	</div>
+</div>
+<div x-show="tab==='modules'">
+	<div class="card">
+		<h2 class="font-bold mb-3">Module Versioning</h2>
+		<button @click="loadModuleVersions()" class="px-3 py-1 bg-blue-500 text-white rounded text-sm mb-3">Refresh</button>
+		<table><thead><tr><th>Module</th><th>Version</th><th>Installed</th></tr></thead>
+		<tbody><template x-for="v in moduleVersions"><tr>
+			<td x-text="v.name"></td><td x-text="v.version"></td><td x-text="v.installed_at"></td>
+		</tr></template></tbody></table>
+	</div>
+</div>
+
+</main>
+<script>
+function app(){return{
+	tab: "dashboard",
+	tabs: [{id:"dashboard",label:"Dashboard"},{id:"channels",label:"Channels"},{id:"publications",label:"Publications"},{id:"jobs",label:"Jobs"},{id:"builder",label:"Job Builder"},{id:"pending",label:"Approval"},{id:"analytics",label:"Analytics"},{id:"audit",label:"Audit"},{id:"topics",label:"Topics"},{id:"diagnostics",label:"Diagnostics"},{id:"assets",label:"Assets"},{id:"modules",label:"Modules"},{id:"settings",label:"Settings"}],
+	health: "",
+	stats: {pubs:0, jobs:0},
+	channels: [], publications: [], jobs: [], modules: [],
+	lastResult: "",
+	toast: "",
+	settings: {publish_mode:"approve", api_url:"http://127.0.0.1:7777"},
+	kinds: [], voices: [], assets: [], moduleVersions: [], quotaInfo: {}, schedulerStatus: [],
+	topics: [], ideaHooks: [], topicForm: {channel_id:"Mialinhcute", kind:"anime", topic:""},
+	logFiles: [], logFile: "notify.log", logContent: "",
+	diagOut: "",
+	form: {channel_id:"Mialinhcute", kind:"anime", topic:"", count:1, require_approval:true},
+	pending: [], audit: [], assets: [],
+	analytics: {total:0, by_channel:[], by_status:[]},
+	async init(){
+		const h = await fetch("/api/health").then(r=>r.json())
+		this.stats.pubs = h.publications
+		this.stats.jobs = h.jobs
+		this.health = "OK"
+		this.channels = (await fetch("/api/channels").then(r=>r.json())).channels
+		this.modules = (await fetch("/api/modules").then(r=>r.json())).items
+		this.loadPublications()
+		this.jobs = (await fetch("/api/jobs?limit=20").then(r=>r.json())).items
+		this.loadPending()
+		this.loadAudit()
+		this.loadAnalytics()
+		this.loadTopics()
+		this.loadLogFiles()
+		this.loadKinds()
+		this.loadVoices()
+		this.loadQuota()
+		this.loadScheduler()
+		setInterval(() => { this.loadPublications(); this.loadPending(); this.loadJobs() }, 5000)
+	},
+	async refreshAll(){
+		await this.init()
+		this.showToast("Refreshed")
+	},
+	async runCleanup(){
+		if (!confirm("Cleanup tat ca video da publish?")) return
+		const r = await fetch("/api/cleanup?force=false",{method:"POST"})
+		const j = await r.json()
+		this.showToast("Cleanup: "+(j.ok?"OK":"FAIL"))
+	},
+	async loadKinds(){
+		const cid = this.form.channel_id
+		if (!cid) return
+		this.kinds = (await fetch("/api/config/kinds?channel_id="+encodeURIComponent(cid)).then(r=>r.json())).items
+	},
+	async loadVoices(){
+		this.voices = (await fetch("/api/config/voices").then(r=>r.json())).items
+	},
+	async loadTopics(){
+		this.topics = (await fetch("/api/topics").then(r=>r.json())).items
+	},
+	async addTopic(){
+		await fetch("/api/topics",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(this.topicForm)})
+		this.topicForm.topic = ""
+		this.loadTopics()
+		this.showToast("Them topic OK")
+	},
+	async delTopic(id){
+		await fetch("/api/topics/"+id,{method:"DELETE"})
+		this.loadTopics()
+	},
+	async expandIdea(){
+		const r = await fetch("/api/idea",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({seed:this.topicForm.topic})})
+		this.ideaHooks = (await r.json()).items
+	},
+	async runSelfcheck(){
+		this.diagOut = "Running selfcheck..."
+		const r = await fetch("/api/diagnostics/selfcheck")
+		const j = await r.json()
+		this.diagOut = j.output || JSON.stringify(j)
+	},
+	async loadLogs(){
+		const r = await fetch("/api/diagnostics/logs?name="+encodeURIComponent(this.logFile))
+		const j = await r.json()
+		this.logContent = (j.items||[]).join(String.fromCharCode(10))
+	},
+	async loadLogFiles(){
+		this.logFiles = (await fetch("/api/diagnostics/logs/list").then(r=>r.json())).items
+	},
+	async doBackup(){
+		const r = await fetch("/api/backup",{method:"POST"})
+		const j = await r.json()
+		this.showToast("Backup: "+(j.file||j.error))
+	},
+	async doKill(){
+		if (!confirm("KILLSWITCH: cancel tat ca job?")) return
+		const r = await fetch("/api/killswitch",{method:"POST"})
+		const j = await r.json()
+		this.showToast("Killed: "+(j.cancelled||0))
+		this.jobs = (await fetch("/api/jobs?limit=20").then(r=>r.json())).items
+	},
+	async loadQuota(){
+		this.quotaInfo = await fetch("/api/analytics/quota").then(r=>r.json())
+	},
+	async loadScheduler(){
+		this.schedulerStatus = (await fetch("/api/scheduler/status").then(r=>r.json())).items
+	},
+	async loadJobs(){
+		this.jobs = (await fetch("/api/jobs?limit=20").then(r=>r.json())).items
+	},
+	async loadAssets(kind){
+		this.assets = (await fetch("/api/assets/list?kind="+kind).then(r=>r.json())).items
+		this.showToast("Assets: "+this.assets.length)
+	},
+	async loadModuleVersions(){
+		this.moduleVersions = (await fetch("/api/modules/versions").then(r=>r.json())).items
+	},
+	showToast(msg){
+		this.toast = msg
+		setTimeout(() => this.toast = "", 3000)
+	},
+	async loadPublications(){
+		this.publications = (await fetch("/api/publications?limit=50").then(r=>r.json())).items
+	},
+
+	async approve(id){
+		await fetch("/api/publications/"+id+"/approve",{method:"POST"})
+		this.loadPending()
+	},
+	async reject(id){
+		await fetch("/api/publications/"+id+"/reject",{method:"POST"})
+		this.loadPending()
+	},
+	async loadPending(){
+		this.pending = (await fetch("/api/pending").then(r=>r.json())).items
+	},
+	async loadAudit(){
+		this.audit = (await fetch("/api/audit?limit=30").then(r=>r.json())).items
+	},
+	async loadAnalytics(){
+		this.analytics = await fetch("/api/analytics").then(r=>r.json())
+	},
+	async publishPub(id){
+		if (!confirm("Dang video "+id+" len YouTube?")) return
+		const r = await fetch("/api/publications/"+id+"/publish",{method:"POST"})
+		const j = await r.json()
+		this.lastResult = JSON.stringify(j)
+		this.loadPublications()
+	},
+	async runJob(id){
+		await fetch("/api/jobs/"+id+"/run",{method:"POST"})
+		this.lastResult = "Running job: "+id
+	},
+	async scheduleJob(id){
+		const at = prompt("Nhap thoi gian (YYYY-MM-DD HH:MM):", "")
+		if (!at) return
+		await fetch("/api/jobs/"+id+"/schedule?run_at="+encodeURIComponent(at),{method:"POST"})
+		this.lastResult = "Scheduled: "+id+" at "+at
+		this.jobs = (await fetch("/api/jobs?limit=20").then(r=>r.json())).items
+	},
+	async deleteJob(id){
+		if (!confirm("Xoa job "+id+"?")) return
+		await fetch("/api/jobs/"+id,{method:"DELETE"})
+		this.jobs = (await fetch("/api/jobs?limit=20").then(r=>r.json())).items
+	},
+	async submitJob(runNow){
+		const payload = Object.assign({}, this.form)
+		if (payload.kind === "__other__" && payload.kind_custom) payload.kind = payload.kind_custom
+		const r = await fetch("/api/jobs",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)})
+		const j = await r.json()
+		this.lastResult = JSON.stringify(j)
+		if (runNow && j.job_id) {
+			await fetch("/api/jobs/"+j.job_id+"/run",{method:"POST"})
+			this.lastResult = "Job created + running: "+j.job_id
+		}
+		this.jobs = (await fetch("/api/jobs?limit=20").then(r=>r.json())).items
+	}
+}}
+</script>
+</div>
+</body>
+</html>

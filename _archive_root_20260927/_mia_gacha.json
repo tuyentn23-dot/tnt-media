@@ -1,0 +1,56 @@
+[
+ {
+  "id": "gacha_love_story",
+  "topic": "gacha",
+  "hook": "Câu chuyện tình Gacha khiến triệu người khóc",
+  "body": "Hai nhân vật Gacha yêu nhau nhưng bị chia cắt bởi số phận.",
+  "payoff": "Phút cuối họ gặp lại trong giấc mơ.",
+  "search_query": "cute cartoon animation love",
+  "name": "Gacha love story"
+ },
+ {
+  "id": "gacha_glow_up",
+  "topic": "gacha",
+  "hook": "Màn lột xác Gacha đẹp nhất",
+  "body": "Cô gái Gacha từ giản dị trở nên rực rỡ sau khi thay đổi bản thân.",
+  "payoff": "Ai cũng có thể tỏa sáng.",
+  "search_query": "girl transformation fashion beauty",
+  "name": "Gacha glow up"
+ },
+ {
+  "id": "edit_anime_transition",
+  "topic": "edit",
+  "hook": "Edit chuyển cảnh anime đỉnh cao",
+  "body": "Những pha chuyển cảnh mượt mà giữa các cảnh anime.",
+  "payoff": "Timing khớp từng nhịp nhạc.",
+  "search_query": "anime action transition effects",
+  "name": "Anime edit"
+ },
+ {
+  "id": "edit_sad_anime",
+  "topic": "edit",
+  "hook": "Edit buồn khiến bạn khóc",
+  "body": "Cảnh anime buồn kết hợp nhạc sad tạo cảm xúc mạnh.",
+  "payoff": "Nhiều người comment khóc theo.",
+  "search_query": "sad anime rain emotional",
+  "name": "Sad anime edit"
+ },
+ {
+  "id": "musical_cat_song",
+  "topic": "minimusical",
+  "hook": "Chú mèo hát bài này hay hơn ca sĩ",
+  "body": "Mèo nhép miệng theo bài hát nổi tiếng.",
+  "payoff": "Nghe xong không thể quên.",
+  "search_query": "cat singing funny cute",
+  "name": "Cat musical"
+ },
+ {
+  "id": "musical_dance_trend",
+  "topic": "minimusical",
+  "hook": "Điệu nhảy trend này gây sốt",
+  "body": "Nhân vật hoạt hình nhảy theo trend TikTok đang hot.",
+  "payoff": "Ai xem cũng muốn nhảy theo.",
+  "search_query": "cartoon dance animation fun",
+  "name": "Dance trend"
+ }
+]
