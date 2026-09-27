@@ -1,5 +1,5 @@
 # ffmpeg_render.py - fast native renderer (multi-scene, hook, caption, music)
-import os, sys, re, json, random, hashlib, subprocess
+import os, sys, re, json, random, hashlib, subprocess, tempfile
 from ops import voice_engine as VE
 from ops import voice_synth as VS
 from ops import voice_master as VM
