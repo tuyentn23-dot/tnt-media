@@ -39,12 +39,13 @@ def _decision_topic():
         from ops import decision_to_publish as dtp
         plan = dtp.choose(3)
         for p in plan:
+            topic = p.get('topic')
             foot = p.get('footage')
-            if foot:
-                return foot, p
+            if topic:
+                return topic, foot, p
     except Exception as e:
         _log('decision_topic error: ' + str(e))
-    return None, None
+    return None, None, None
 
 
 def main():
@@ -54,10 +55,10 @@ def main():
         return 0
     try:
         from ops.auto_publish import run
-        dec_topic, dec = _decision_topic()
+        dec_topic, dec_foot, dec = _decision_topic()
         if dec_topic:
             _log('decision B topic: ' + str(dec_topic) + ' decisionId=' + str((dec or {}).get('decisionId')))
-            r = run(topic=dec_topic, target_dur=14.0)
+            r = run(topic=dec_topic, footage=dec_foot, target_dur=14.0)
         else:
             _log('no decision B, fallback topic_picker')
             r = run(target_dur=14.0)

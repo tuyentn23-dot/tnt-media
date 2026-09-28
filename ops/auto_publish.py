@@ -48,7 +48,7 @@ def _already_published(topic):
     except Exception:
         return False
 
-def run(topic=None, target_dur=14.0, force=False, privacy='public', title=None, description='', tags=None, cycle_id=None, voice_name=None, allow_republish=False):
+def run(topic=None, target_dur=14.0, force=False, privacy='public', title=None, description='', tags=None, cycle_id=None, voice_name=None, footage=None, allow_republish=False):
     from ops.video_build import build_short
     from ops.video_quality import rank_footage
     from ops.quality_gate import evaluate
@@ -63,18 +63,18 @@ def run(topic=None, target_dur=14.0, force=False, privacy='public', title=None, 
     script_lines = []
     try:
         from ops import content_planner as _cp
-        hook_text, script_lines, _hint = _cp.for_topic(topic)
+        hook_text, script_lines, _hint = _cp.for_topic(footage or topic)
     except Exception:
         pass
-    pool = _pool(topic)
+    pool = _pool(footage or topic)
     if not pool:
-        return dict(ok=False, error='no footage: ' + topic, topic=topic)
+        return dict(ok=False, error='no footage: ' + (footage or topic), topic=topic)
     best = rank_footage(pool)[:4]
     ts = time.strftime('%Y%m%d_%H%M%S')
     fname = 'short' + chr(95) + str(topic) + chr(95) + ts + '.mp4'
     out = os.path.join(ROOT, 'output', fname)
     vt = ' '.join(str(x) for x in script_lines) if script_lines else None
-    mus = _music_for(topic)
+    mus = _music_for(footage or topic)
     build_short(best, script_lines, out, hook_text=hook_text, music_path=mus, target_dur=float(target_dur), voice_text=vt, voice_name=voice_name)
     if not vt or len(str(vt).strip()) < 10:
         return dict(ok=False, blocked=True, error='no voiceover text (quality rule)', topic=topic)
@@ -82,7 +82,7 @@ def run(topic=None, target_dur=14.0, force=False, privacy='public', title=None, 
     if not gate.get('passes'):
         return dict(ok=False, blocked=True, video=out, quality=gate, topic=topic)
     if not title:
-        title = (hook_text or topic) + ' #shorts'
+        title = (topic if (topic and ' ' in topic and len(topic) > 15) else (hook_text or topic)) + ' #shorts'
     if not description and script_lines:
         description = (' | ').join([str(x) for x in script_lines[:2]]) + ' #shorts #viral #tiktok'
     if not tags:

@@ -87,3 +87,22 @@ try:
     installwithshim()
 except Exception:
     pass
+
+# Legacy setters: moviepy 2.x uses with_X, old code calls set_X.
+def installlegacysetters():
+ pairs = ['duration', 'position', 'start', 'end', 'audio', 'fps', 'size', 'opacity', 'mask', 'volume', 'margin', 'speed']
+ classes = []
+ import moviepy as _mp
+ for nm in ['VideoFileClip', 'ImageClip', 'ColorClip', 'TextClip', 'CompositeVideoClip', 'AudioFileClip']:
+  c = getattr(_mp, nm, None)
+  if c is not None:
+   classes.append(c)
+ from moviepy.Clip import Clip as _BC
+ classes.append(_BC)
+ for cls in classes:
+  for nm in pairs:
+   w = 'with' + chr(95) + nm
+   s2 = 'set' + chr(95) + nm
+   if (not hasattr(cls, s2)) and hasattr(cls, w):
+    setattr(cls, s2, getattr(cls, w))
+installlegacysetters()
