@@ -33,3 +33,16 @@ Chưa có text-to-video adapter.
 Title bị mất dấu tiếng Việt khi qua pipeline (vd "The gioi anime" thay vì "Thế giới anime") — do title truyền ASCII. Cần giữ Unicode.
 
 Render rất chậm (~8-15 phút/clip) — xem ops/MODULES.md.
+
+
+## Clip AI (Google Vids) - 2026-09-28
+
+
+- anime_ai_cat -> qNzCsBgevqg (1080x1920, 10s, public) - tao bang ops/vids_agent.py
+
+
+- Video AI: 720p nguon, convert 9:16 bang ffmpeg trong _to_portrait.
+
+
+- QUOTA free Vids ~6-10 video/thang -> chi dung cho clip hero, khong san xuat hang loat.
+
