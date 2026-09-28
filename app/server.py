@@ -24,6 +24,12 @@ try:
 except Exception as _e:
 	print("[server] publish router FAIL:", str(_e)[:200])
 
+try:
+	from app._routes_prompts import router as _prompt_router
+	app.include_router(_prompt_router)
+except Exception as _e:
+	print("[server] prompts router FAIL:", str(_e)[:200])
+
 @app.get('/')
 def root():
 	return RedirectResponse(url='/ui/index.html')

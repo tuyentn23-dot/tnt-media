@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>TNT Media OS — Agent Modes</title>
+<style>
+body{font-family:system-ui,Segoe UI,sans-serif;background:#0f1115;color:#e6e6e6;margin:0;padding:24px}
+h1{font-size:20px} .sub{color:#9aa0a6;margin-bottom:16px}
+.tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.tab{padding:8px 14px;border:1px solid #2a2f3a;border-radius:6px;background:#171a21;cursor:pointer}
+.tab.active{background:#2563eb;border-color:#2563eb;color:#fff}
+.panel{display:none} .panel.active{display:block}
+pre{background:#0b0d11;border:1px solid #2a2f3a;border-radius:6px;padding:14px;white-space:pre-wrap;word-break:break-word;max-height:60vh;overflow:auto}
+button{padding:8px 14px;border-radius:6px;border:1px solid #2a2f3a;background:#171a21;color:#e6e6e6;cursor:pointer;margin-bottom:10px}
+button.ok{background:#16a34a;border-color:#16a34a;color:#fff}
+.meta{color:#9aa0a6;font-size:13px;margin:4px 0 10px}
+</style>
+</head>
+<body>
+<h1>TNT Media OS — Agent Modes</h1>
+<div class="sub">Copy prompt cho AI agent theo từng chế độ. Nguyên tắc: <b>source ≠ data ≠ release</b></div>
+<div class="tabs" id="tabs"></div>
+<div id="panels"></div>
+<script>
+const ORDER=['plan','dev','run'];
+const NAMES={plan:'PLAN',dev:'DEV',run:'RUN'};
+let PROMPTS={};
+async function load(){
+ const r=await fetch('/api/agent-prompts');
+ const j=await r.json();
+ PROMPTS=j.prompts||{};
+ const tabs=document.getElementById('tabs');
+ const panels=document.getElementById('panels');
+ ORDER.forEach((m,i)=>{
+ const b=document.createElement('div');
+ b.className='tab'+(i===0?' active':'');
+ b.textContent=NAMES[m];
+ b.onclick=()=>select(m);
+ b.dataset.mode=m;
+ tabs.appendChild(b);
+ const p=document.createElement('div');
+ p.className='panel'+(i===0?' active':'');
+ p.id='panel-'+m;
+ p.innerHTML='<div class="meta">mode: <b>'+NAMES[m]+'</b></div><button id="btn-'+m+'">📋 Copy prompt</button><pre id="pre-'+m+'"></pre>';
+ panels.appendChild(p);
+ document.getElementById('pre-'+m).textContent=(PROMPTS[m]&&PROMPTS[m].prompt)||'(chua co prompt)';
+ document.getElementById('btn-'+m).onclick=()=>copy(m);
+ });
+}
+function select(m){
+ document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.mode===m));
+ ORDER.forEach(x=>document.getElementById('panel-'+x).classList.toggle('active',x===m));
+}
+async function copy(m){
+ const txt=(PROMPTS[m]&&PROMPTS[m].prompt)||'';
+ try{await navigator.clipboard.writeText(txt);}catch(e){
+ const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();
+ }
+ const b=document.getElementById('btn-'+m);
+ const old=b.textContent;b.textContent='✅ Da copy';b.classList.add('ok');
+ setTimeout(()=>{b.textContent=old;b.classList.remove('ok');},1500);
+}
+load();
+</script>
+</body>
+</html>
