@@ -106,3 +106,23 @@ def installlegacysetters():
    if (not hasattr(cls, s2)) and hasattr(cls, w):
     setattr(cls, s2, getattr(cls, w))
 installlegacysetters()
+
+# Legacy method aliases: 1.x name -> 2.x name (method mapping).
+def installmethodaliases():
+ pairs = [('resize', 'resized'), ('crop', 'cropped'), ('rotate', 'rotated'), ('subclip', 'subclipped'), ('fl_image', 'image_transform')]
+ classes = []
+ import moviepy as _mp
+ for nm in ['VideoFileClip', 'ImageClip', 'ColorClip', 'TextClip', 'CompositeVideoClip', 'AudioFileClip', 'VideoClip', 'AudioClip']:
+  c = getattr(_mp, nm, None)
+  if c is not None:
+   classes.append(c)
+ from moviepy.Clip import Clip as _BC
+ classes.append(_BC)
+ for cls in classes:
+  for old, new in pairs:
+   if (not hasattr(cls, old)) and hasattr(cls, new):
+    setattr(cls, old, getattr(cls, new))
+try:
+ installmethodaliases()
+except Exception:
+ pass
