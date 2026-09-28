@@ -101,7 +101,8 @@ def _fit(clip, w=W, h=H):
     bgc = ImageClip(np.array(bg)).set_duration(clip.duration)
     fg = _resize(width=w)
     if fg.h > h:
-        fg = fg.resize(height=h)
+        _rz = getattr(fg, "resized", None) or getattr(fg, "resize", None)
+        fg = _rz(height=h)
     fg = fg.with_position(('center', 'center'))
     return CompositeVideoClip([bgc, fg], size=(w, h)).set_duration(clip.duration)
 
