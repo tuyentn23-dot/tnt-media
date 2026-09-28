@@ -16,9 +16,12 @@ table{width:100%;border-collapse:collapse}
 th,td{padding:8px;text-align:left;border-bottom:1px solid #e5e7eb}
 th{background:#f9fafb;font-weight:600}
 </style>
+<style>
+[x-cloak]{display:none!important}
+</style>
 </head>
 <body class="bg-gray-100 min-h-screen">
-<div x-data="app()" x-init="init()">
+<div x-data="app()" x-init="init()" @keydown.window="onKey($event)">
 <div x-show="health===&quot;OFFLINE&quot;">Mất kết nối backend — đang thử lại...</div>
 <div x-show="toast" class="fixed bottom-4 right-4 bg-black text-white px-4 py-2 rounded shadow-lg z-50" x-text="toast"></div>
 <header class="bg-white shadow">
@@ -26,11 +29,22 @@ th{background:#f9fafb;font-weight:600}
 		<h1 class="text-2xl font-bold text-gray-800">TNT Media Manager</h1>
 		<div class="text-sm text-gray-500" x-text="health"></div>
 	</div>
-	<nav class="max-w-7xl mx-auto px-4 flex gap-2">
-		<template x-for="t in tabs" :key="t.id">
-			<div class="tab" :class="tabClass(t.id)" @click="tab=t.id" x-text="t.label"></div>
-		</template>
-	</nav>
+	<nav class="max-w-7xl mx-auto px-4 flex gap-2 items-center flex-wrap">
+<template x-for="t in tabs" :key="t.id">
+<div class="tab" :class="tabClass(t.id)" @click="tab=t.id" x-text="t.label"></div>
+</template>
+<template x-for="g in groups" :key="g.id">
+<div class="relative">
+<div class="tab" :class="groupClass(g)" @click="toggleMenu(g.id)"><span x-text="g.label"></span><span class="ml-1 text-xs">▾</span></div>
+<div x-show="menuOpen===g.id" @click.outside="menuOpen=null" class="absolute left-0 top-full mt-1 bg-white shadow-lg rounded border z-40 min-w-40">
+<template x-for="t in g.items" :key="t.id">
+<div class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm whitespace-nowrap" @click="openTab(t.id)" x-text="t.label"></div>
+</template>
+</div>
+</div>
+</template>
+<button @click="paletteOpen=true" class="ml-auto text-xs px-3 py-1 border border-gray-300 rounded text-gray-500 hover:bg-gray-50">Tìm kiếm Ctrl+K</button>
+</nav>
 </header>
 <main class="max-w-7xl mx-auto p-4">
 <!-- Dashboard -->
@@ -243,10 +257,26 @@ th{background:#f9fafb;font-weight:600}
 <div class="text-sm text-gray-600 mt-2" x-text="previewId || ''"></div>
 <button @click="previewUrl=null" class="mt-3 px-3 py-1 bg-gray-500 text-white rounded">Đóng</button>
 </div></div>
+<div x-show="paletteOpen" x-cloak class="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50" @click="paletteOpen=false">
+<div class="bg-white rounded shadow-xl mt-24 w-full max-w-lg" @click.stop>
+<input x-model="search" type="text" placeholder="Tìm tab..." class="w-full px-4 py-3 border-b outline-none rounded-t">
+<div class="max-h-80 overflow-auto">
+<template x-for="t in searchResults" :key="t.id">
+<div class="px-4 py-2 hover:bg-blue-50 cursor-pointer" @click="openTab(t.id)" x-text="t.label"></div>
+</template>
+<div x-show="searchResults.length===0" class="px-4 py-3 text-gray-400 text-sm">Không có kết quả</div>
+</div>
+</div>
+</div>
 <script>
 function app(){return{
 	tab: "dashboard",
-	tabs: [{id:"dashboard",label:"Dashboard"},{id:"channels",label:"Channels"},{id:"publications",label:"Publications"},{id:"jobs",label:"Jobs"},{id:"builder",label:"Job Builder"},{id:"pending",label:"Approval"},{id:"analytics",label:"Analytics"},{id:"audit",label:"Audit"},{id:"topics",label:"Topics"},{id:"diagnostics",label:"Diagnostics"},{id:"assets",label:"Assets"},{id:"modules",label:"Modules"},{id:"settings",label:"Settings"}],
+	tabs: [{id:"dashboard",label:"Dashboard"},{id:"publications",label:"Publications"},{id:"jobs",label:"Jobs"},{id:"pending",label:"Duyệt"}],
+	groups: [{id:"content",label:"Nội dung",items:[{id:"channels",label:"Channels"},{id:"topics",label:"Topics"},{id:"assets",label:"Assets"},{id:"builder",label:"Job Builder"}]},{id:"analytics",label:"Phân tích",items:[{id:"analytics",label:"Analytics"},{id:"audit",label:"Audit"},{id:"diagnostics",label:"Diagnostics"}]},{id:"system",label:"Hệ thống",items:[{id:"modules",label:"Modules"},{id:"settings",label:"Settings"}]}],
+	allTabs: [{id:"dashboard",label:"Dashboard"},{id:"channels",label:"Channels"},{id:"publications",label:"Publications"},{id:"jobs",label:"Jobs"},{id:"builder",label:"Job Builder"},{id:"pending",label:"Duyệt"},{id:"analytics",label:"Analytics"},{id:"audit",label:"Audit"},{id:"topics",label:"Topics"},{id:"diagnostics",label:"Diagnostics"},{id:"assets",label:"Assets"},{id:"modules",label:"Modules"},{id:"settings",label:"Settings"}],
+	menuOpen: null,
+	paletteOpen: false,
+	search: "",
 	health: "",
 	stats: {pubs:0, jobs:0},
 	channels: [], publications: [], jobs: [], modules: [],
@@ -297,6 +327,11 @@ async showPreview(id){
 this.previewId = id; this.previewUrl = "/api/media/preview/" + id;
 },
 tabClass(id){ return id===this.tab ? 'tab active' : 'tab' },
+	groupClass(g){ var ids = g.items.map(function(x){return x.id}); return ids.indexOf(this.tab)>=0 ? 'tab active' : 'tab' },
+	toggleMenu(id){ this.menuOpen = (this.menuOpen===id) ? null : id },
+	openTab(id){ this.tab=id; this.menuOpen=null; this.paletteOpen=false; this.search='' },
+	get searchResults(){ var q=this.search.toLowerCase().trim(); if(!q) return this.allTabs; return this.allTabs.filter(function(t){ return t.label.toLowerCase().indexOf(q)>=0 || t.id.indexOf(q)>=0 }) },
+	onKey(e){ if((e.ctrlKey||e.metaKey) && e.key==='k'){ e.preventDefault(); this.paletteOpen=!this.paletteOpen } if(e.key==='Escape'){ this.paletteOpen=false; this.menuOpen=null } },
 async refreshAll(){
 		await this.init()
 		this.showToast("Refreshed")
