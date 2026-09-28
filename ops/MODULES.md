@@ -55,3 +55,30 @@ Bug tool phiên này (đã workaround):
 - write_file/run_python gộp nhiều space thành 1 -> build indentation bằng chr(32)*N.
 - Nuốt ký tự đặc biệt -> dùng chr() thay vì gõ trực tiếp.
 - Nên viết generator script (Python ghi file) cho code phức tạp.
+
+
+## vids_agent.py — Google Vids AI video generator (mien phi, khong API key)
+
+Muc dich: tao video AI dong tu text prompt, KHONG dung API key, KHONG ton phi.
+Ket noi Chrome that qua CDP (remote-debugging-port=9222) da dang nhap Google.
+
+Cach dung:
+- Buoc 1: chay launch_chrome.py -> cua so Chrome mo ra.
+- Buoc 2: dang nhap Google (1 lan), vao duoc vids.new.
+- Buoc 3: from ops import vids_agent; vids_agent.generate(prompt, out_path)
+
+Flow tu dong: mo Create AI videos -> Create from scratch -> fill prompt -> chon Portrait 9:16 -> Generate -> doi video -> File > Download > MP4 > luu ve out_path.
+
+LƯU Ý:
+- Chrome PHAI chay voi --remote-debugging-port=9222 (dung launch_chrome.py).
+- Khong dung headless (Google chan automation).
+- Download MP4 can: Browser.setDownloadBehavior (browser-level CDP) + hover Download -> mouse click.
+- JS .click() KHONG trigger download (khong phai trusted gesture). Phai dung pg.mouse.click().
+- Menu File > Download la SUBMENU: phai hover roi moi click MP4.
+- Generate mat ~2-3 phut/video (720p, 10s).
+- Gioi han free tier chua ro, theo doi quota.
+
+Van de da gap & fix:
+- Playwright expect_download() KHONG bat duoc download POST qua CDP -> dung setDownloadBehavior + poll folder.
+- Page.setDownloadBehavior deprecated -> dung Browser.setDownloadBehavior (browser-level).
+- JS click khong trusted -> dung native/mouse click.

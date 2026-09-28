@@ -66,3 +66,8 @@ pub_list.json
 pub_result.json
 memory/tray_state.json
 memory/footage_cache.json
+
+_vids_chrome/
+_vids_dl/
+_vids_profile/
+_vids_state.json
