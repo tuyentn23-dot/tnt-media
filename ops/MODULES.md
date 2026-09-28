@@ -56,29 +56,37 @@ Bug tool phiên này (đã workaround):
 - Nuốt ký tự đặc biệt -> dùng chr() thay vì gõ trực tiếp.
 - Nên viết generator script (Python ghi file) cho code phức tạp.
 
+##-- vids_agent.py -- Google Vids AI video generator (mien phi, KHONG API key)
 
-## vids_agent.py — Google Vids AI video generator (mien phi, khong API key)
+MUC DICH: tao video AI DONG tu text prompt, mien phi, khong can API key.
+Ket noi Chrome that qua CDP (port 9222) da dang nhap Google.
 
-Muc dich: tao video AI dong tu text prompt, KHONG dung API key, KHONG ton phi.
-Ket noi Chrome that qua CDP (remote-debugging-port=9222) da dang nhap Google.
+CACH DUNG (3 buoc):
+1. Chay launch_chrome.py -> cua so Chrome mo ra.
+2. Dang nhap Google (1 lan) trong cua so do.
+3. Python: from ops import vids_agent; r = vids_agent.generate(prompt, out_path)
 
-Cach dung:
-- Buoc 1: chay launch_chrome.py -> cua so Chrome mo ra.
-- Buoc 2: dang nhap Google (1 lan), vao duoc vids.new.
-- Buoc 3: from ops import vids_agent; vids_agent.generate(prompt, out_path)
+API chinh:
+ vids_agent.generate(prompt, out_path, cdp_url=None, reuse_page=False, keep_page=False) -> dict
+ - prompt: mo ta video (tieng Anh tot nhat)
+ - out_path: duong dan luu MP4 (vd library/vids/clip1.mp4)
+ - reuse_page: dung tab Vids dang mo thay vi tao project moi
+ - keep_page: giu tab sau khi xong (mac dinh dong)
+ - tra ve: {ok, error, path, url}
 
-Flow tu dong: mo Create AI videos -> Create from scratch -> fill prompt -> chon Portrait 9:16 -> Generate -> doi video -> File > Download > MP4 > luu ve out_path.
+FLOW TU DONG:
+ Mo /videos/create (project moi) -> Create AI videos -> Create from scratch
+ -> fill prompt -> chon Portrait 9:16 -> Generate -> doi Insert
+ -> File > Download (hover) > MP4 video (mouse click) -> luu ve out_path.
 
-LƯU Ý:
-- Chrome PHAI chay voi --remote-debugging-port=9222 (dung launch_chrome.py).
-- Khong dung headless (Google chan automation).
-- Download MP4 can: Browser.setDownloadBehavior (browser-level CDP) + hover Download -> mouse click.
-- JS .click() KHONG trigger download (khong phai trusted gesture). Phai dung pg.mouse.click().
-- Menu File > Download la SUBMENU: phai hover roi moi click MP4.
-- Generate mat ~2-3 phut/video (720p, 10s).
+LƯU Ý QUAN TRONG (bai hoc xuong mau):
+- LUON tao project MOI (/videos/create) de tranh trang thai cu. reuse_page=True chi khi tab sach.
+- Chrome PHAI co --remote-debugging-port=9222 (launch_chrome.py). KHONG headless (Google chan).
+- Download MP4: dung Browser.setDownloadBehavior (browser-level CDP) + hover Download + pg.mouse.click().
+ JS .click() KHONG trigger download (khong phai trusted gesture).
+ Playwright expect_download() KHONG bat duoc download POST qua CDP.
+ Page.setDownloadBehavior da deprecated -> phai dung Browser.setDownloadBehavior (browser-level).
+- Menu File > Download la SUBMENU: phai hover() roi moi click MP4 (bounding_box roi mouse.click).
+- Generate mat ~2-3 phut/video (720p, 10s). Timeout wait_video=300s.
 - Gioi han free tier chua ro, theo doi quota.
 
-Van de da gap & fix:
-- Playwright expect_download() KHONG bat duoc download POST qua CDP -> dung setDownloadBehavior + poll folder.
-- Page.setDownloadBehavior deprecated -> dung Browser.setDownloadBehavior (browser-level).
-- JS click khong trusted -> dung native/mouse click.
