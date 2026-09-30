@@ -214,7 +214,7 @@ def _add_voice(path, voice_text, voice_name=None):
         return False
     try:
         from ops import voice as _v
-        vp, sents = _v.synth(voice_text, out_path=os.path.join(os.path.dirname(path), '_vo.mp3'), voice=voice_name)
+        vp, sents = _v.synth(voice_text, out_path=os.path.join((os.path.dirname(path) or '.'), '_vo.mp3'), voice=voice_name)
     except Exception:
         return False
     if not vp or not os.path.exists(vp):
