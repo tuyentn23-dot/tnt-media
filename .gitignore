@@ -1,75 +1,84 @@
-# TNT Media gitignore
+# Git ignore - TNT Media
+
 # Secrets
-.pickle
-client_secret.json
+*.pickle
+client_secret*.json
 api_keys.json
 .env
 .env.local
 temp_gemini_key.txt
-memory/token.json
-memory/token_channel_*.json
-memory/token_new_channel.json
 
 # Python
 __pycache__/
-*.pyc
+*.py[cod]
+*.pyo
 .venv/
 venv/
 
-# DB runtime
+# Database
 *.db
 *.sqlite
 *.sqlite3
-state/
-memory/tnt_media.db
 
 # Logs
 logs/
 *.log
+runtime.log
 
-# Heavy media
+# Output
 output/
-backups/
-library/
-music_bank/
-assets/
-tnt_media_v3/
-cloud_media/
-_trash/
+content/assets/
+*.mp4
+*.wav
+*.mp3
 
-# Archives/work
-_archive*/
-_work/
-_attic/
-work/
-
-# Sensitive
-token.pickle
-config/token.pickle
-config/client_secrets.json
-channels/*/token.pickle
-deploy/GH_SECRETS.txt
-
-# Temp noise
-tmp_*
-pub_*.json
-pub_log.txt
-_audit_log.txt
+# IDE
 .vscode/
-tools/gh.zip
-tools/gh/
-do_pub.py
-pick2.py
-run_batch_6.py
-tnt_run.py
-pub_list.json
-pub_result.json
-memory/tray_state.json
-memory/footage_cache.json
+.idea/
+*.swp
 
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp / archive
+temp/
+tmp/
+_archive/
+
+# Temp scripts ops (prefix underscore)
+ops/_*.py
+ops/zz_*.py
+ops/test_*.py
+ops/fix_*.py
+ops/read_*.py
+ops/show_*.py
+ops/move_*.py
+ops/dump_*.py
+ops/cleanup.py
+ops/x*.py
+
+# Temp files root
+_*.py
+_*.txt
+_*.ttf
+
+# Temp dirs (session)
+_trash/
+_work/
 _vids_chrome/
 _vids_dl/
-_vids_profile/
-_vids_state.json
+vids_profile/
+vids_tmp/
+edit_tmp/
+archive_root/
+archive_tmp/
+archive_root/
+dbg.mp4
+dbg*.mp3
+*.mp4
+*.mp3
 
-_vids_tmp/
+# Keep important ops files
+!ops/init.py
+!ops/_no_window.py
