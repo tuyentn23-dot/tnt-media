@@ -5,7 +5,7 @@ import os, shutil, datetime
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ARCHIVE = os.path.join(ROOT, '_trash', 'archive')
 
-def arch():
+def _arch():
     d = os.path.join(ARCHIVE, datetime.datetime.now().strftime('%Y%m%d%H%M%S'))
     os.makedirs(d, exist_ok=True)
     return d
