@@ -1,0 +1,31 @@
+{
+  "ops_core": [
+    "ops/vids_agent.py",
+    "ops/vids_edit.py",
+    "ops/vids_post.py",
+    "ops/compat.py",
+    "ops/os_publish.py",
+    "ops/autopublish_runner.py",
+    "ops/auto_publish.py",
+    "ops/init.py",
+    "ops/_no_window.py",
+    "ops/voice.py"
+  ],
+  "app": [
+    "app/server.py",
+    "app/tray.py",
+    "app/_routes_publish.py",
+    "app/_routes_prompts.py"
+  ],
+  "root": [
+    "launch_chrome.py",
+    "_serve.py",
+    "main_pipeline.py",
+    "scheduler.py"
+  ],
+  "config": [
+    "channels/Mialinhcute.json",
+    "channels/vilevi5676.json",
+    "config/scripts_vi.json"
+  ]
+}
