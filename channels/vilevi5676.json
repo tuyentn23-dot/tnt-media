@@ -1,25 +1,39 @@
 {
-  "name": "vilevi5676",
+  "channel_id": "vilevi5676",
   "platform": "youtube",
-  "active": true,
-  "aspect": "9:16",
-  "maxSeconds": 90,
-  "voicePreset": "female_warm",
-  "voiceId": "calm",
-  "colorPrimary": "#2b6cb0",
-  "colorAccent": "#f6ad55",
-  "watermark": "@vilevi5676",
-  "topics": [
-    "lifestyle",
-    "food",
-    "animals",
-    "nostalgia",
-    "curiosity",
-    "whatif",
-    "facts"
-  ],
-  "audience": "general",
-  "romance": "allowed",
-  "tokenPath": "config/token.pickle",
-  "scheduleCron": "0 8,12,18,21 * * *"
+  "name": "Vilevi",
+  "handle": "@vilevi5676",
+  "url": "youtube.com/@vilevi5676",
+  "owner_confirmed": true,
+  "subscriber_count_user_reported": 7000,
+  "priority": 1,
+  "role": "flagship_candidate",
+  "status": "deep_audit_completed_initial_sample",
+  "youtube_channel_id": "UCbblZzHm3CZzmoUZznfIoTg",
+  "audit": {
+    "sample_size": 15,
+    "sample_scope": "15 most recent public videos from YouTube RSS",
+    "avg_views": 3379.4,
+    "median_views": 2261,
+    "max_views": 19282,
+    "min_views": 77,
+    "subscriber_count_user_reported": 7000,
+    "observations": [
+      "Recent sample still shows meaningful residual reach despite inconsistent posting and mixed topics.",
+      "Median recent views around 2261 is material relative to the reported 7000 subscribers.",
+      "One recent video reached 19282 views, proving the channel can still exceed its subscriber base when topic/format resonates.",
+      "Performance variance is very high, so the channel should not be hard-rebranded before controlled experiments.",
+      "Recent titles indicate mixed lifestyle, food, animals, nostalgia, local places, and curiosity-style content rather than one tightly locked niche."
+    ],
+    "decision": "KEEP_AND_TEST",
+    "recommended_role": "flagship_rebrand_test_channel",
+    "rebrand_risk": "medium",
+    "subscriber_asset_value": "high_relative_to_other_owned_channels"
+  },
+  "next_experiment": {
+    "phase": "controlled_rebrand_test",
+    "video_count": 6,
+    "rule": "Do not delete old videos. Publish a small coherent batch, measure response, then decide whether to rebrand further.",
+    "candidate_direction": "AI-enhanced visual entertainment/storytelling that remains broad enough to fit the channel history."
+  }
 }

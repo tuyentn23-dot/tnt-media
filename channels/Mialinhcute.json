@@ -1,23 +1,12 @@
 {
-  "name": "Mialinhcute",
+  "channel_id": "Mialinhcute",
   "platform": "youtube",
-  "active": true,
-  "aspect": "9:16",
-  "maxSeconds": 20,
-  "voicePreset": "female_cute",
-  "voiceId": "HoaiMy",
-  "colorPrimary": "#ff69b4",
-  "colorAccent": "#ffd700",
-  "watermark": "@Mialinhcute",
-  "topics": [
-    "anime",
-    "roblox",
-    "cute_animals",
-    "meme",
-    "gacha"
-  ],
-  "audience": "kids",
-  "romance": "forbidden",
-  "tokenPath": "memory/token_new_channel.json",
-  "scheduleCron": "0 9,15,21 * * *"
+  "name": "Mialinhcute",
+  "handle": "@Mialinhcute",
+  "url": "youtube.com/@Mialinhcute",
+  "owner_confirmed": true,
+  "subscriber_count_user_reported": 2000,
+  "priority": 2,
+  "role": "experimental_ip_lab_candidate",
+  "status": "pending_deep_audit"
 }
