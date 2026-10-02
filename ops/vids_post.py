@@ -1,5 +1,5 @@
 # -- coding: utf-8 --
-# Hau ky video: caption thap + voice + nen mau theo chu de.
+# Hau ky: caption thap + voice + nen mau theo chu de.
 import os, subprocess, shutil
 
 THEMES = {
@@ -19,11 +19,15 @@ def _ff():
     ff = os.path.join(root, 'tools', 'ffmpeg.exe')
     return ff if os.path.exists(ff) else 'ffmpeg'
 
+def _has_audio(path):
+    r = subprocess.run([_ff(), '-i', path, '-hide_banner'], capture_output=True, text=True)
+    return 'Audio:' in r.stderr
+
 def _ts(t):
     h = int(t // 3600)
     m = int((t % 3600) // 60)
     sec = t % 60
-    return str(h).zfill(2) + ':' + str(m).zfill(2) + ':' + ('%06.3f' % sec).replace('.', ',')
+    return str(h).zfill(2) + ':' + str(m).zfill(2) + ':' + (chr(37)+chr(48)+chr(54)+chr(46)+chr(51)+chr(102)) % sec
 
 def build_srt(segs, out):
     lines = []
@@ -41,21 +45,23 @@ def add_voice(path, text, voice=None):
     if not vp or not os.path.exists(vp):
         return False
     tmp = path + '.vo.mp4'
-    fc = '[0:a]volume=0.20[bg];[1:a]volume=1.9[vo];[bg][vo]amix=inputs=2:duration=first:dropout_transition=0'
-    cmd = [_ff(), '-y', '-i', path, '-i', vp, '-filter_complex', fc, '-c:v', 'copy', '-c:a', 'aac', '-shortest', tmp]
+    if _has_audio(path):
+        fc = '[0:a]volume=0.20[bg];[1:a]volume=1.9[vo];[bg][vo]amix=inputs=2:duration=first:dropout_transition=0[aout]'
+        cmd = [_ff(), '-y', '-i', path, '-i', vp, '-filter_complex', fc, '-map', '0:v', '-map', '[aout]', '-c:v', 'copy', '-c:a', 'aac', '-shortest', tmp]
+    else:
+        cmd = [_ff(), '-y', '-i', path, '-i', vp, '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'aac', '-shortest', tmp]
     r = subprocess.run(cmd, capture_output=True)
     if r.returncode == 0 and os.path.exists(tmp):
         shutil.move(tmp, path)
         return True
     return False
-
 def add_captions(path, segs, theme='default'):
     th = THEMES.get(theme, THEMES['default'])
-    srt = os.path.join(os.path.dirname(path), '_cap.srt')
+    srt = os.path.join((os.path.dirname(path) or '.'), '_cap.srt')
     build_srt(segs, srt)
     tmp = path + '.cap.mp4'
     srt_esc = srt.replace(chr(92), '/').replace(':', chr(92) + ':')
-    style = ('FontName=Arial,FontSize=16,Bold=1,PrimaryColour=' + th['primary'] + ',OutlineColour=&H00000000,BackColour=' + th['back'] + ',BorderStyle=4,Outline=2,Shadow=0,MarginV=340,Alignment=2')
+    style = 'FontName=Arial,FontSize=16,Bold=1,PrimaryColour=' + th['primary'] + ',OutlineColour=&H00000000,BackColour=' + th['back'] + ',BorderStyle=4,Outline=2,Shadow=0,MarginV=340,Alignment=2'
     vf = 'subtitles=' + srt_esc + ':force_style=' + chr(39) + style + chr(39)
     cmd = [_ff(), '-y', '-i', path, '-vf', vf, '-c:a', 'copy', tmp]
     r = subprocess.run(cmd, capture_output=True)
