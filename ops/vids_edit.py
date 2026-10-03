@@ -1,5 +1,9 @@
 # -- coding: utf-8 --
 import os, subprocess, shutil, random, re
+try:
+	import ops._no_window as _nw
+except Exception:
+	pass
 W, H, FPS = 1080, 1920, 30
 def _has_audio(path):
     r = subprocess.run([_ff(), '-i', path, '-hide_banner'], capture_output=True, text=True)

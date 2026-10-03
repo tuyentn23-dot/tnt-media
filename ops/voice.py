@@ -3,6 +3,10 @@ import os
 import sys
 import asyncio
 import time
+try:
+	import ops._no_window as _nw
+except Exception:
+	pass
 F = '__file__'
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(globals()[F])))
 sys.path.insert(0, ROOT)

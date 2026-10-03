@@ -1,6 +1,10 @@
 # -- coding: utf-8 --
 # Hau ky: caption thap + voice + nen mau theo chu de.
 import os, subprocess, shutil
+try:
+	import ops._no_window as _nw
+except Exception:
+	pass
 
 THEMES = {
     'default': {'back': '&H80000000', 'primary': '&H00FFFFFF'},
@@ -49,7 +53,7 @@ def add_voice(path, text, voice=None):
         fc = '[0:a]volume=0.20[bg];[1:a]volume=1.9[vo];[bg][vo]amix=inputs=2:duration=first:dropout_transition=0[aout]'
         cmd = [_ff(), '-y', '-i', path, '-i', vp, '-filter_complex', fc, '-map', '0:v', '-map', '[aout]', '-c:v', 'copy', '-c:a', 'aac', '-shortest', tmp]
     else:
-        cmd = [_ff(), '-y', '-i', path, '-i', vp, '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'aac', '-shortest', tmp]
+        cmd = [_ff(), '-y', '-i', path, '-i', vp, '-filter_complex', '[1:a]apad=[novd]', '-map', '0:v', '-map', '[novd]', '-c:v', 'copy', '-c:a', 'aac', '-shortest', tmp]
     r = subprocess.run(cmd, capture_output=True)
     if r.returncode == 0 and os.path.exists(tmp):
         shutil.move(tmp, path)
