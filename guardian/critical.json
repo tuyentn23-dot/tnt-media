@@ -46,5 +46,17 @@
     "pipeline/selfcheck.py",
     "pipeline/quota.py",
     "pipeline/recovery.py"
+  ],
+  "state_truth": [
+    "state/pipeline.db"
+  ],
+  "guardian_system": [
+    "guardian/guard.py",
+    "guardian/snapshot.py",
+    "guardian/safe_fs.py",
+    "guardian/agent_boot.py",
+    "guardian/session_end.py",
+    "guardian/integrity.py",
+    "guardian/critical.json"
   ]
 }
