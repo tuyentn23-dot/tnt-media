@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-10-04T15:24:57.780145",
+  "generated": "2026-10-04T15:57:57.647156",
   "files": {
     "ops/vids_agent.py": "6a0ee08287d7d6c2522acae18664b533cfbf5b05901dd4bcea4b5374d781fc43",
     "ops/vids_edit.py": "7c1fcccb442a46508879df24018679e24e103ba9d8906b260aed4716bc6c1e5c",
@@ -23,7 +23,7 @@
     "channels/Mialinhcute.json": "568cb0f6ccfc84688b5db1466f6252bedd2585329594d99b14487386e6361195",
     "channels/vilevi5676.json": "17256b507fdccbd9d15fad375007f6c2e6b72263b84d6a46c2dfbefa619161e6",
     "config/scripts_vi.json": "60b034a5b6e92a0ebe18fee525436364e5be498e4820de5bfb7ea2ed145862c6",
-    "BOOTSTRAP.md": "a195f8bec50e126093caa36bc4d88cc6a5f509ac31919f5b61a5d9d7c6b62adb",
+    "BOOTSTRAP.md": "7783157979d344347d58287cf9d48761daa0a9b5deb50a395242eefe558ef339",
     "AGENT_RULES.md": "ac9ecc0a711a38b9c03fe4b84274c192b1cdf8e2c06adb0841c2a06dc8634311",
     "SYSTEM_OVERVIEW.md": "23a77b5d8b83d5e1d6b3bbbc40ff89a0d99c20cc9610f8bcda2e0451c215eaec",
     "PIPELINE_SPEC.md": "677a6c72f35da3ea76711d199ed87af06c7ca875430ebedaa2b0fed09957ea44",

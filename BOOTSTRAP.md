@@ -220,3 +220,34 @@ Nếu bất kỳ check nào FAIL → KHÔNG KẾT THÚC PHIÊN.
 | Pre-commit hook | .git/hooks/pre-commit | Trước commit |
 | Test suite | tests/test_bootstrap.py | Trước commit |
 | Session end | guardian/session_end.py | Cuối phiên |
+
+
+---
+
+## 12. PYTHON VENV — Quan trọng
+
+Hệ thống media/ dùng venv riêng: .venv/ (không dùng venv chung D:/TNT_AI/venv)
+
+### Chạy Python trong media/
+
+bash
+# Cách 1: Dùng media.bat
+media.bat script.py
+
+# Cách 2: Dùng trực tiếp
+.venv\Scripts\python.exe script.py
+
+
+### Cài package mới
+
+bash
+.venv\Scripts\python.exe -m pip install <package>
+# Sau đó cập nhật requirements.txt
+.venv\Scripts\python.exe -m pip freeze > requirements-lock.txt
+
+
+### LƯU Ý
+
+- KHÔNG dùng venv chung D:/TNT_AI/venv (sẽ ảnh hưởng dự án RapidAPI, FIVERR, MONOLUX)
+- KHÔNG chạy taskkill /IM python.exe (giết tất cả process của mọi dự án)
+- Khi cần kill: dùng taskkill /PID <specific_pid>
