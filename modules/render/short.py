@@ -1,7 +1,7 @@
 # -- coding: utf-8 --
 # modules/render/short.py - Render short (alias cua render.video; kind 'render.short')
 import os, sys
-ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(file))))
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, ROOT)
 
 MODULE = {

@@ -7,7 +7,7 @@
     "ops/os_publish.py",
     "ops/autopublish_runner.py",
     "ops/auto_publish.py",
-    "ops/init.py",
+    "ops/__init__.py",
     "ops/_no_window.py",
     "ops/voice.py"
   ],
@@ -27,5 +27,24 @@
     "channels/Mialinhcute.json",
     "channels/vilevi5676.json",
     "config/scripts_vi.json"
+  ],
+  "bootstrap": [
+    "BOOTSTRAP.md",
+    "AGENT_RULES.md",
+    "SYSTEM_OVERVIEW.md",
+    "PIPELINE_SPEC.md",
+    "STATE.md",
+    "CHANGELOG.md",
+    "guardian/agent_boot.py"
+  ],
+  "pipeline_hard": [
+    "pipeline/__init__.py",
+    "pipeline/runner.py",
+    "pipeline/job.py",
+    "pipeline/scheduler.py",
+    "pipeline/state.py",
+    "pipeline/selfcheck.py",
+    "pipeline/quota.py",
+    "pipeline/recovery.py"
   ]
 }
