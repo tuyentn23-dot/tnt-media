@@ -29,11 +29,17 @@ def pick(folder, n=6):
 
 def _seg(src, out, take, idx):
     z = 1.10 if idx % 2 == 0 else 1.18
-    vfc = 'scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,zoompan=z=1+on/500:d=1:s=1080x1920:fps=30'
+    vfc = 'scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,setsar=1,zoompan=z=1+on/500:d=1:s=1080x1920:fps=30'
     cmd = [_ff(), '-y', '-i', src, '-t', str(take), '-vf', vfc, '-an', '-c:v', 'libx264', '-preset', 'veryfast', out]
     subprocess.run(cmd, capture_output=True)
     return os.path.exists(out) and os.path.getsize(out) > 2000
 
+
+def _seg_169(src, out, take, idx):
+ vfc = 'scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setsar=1,zoompan=z=1+on/500:d=1:s=1920x1080:fps=30'
+ cmd = [_ff(), '-y', '-i', src, '-t', str(take), '-vf', vfc, '-an', '-c:v', 'libx264', '-preset', 'veryfast', '-pix_fmt', 'yuv420p', out]
+ subprocess.run(cmd, capture_output=True)
+ return os.path.exists(out) and os.path.getsize(out) > 2000
 
 TRANSITIONS = ['fade', 'slideleft', 'slideright', 'wipeleft', 'wiperight', 'circleopen', 'circleclose', 'smoothleft', 'smoothright']
 
@@ -81,7 +87,7 @@ def add_music(path, music=None):
         shutil.move(tmp, path)
         return True
     return False
-def build(folder, out, voice_text=None, hook=None, caps=None, theme=None, n=6, seg=2.0, music=None):
+def build(folder, out, voice_text=None, hook=None, caps=None, theme=None, n=6, seg=2.0, music=None, aspect='9:16'):
     from ops import vids_post as vp
     src = pick(folder, n)
     if len(src) < 2:
@@ -92,7 +98,8 @@ def build(folder, out, voice_text=None, hook=None, caps=None, theme=None, n=6, s
     segs = []
     for i, f in enumerate(src):
         sp = os.path.join(tdir, str(i) + '.mp4')
-        if _seg(f, sp, seg, i):
+        seg_fn = _seg_169 if aspect == '16:9' else _seg
+        if seg_fn(f, sp, seg, i):
             segs.append(sp)
     if len(segs) < 2:
         return {'ok': False, 'err': 'seg fail'}

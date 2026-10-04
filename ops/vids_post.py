@@ -60,16 +60,17 @@ def add_voice(path, text, voice=None):
         return True
     return False
 def add_captions(path, segs, theme='default'):
-    th = THEMES.get(theme, THEMES['default'])
-    srt = os.path.join((os.path.dirname(path) or '.'), '_cap.srt')
-    build_srt(segs, srt)
-    tmp = path + '.cap.mp4'
-    srt_esc = srt.replace(chr(92), '/').replace(':', chr(92) + ':')
-    style = 'FontName=Arial,FontSize=16,Bold=1,PrimaryColour=' + th['primary'] + ',OutlineColour=&H00000000,BackColour=' + th['back'] + ',BorderStyle=4,Outline=2,Shadow=0,MarginV=340,Alignment=2'
-    vf = 'subtitles=' + srt_esc + ':force_style=' + chr(39) + style + chr(39)
-    cmd = [_ff(), '-y', '-i', path, '-vf', vf, '-c:a', 'copy', tmp]
-    r = subprocess.run(cmd, capture_output=True)
-    if r.returncode == 0 and os.path.exists(tmp):
-        shutil.move(tmp, path)
-        return True
-    return False
+	th = THEMES.get(theme, THEMES['default'])
+	d = os.path.dirname(os.path.abspath(path)) or '.'
+	base = os.path.splitext(os.path.basename(path))[0]
+	srt = os.path.join(d, base + '.cap.srt')
+	build_srt(segs, srt)
+	tmp = path + '.cap.mp4'
+	style = 'FontName=Arial,FontSize=48,Bold=1,PrimaryColour=' + th['primary'] + ',OutlineColour=&H00000000,BackColour=' + th['back'] + ',BorderStyle=1,Outline=3,Shadow=0,MarginV=60,Alignment=2'
+	vf = 'subtitles=' + base + '.cap.srt:force_style=' + chr(39) + style + chr(39)
+	cmd = [_ff(), '-y', '-i', os.path.abspath(path), '-vf', vf, '-c:a', 'copy', os.path.abspath(tmp)]
+	r = subprocess.run(cmd, capture_output=True, cwd=d)
+	if r.returncode == 0 and os.path.exists(tmp):
+		shutil.move(tmp, path)
+		return True
+	return False

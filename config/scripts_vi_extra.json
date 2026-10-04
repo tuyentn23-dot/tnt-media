@@ -1,0 +1,132 @@
+{
+ "anime": {
+  "hook": "Mèo cute gặp anime",
+  "lines": [
+   "Những chú mèo con cũng có bộ phim hoạt hình yêu thích.",
+   "Chúng thường ngồi im lặng như đang suy nghĩ về nhân vật.",
+   "Có chú còn bắt chước nhân vật trên màn hình.",
+   "Hóa ra chúng cũng có thế giới tinh thần phong phú."
+  ],
+  "cta": "Theo dõi Mia Linh để xem thêm nhé!"
+ },
+ "roblox": {
+  "hook": "Roblox - thế giới mini game",
+  "lines": [
+   "Roblox có hàng triệu mini game miễn phí.",
+   "Bạn có thể tạo nhân vật và thế giới riêng.",
+   "Chơi cùng bạn bè khắp thế giới.",
+   "Thỏa sức sáng tạo không giới hạn."
+  ],
+  "cta": "Theo dõi để khám phá thêm!"
+ },
+ "cute_animals": {
+  "hook": "Khoảnh khắc động vật cute",
+  "lines": [
+   "Chó con ngủ trong lòng bàn tay.",
+   "Mèo con chơi đùa với cuộn len.",
+   "Thỏ con nhảy tung tăng trong vườn.",
+   "Mỗi khoảnh khắc đều ấm áp."
+  ],
+  "cta": "Theo dõi Mia Linh nhé!"
+ },
+ "gacha": {
+  "hook": "Gacha - tạo nhân vật đỉnh cao",
+  "lines": [
+   "Gacha cho phép bạn tạo nhân vật với hàng nghìn phụ kiện.",
+   "Thiết kế trang phục, kiểu tóc, biểu cảm.",
+   "Cộng đồng chia sẻ hàng triệu nhân vật.",
+   "Thỏa sức sáng tạo."
+  ],
+  "cta": "Theo dõi để xem thêm nhé!"
+ },
+ "lifestyle": {
+  "hook": "Bí quyết sống vui mỗi ngày",
+  "lines": [
+   "Bắt đầu ngày mới bằng nụ cười và ly cà phê.",
+   "Dành ba mươi phút đọc sách.",
+   "Đi bộ hai mươi phút giúp tinh thần minh mẫn.",
+   "Cuộc sống tươi đẹp khi ta biết trân trọng."
+  ],
+  "cta": "Theo dõi ViLe Vi để sống vui hơn!"
+ },
+ "food": {
+  "hook": "Ẩm thực Việt - hương vị đậm đà",
+  "lines": [
+   "Phở Hà Nội đậm đà hương quế hồi.",
+   "Bánh mì Sài Gòn giòn rụm.",
+   "Cơm tấm miền Nam thơm mùi dừa nướng.",
+   "Mỗi món ăn mang một câu chuyện."
+  ],
+  "cta": "Theo dõi để khám phá thêm!"
+ },
+ "nostalgia": {
+  "hook": "Ký ức tuổi thơ - những năm tháng đẹp",
+  "lines": [
+   "Buổi chiều hè chơi ô quan với bạn bè.",
+   "Tiếng ve kêu trong buổi trưa hè.",
+   "Trò chơi dân gian và màn điện tử.",
+   "Ký ức tuổi thơ là viên ngọc quý."
+  ],
+  "cta": "Theo dõi để sống lại ký ức!"
+ },
+ "facts": {
+  "hook": "Sự thật khoa học bạn chưa biết",
+  "lines": [
+   "Có những sự thật khiến bạn giật mình.",
+   "Khoa học đã chứng minh nhiều điều thú vị.",
+   "Thế giới chứa đầy điều kỳ diệu.",
+   "Học mỗi ngày để hiểu biết thêm."
+  ],
+  "cta": "Theo dõi để học thêm!"
+ },
+ "curiosity": {
+  "hook": "Sự thật thú vị bạn chưa từng biết",
+  "lines": [
+   "Có những sự thật khiến bạn bất ngờ.",
+   "Thế giới này đầy điều kỳ lạ.",
+   "Mỗi ngày ta có thể học điều mới.",
+   "Hãy giữ lòng tò mò."
+  ],
+  "cta": "Theo dõi để khám phá!"
+ },
+ "psychology": {
+  "hook": "Tâm lý học - hiểu mình để sống tốt",
+  "lines": [
+   "Não bộ luôn tìm kiếm sự an toàn.",
+   "Cảm xúc là sức mạnh, không phải yếu đuối.",
+   "Hiểu mình là bước đầu để thay đổi.",
+   "Mỗi người đều có thể phát triển."
+  ],
+  "cta": "Theo dõi để hiểu mình hơn!"
+ },
+ "whatif": {
+  "hook": "Nếu thế giới thay đổi - điều gì xảy ra?",
+  "lines": [
+   "Nếu trái đất ngừng quay, mọi thứ đảo lộn.",
+   "Nếu mặt trời tắt, trái đất lạnh giá.",
+   "Nếu con người sống dưới nước, cuộc sống khác.",
+   "Những kịch bản giúp hiểu giá trị hiện tại."
+  ],
+  "cta": "Theo dõi để khám phá thêm!"
+ },
+ "science": {
+  "hook": "Khoa học - chân trời tri thức",
+  "lines": [
+   "Khoa học giúp chúng ta hiểu về thế giới.",
+   "Từ y học đến vũ trụ đều thú vị.",
+   "Những phát minh mới thay đổi cuộc sống.",
+   "Học khoa học là học cách tư duy."
+  ],
+  "cta": "Theo dõi để học khoa học!"
+ },
+ "nature": {
+  "hook": "Thiên nhiên - nguồn cảm hứng",
+  "lines": [
+   "Rừng xanh bạt ngàn mang lại bình yên.",
+   "Suối trong lành giúp tâm hồn thư giãn.",
+   "Bãi biển cát vàng gợi bao kỳ nghỉ.",
+   "Thiên nhiên là món quà vô giá."
+  ],
+  "cta": "Theo dõi để thư giãn!"
+ }
+}
