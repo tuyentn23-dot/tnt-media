@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-10-04T14:41:37.980414",
+  "generated": "2026-10-04T15:00:03.206121",
   "files": {
     "ops/vids_agent.py": "6a0ee08287d7d6c2522acae18664b533cfbf5b05901dd4bcea4b5374d781fc43",
     "ops/vids_edit.py": "7c1fcccb442a46508879df24018679e24e103ba9d8906b260aed4716bc6c1e5c",
@@ -43,7 +43,7 @@
     "guardian/snapshot.py": "e9de73aeb3d3ab89fd79ffe0529e61e39841f0e6374991d57e78f6aefeee845b",
     "guardian/safe_fs.py": "46aa7b1e936d57fa94b75562a79b096eb69ff4e9c5902bdb35cbb5f4132a2340",
     "guardian/session_end.py": "2b3321234058eea70cacc5e8951461b38ef06675dd3f86a74712bc90332c2397",
-    "guardian/integrity.py": "eb5373c8c37840d1ea4692c47dde54f82a856accb29f2a4988426f05b44be700",
+    "guardian/integrity.py": "272a2879757376ef09785438068fde6f4cb42ca7b65ef96a0f09311e16ad1dce",
     "guardian/critical.json": "efb51cc87571ce06ab48a6971dad94ecc60c555ae4b2fada8c1b0cd8b57c05ec"
   }
 }
