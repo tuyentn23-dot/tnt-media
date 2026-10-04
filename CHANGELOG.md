@@ -1,5 +1,22 @@
 # CHANGELOG - XEM _archive_CHANGELOG.md cho lich su cu
 
+
+## 2026-10-04 (He thong bao ve 4 lop + Cleanup)
+- BOOTSTRAP.md: file AI doc dau phien, 11 muc
+- guardian/agent_boot.py: in trang thai he thong + checklist
+- guardian/session_end.py: check 3 lop cuoi phien
+- guardian/integrity.py: SHA256 critical files + verify manifest vs git HEAD
+- guardian/critical.sha256.json: manifest 43 file
+- guardian/precommit_check.py: hook chan commit file bi pha
+- guardian/guard.py: rewrite khong crash + integrity
+- guardian/critical.json: them bootstrap + pipeline_hard + state_truth + guardian_system
+- tests/test_bootstrap.py: 17 test bao ve 4 yeu cau
+- AGENT_RULES.md: bat buoc doc BOOTSTRAP + chay agent_boot
+- Fix file trong nhieu module (modules/render/short.py, ops/*)
+- Tag v1.0-guardian + backup-before-cleanup-289
+- CLEANUP: xoa 289 file rac trong ops/ (451 -> 52 file core)
+- Xoa 18 video rac trong media/ (archive _trash)
+- Test tan cong: 9/9 phong thu thanh cong
 ## 2026-09-22 (phien Noi A->B + YC2/3/4/7 + Fix publish)
 - Noi Nhanh A (memory/tnt_media.db) vao Nhanh B (system/state.db): ops/sync_a_to_b.py, tich hop vao state_sync.py
 - YC3: viet lai ops/trend_scan.py (Google Suggest free) -> 170 trends

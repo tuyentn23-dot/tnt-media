@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-10-04T15:00:03.206121",
+  "generated": "2026-10-04T15:24:57.780145",
   "files": {
     "ops/vids_agent.py": "6a0ee08287d7d6c2522acae18664b533cfbf5b05901dd4bcea4b5374d781fc43",
     "ops/vids_edit.py": "7c1fcccb442a46508879df24018679e24e103ba9d8906b260aed4716bc6c1e5c",
@@ -28,7 +28,7 @@
     "SYSTEM_OVERVIEW.md": "23a77b5d8b83d5e1d6b3bbbc40ff89a0d99c20cc9610f8bcda2e0451c215eaec",
     "PIPELINE_SPEC.md": "677a6c72f35da3ea76711d199ed87af06c7ca875430ebedaa2b0fed09957ea44",
     "STATE.md": "2f9d52df8b460cd325e702702212484c505d708801d0e3283cb55639339ed47e",
-    "CHANGELOG.md": "3791bec1ca2d74bab240e84e0524518fb6e041c3b92e3c80773df0bd63d49eab",
+    "CHANGELOG.md": "eb58f0e6612bc3d8e6482ae11436cc7ca70466b3b43ebb1566c8f9ee75f62b75",
     "guardian/agent_boot.py": "618ecb02d7d1dcd05d40a848443eafb9ea9479218e00fbd6ef62100d87deb2b2",
     "pipeline/__init__.py": "8baa4caa61689b8eb57cc88fe7bab94505ed1f733fd2aa9309fb23d71ae25f7c",
     "pipeline/runner.py": "c477b3a4dcd35989d4bb8bdd53932f22b6b31c6d580a853d84986ec14b5b5855",
