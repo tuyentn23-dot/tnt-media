@@ -1,34 +1,50 @@
 name: TNT Media Publish
 
 on:
-  schedule:
-    - cron: '0 2,8,14 * * *'
-  workflow_dispatch:
+ schedule:
+ - cron: '0 2,14 * * *' # 2 lan/ngay thay vi 3 (giam tai)
+ workflow_dispatch:
 
 jobs:
-  publish:
-    runs-on: ubuntu-latest
-    timeout-minutes: 350
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - name: Install deps
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg
-          pip install -r requirements.txt
-      - name: Restore tokens
-        run: |
-          mkdir -p config memory
-          echo "${{ secrets.TOKEN_PICKLE_B64 }}" | base64 -d > config/token.pickle
-          echo "${{ secrets.TOKEN_NEW_CHANNEL_B64 }}" | base64 -d > memory/token_new_channel.json
-          echo "${{ secrets.CLIENT_SECRETS_JSON_B64 }}" | base64 -d > config/client_secrets.json
-          mkdir -p channels/Mialinhcute
-          echo "${{ secrets.TOKEN_MIALINHCUTE_B64 }}" | base64 -d > channels/Mialinhcute/token.pickle
-      - name: Publish 4 per channel
-        run: python ops/multichannel_runner.py 4
-        env:
-          TNT_COOLDOWN_MIN: '1'
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+ publish:
+ runs-on: ubuntu-latest
+ timeout-minutes: 350
+ continue-on-error: false
+ steps:
+ - uses: actions/checkout@v4
+ - uses: actions/setup-python@v5
+ with:
+ python-version: '3.11'
+ - name: Install deps
+ run: |
+ sudo apt-get update
+ sudo apt-get install -y ffmpeg
+ pip install -r requirements.txt
+ - name: Restore tokens
+ run: |
+ mkdir -p config memory channels/Mialinhcute
+ echo "{{ secrets.TOKEN_PICKLE_B64 }}" | base64 -d > config/token.pickle
+ echo "{{ secrets.TOKEN_NEW_CHANNEL_B64 }}" | base64 -d > memory/token_new_channel.json
+ echo "{{ secrets.CLIENT_SECRETS_JSON_B64 }}" | base64 -d > config/client_secrets.json
+ echo "{{ secrets.TOKEN_MIALINHCUTE_B64 }}" | base64 -d > channels/Mialinhcute/token.pickle
+ - name: Publish
+ id: pub
+ continue-on-error: true
+ run: |
+ python ops/multichannel_runner.py 2 2>&1 | tee publish.log
+ env:
+ TNT_COOLDOWN_MIN: '1'
+ GROQ_API_KEY: {{ secrets.GROQ_API_KEY }}
+ - name: Write state
+ if: always()
+ run: |
+ mkdir -p .state
+ echo "{"last_run": "(date -u +%FT%TZ)", "outcome": "${{ steps.pub.outcome }}"}" > .state/last_run.json
+ - name: Upload log
+ if: always()
+ uses: actions/upload-artifact@v4
+ with:
+ name: publish-log
+ path: publish.log
+ if-no-files-found: ignore
+ retention-days: 3
