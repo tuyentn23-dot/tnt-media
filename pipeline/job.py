@@ -33,7 +33,7 @@ def make_job_id():
 
 class Job:
 	def __init__(self, channel_id, topic=None, kind=None,
-		length_override=None, voice_override=None, music_mood=None,
+		length_override=None, voice_override=None, voice_preset=None, music_mood=None,
 		count=1, require_approval=True, run_at=None, repeat=None,
 		priority=5, created_by='agent', job_id=None):
 		self.job_id = job_id or make_job_id()
@@ -42,6 +42,7 @@ class Job:
 		self.kind = kind
 		self.length_override = length_override
 		self.voice_override = voice_override
+		self.voice_preset = voice_preset
 		self.music_mood = music_mood
 		self.count = int(count) if count else 1
 		self.require_approval = bool(require_approval)
@@ -60,6 +61,7 @@ class Job:
 			'kind': self.kind,
 			'length_override': self.length_override,
 			'voice_override': self.voice_override,
+			'voice_preset': self.voice_preset,
 			'music_mood': self.music_mood,
 			'count': self.count,
 			'require_approval': self.require_approval,
@@ -81,6 +83,7 @@ class Job:
 			kind=d.get('kind'),
 			length_override=d.get('length_override'),
 			voice_override=d.get('voice_override'),
+			voice_preset=d.get('voice_preset'),
 			music_mood=d.get('music_mood'),
 			count=d.get('count', 1),
 			require_approval=d.get('require_approval', True),

@@ -59,8 +59,8 @@ def run_job(job, dry_run=False, item_id=None):
 		log('validate FAIL: ' + str(errs))
 		return {'ok': False, 'error': errs}
 	c = state.init()
-	c.execute('INSERT OR REPLACE INTO jobs (id, channel_id, topic, kind, length_override, voice_override, music_mood, count, require_approval, run_at, repeat, status, priority, created_by, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
-		(job.job_id, job.channel_id, job.topic, job.kind, job.length_override, job.voice_override, job.music_mood, job.count, int(job.require_approval), job.run_at, job.repeat, 'running', job.priority, job.created_by, state.now(), state.now()))
+	c.execute('INSERT OR REPLACE INTO jobs (id, channel_id, topic, kind, length_override, voice_override, voice_preset, music_mood, count, require_approval, run_at, repeat, status, priority, created_by, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+		(job.job_id, job.channel_id, job.topic, job.kind, job.length_override, job.voice_override, job.voice_preset, job.music_mood, job.count, int(job.require_approval), job.run_at, job.repeat, 'running', job.priority, job.created_by, state.now(), state.now()))
 	c.commit()
 	if dry_run:
 		log('DRY-RUN: bo qua render/publish')
@@ -110,7 +110,12 @@ def run_job(job, dry_run=False, item_id=None):
 						item = fresh[0]
 			out = os.path.abspath(os.path.join(ROOT, 'output', 'ch' + job.channel_id + '' + item['id'] + '' + time.strftime('%Y%m%d_%H%M%S') + '.mp4'))
 			os.makedirs(os.path.dirname(out), exist_ok=True)
-			style = cfg.get('style', {})
+			style = dict(cfg.get('style', {}) or {})
+			if job.voice_override:
+				style['voice'] = job.voice_override
+			if job.voice_preset:
+				style['voice_preset'] = job.voice_preset
+				style['preset'] = job.voice_preset
 			try:
 				r = _call('render.video', 'render', item, out, style=style)
 			except Exception as e:
@@ -126,6 +131,15 @@ def run_job(job, dry_run=False, item_id=None):
 			sig = cf.signature(item, kind)
 			c.execute('INSERT OR IGNORE INTO publications (job_id, channel_id, signature, topic, kind, title, file_path, status, created_at) VALUES (?,?,?,?,?,?,?,?,?)', (job.job_id, job.channel_id, sig, item.get('topic'), kind, item.get('hook', '')[:100], out, 'rendered', state.now()))
 			c.commit()
+			# QUALITY GATE
+			try:
+				from ops import quality_gate as qg
+				qc = qg.check(out)
+				if not qc.get('ok'):
+					log('QUALITY FAIL: ' + str(qc.get('errors')))
+					continue
+			except Exception as qe:
+				log('quality gate err: ' + str(qe)[:150])
 			rendered.append({'path': out, 'kind': kind, 'sig': sig})
 			log('rendered: ' + out)
 	except Exception as e:
@@ -140,6 +154,30 @@ def run_job(job, dry_run=False, item_id=None):
 		c.execute('UPDATE jobs SET status=?, error=?, updated_at=? WHERE id=?', ('failed', msg, state.now(), job.job_id))
 		c.commit()
 		return {'ok': False, 'error': msg, 'errors': errors, 'rendered': 0}
+								# === PUBLISH STEP (chi khi auto mode, khong can duyet) ===
+		published = []
+		pmode = str(cfg.get('publish', {}).get('mode', 'approve'))
+		auto_pub = (pmode == 'auto') and (job.require_approval is False or job.require_approval == 0)
+		if rendered and auto_pub:
+			try:
+				from modules.publish import youtube as ytmod
+				for r in rendered:
+					row2 = c.execute('SELECT id, title FROM publications WHERE signature=? AND channel_id=?', (r['sig'], job.channel_id)).fetchone()
+					if not row2:
+						continue
+					pid = row2['id']
+					ttl = row2['title'] or r['kind']
+					try:
+						res = ytmod.publish(r['path'], ttl, '', job.channel_id)
+						vid = res.get('youtube_id', res.get('id')) if isinstance(res, dict) else None
+						c.execute('UPDATE publications SET status=?, youtube_id=?, published_at=? WHERE id=?', ('published', vid, state.now(), pid))
+						c.commit()
+						published.append(vid)
+						log('published: ' + str(vid))
+					except Exception as pe:
+						log('publish FAIL: ' + str(pe)[:200])
+			except Exception as e:
+				log('publish module err: ' + str(e)[:200])
 	# Do not overwrite a cancelled terminal state (killswitch) with done.
 	cur = c.execute('SELECT status FROM jobs WHERE id=?', (job.job_id,)).fetchone()
 	cur_status = cur['status'] if cur else None

@@ -21,7 +21,27 @@
     "launch_chrome.py",
     "_serve.py",
     "main_pipeline.py",
-    "scheduler.py"
+    "scheduler.py",
+    "desktop_app/app.py",
+    "desktop_app/i18n.py",
+    "desktop_app/theme.py",
+    "desktop_app/api.py",
+    "desktop_app/widgets.py",
+    "desktop_app/icon.ico",
+    "desktop_app/tray.py",
+    "desktop_app/views/pipeline.py",
+    "desktop_app/strings_vi.json",
+    "desktop_app/strings_en.json",
+    "desktop_app/views/channels.py",
+    "app/server.py",
+    "ops/trend_analyzer.py",
+    "ops/yt_metrics.py",
+    "ops/oauth_setup.py",
+    "quality_policy.json",
+    "ops/quality_gate.py",
+    "desktop_app/views/tables.py",
+    "HANDOFF_2026-10-05_PHIEN_SAU.md",
+    "module_registry.json"
   ],
   "config": [
     "channels/Mialinhcute.json",
@@ -57,6 +77,7 @@
     "guardian/agent_boot.py",
     "guardian/session_end.py",
     "guardian/integrity.py",
-    "guardian/critical.json"
+    "guardian/critical.json",
+    "guardian/zones.py"
   ]
 }

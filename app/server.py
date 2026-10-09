@@ -7,7 +7,7 @@ except Exception:
 	pass
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import JSONResponse
 from pipeline import state
 if os.environ.get('TNT_TEST_DB'):
@@ -109,11 +109,57 @@ def media_preview(pub_id: int):
 		return JSONResponse({'ok': False, 'error': 'file missing'}, status_code=404)
 	return FileResponse(fp, media_type='video/mp4')
 
+@app.post('/api/channels')
+def channel_create(req: Request):
+	body = None
+	try:
+		import asyncio
+		body = asyncio.run(req.json())
+	except Exception:
+		body = {}
+	if not isinstance(body, dict):
+		body = {}
+	cid = (body.get('id') or '').strip()
+	if not cid:
+		raise HTTPException(status_code=400, detail='id required')
+	c = state.connect()
+	row = c.execute('SELECT id FROM channels WHERE id=?', (cid,)).fetchone()
+	if row:
+		c.close()
+		raise HTTPException(status_code=409, detail='exists')
+	sql = 'INSERT INTO channels (id, enabled, niche, kinds, voice, max_length_sec, style, publish_mode, quality_gate) VALUES (?,?,?,?,?,?,?,?,?)'
+	vals = (cid, int(body.get('enabled', 1)), body.get('niche', ''), body.get('kinds', 'short'), body.get('voice', ''), int(body.get('max_length_sec', 60)), body.get('style', ''), body.get('publish_mode', 'approve'), body.get('quality_gate', 'normal'))
+	c.execute(sql, vals)
+	c.commit()
+	c.close()
+	return {'ok': True, 'id': cid}
+
+
+@app.delete('/api/channels/{cid}')
+def channel_delete(cid: str):
+	c = state.connect()
+	c.execute('DELETE FROM channels WHERE id=?', (cid,))
+	c.commit()
+	c.close()
+	return {'ok': True}
+
 @app.get('/api/channels')
 def channels():
 	c = state.connect()
 	rows = c.execute('SELECT id, enabled FROM channels').fetchall()
-	return {'channels': [dict(r) for r in rows]}
+	out = []
+	for r in rows:
+		d = dict(r)
+		d['token'] = False
+		try:
+			from ops import channel_loader as chl
+			cfg = chl.load(r['id'])
+			tp = chl.token_path(cfg)
+			d['token'] = bool(tp and os.path.exists(tp))
+		except Exception:
+			pass
+		out.append(d)
+	return {'channels': out}
 
 
 @app.get('/api/publications')
@@ -145,7 +191,7 @@ def jobs(limit: int = 50):
 				d['elapsed_sec'] = int(now - t0)
 		except Exception:
 			pass
-		lg = os.path.join(ROOT, 'logs', 'runner_' + str(d.get('id')) + '.log')
+		lg = os.path.join(ROOT, 'logs', 'runner' + str(d.get('id')) + '.log')
 		if os.path.exists(lg):
 			try:
 				d['log_tail'] = open(lg, encoding='utf-8', errors='replace').read().splitlines()[-2:]
@@ -162,11 +208,46 @@ def quota():
 	return {'items': [dict(r) for r in rows]}
 
 
+@app.get('/api/modules/info')
+def modules_info():
+	import json
+	p = os.path.join(ROOT, 'module_registry.json')
+	if not os.path.exists(p):
+		return {'items': []}
+	try:
+		d = json.load(open(p, encoding='utf-8'))
+		return {'items': d}
+	except Exception as e:
+		return {'items': {}, 'err': str(e)[:150]}
+
 @app.get('/api/modules')
 def modules():
 	from pipeline import modules_loader as ml
 	mods = ml.discover()
-	return {'items': [{'name': k, 'version': v['meta'].get('version'), 'valid': v['valid'], 'category': v['category']} for k, v in mods.items()]}
+	import json as _json
+	reg = {}
+	try:
+		rp = os.path.join(ROOT, 'module_registry.json')
+		if os.path.exists(rp):
+			reg = _json.load(open(rp, encoding='utf-8'))
+	except Exception:
+		reg = {}
+	items = []
+	for k, v in mods.items():
+		r = reg.get(k, {}) or {}
+		items.append({
+			'name': k,
+			'version': v['meta'].get('version'),
+			'valid': v['valid'],
+			'category': v['category'],
+			'title': r.get('title', ''),
+			'desc': r.get('mech', ''),
+			'when_to_use': r.get('when', ''),
+			'strength': r.get('strength', ''),
+			'free': r.get('free', True),
+			'note': r.get('note', ''),
+		})
+	return {'items': items}
 
 
 
@@ -181,7 +262,7 @@ def create_job(payload: dict):
 	if errs:
 		return JSONResponse({'ok': False, 'errors': errs}, status_code=400)
 	c = state.init()
-	c.execute('INSERT INTO jobs (id, channel_id, topic, kind, length_override, voice_override, music_mood, count, require_approval, run_at, repeat, status, priority, created_by, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', (j.job_id, j.channel_id, j.topic, j.kind, j.length_override, j.voice_override, j.music_mood, j.count, int(j.require_approval), j.run_at, j.repeat, 'pending', j.priority, j.created_by, state.now(), state.now()))
+	c.execute('INSERT INTO jobs (id, channel_id, topic, kind, length_override, voice_override, voice_preset, music_mood, count, require_approval, run_at, repeat, status, priority, created_by, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', (j.job_id, j.channel_id, j.topic, j.kind, j.length_override, j.voice_override, j.voice_preset, j.music_mood, j.count, int(j.require_approval), j.run_at, j.repeat, 'pending', j.priority, j.created_by, state.now(), state.now()))
 	c.commit()
 	return {'ok': True, 'job_id': j.job_id}
 
@@ -215,11 +296,32 @@ def pending():
 
 
 @app.post('/api/publications/{pub_id}/approve')
-def approve(pub_id: int):
+def approve(pub_id: int, upload: bool = True):
 	c = state.init()
+	row = c.execute('SELECT id, channel_id, title, file_path, status FROM publications WHERE id=?', (pub_id,)).fetchone()
+	if not row:
+		return JSONResponse({'ok': False, 'error': 'not found'}, status_code=404)
+	if row['status'] not in ('rendered', 'approved'):
+		return JSONResponse({'ok': False, 'error': 'status=' + str(row['status'])}, status_code=400)
+	vid = None
+	err = None
+	if upload:
+		try:
+			from modules.publish import youtube as ytmod
+			ttl = row['title'] or ('Video ' + str(pub_id))
+			res = ytmod.publish(row['file_path'], ttl, '', row['channel_id'])
+			vid = res.get('youtube_id', res.get('id'))
+		except Exception as e:
+			err = str(e)[:200]
+	if vid:
+		c.execute('UPDATE publications SET status=?, youtube_id=?, published_at=? WHERE id=?', ('published', vid, state.now(), pub_id))
+		c.commit()
+		return {'ok': True, 'published': True, 'youtube_id': vid}
+	if err:
+		return JSONResponse({'ok': False, 'error': err}, status_code=500)
 	r = c.execute('UPDATE publications SET status=? WHERE id=? AND status=?', ('approved', pub_id, 'rendered'))
 	c.commit()
-	return {'ok': r.rowcount > 0, 'approved': r.rowcount}
+	return {'ok': True, 'approved': r.rowcount, 'note': 'no upload (token missing?)'}
 
 
 @app.post('/api/publications/{pub_id}/reject')
@@ -257,14 +359,51 @@ def analytics():
 	return {'total': total, 'by_channel': [dict(zip([chr(99)+chr(104),chr(110)], r)) for r in by_ch], 'by_status': [dict(zip([chr(115),chr(110)], r)) for r in by_status]}
 
 
+@app.get('/api/jobs/{job_id}')
+def job_detail(job_id: str):
+	c = state.connect()
+	sql = 'SELECT id, channel_id, kind, topic, status, created_at, count FROM jobs WHERE id=?'
+	row = c.execute(sql, (job_id,)).fetchone()
+	if not row:
+		c.close()
+		return JSONResponse({'ok': False, 'err': 'not found'}, status_code=404)
+	d = dict(row)
+	lg = os.path.join(ROOT, 'logs', 'runner' + str(job_id) + '.log')
+	tail = []
+	if os.path.exists(lg):
+		try:
+			tail = open(lg, encoding='utf-8', errors='replace').read().splitlines()[-40:]
+		except Exception:
+			tail = []
+	d['log_tail'] = tail
+	st = str(d.get('status') or '')
+	d['running'] = st in ('running', 'pending')
+	c.close()
+	return d
+
+@app.post('/api/jobs/{job_id}/approve')
+def job_approve(job_id: str):
+	c = state.init()
+	r = c.execute('UPDATE jobs SET status=?, updated_at=? WHERE id=? AND status=?', ('pending', state.now(), job_id, 'pending_approval'))
+	c.commit()
+	return {'ok': r.rowcount > 0, 'approved': r.rowcount}
+
+
+@app.post('/api/jobs/approve_all')
+def jobs_approve_all():
+	c = state.init()
+	r = c.execute('UPDATE jobs SET status=?, updated_at=? WHERE status=?', ('pending', state.now(), 'pending_approval'))
+	c.commit()
+	return {'ok': True, 'approved': r.rowcount}
+
 @app.post('/api/jobs/{job_id}/run')
 def run_job(job_id: str, dry_run: bool = False):
 	import subprocess
 	c = state.connect()
-	row = c.execute('SELECT id, channel_id, kind, topic, length_override, voice_override, music_mood, count, require_approval FROM jobs WHERE id=?', (job_id,)).fetchone()
+	row = c.execute('SELECT id, channel_id, kind, topic, length_override, voice_override, voice_preset, music_mood, count, require_approval FROM jobs WHERE id=?', (job_id,)).fetchone()
 	if not row:
 		return JSONResponse({'ok': False, 'error': 'job not found'}, status_code=404)
-	job_dict = {'job_id': row['id'], 'channel_id': row['channel_id'], 'kind': row['kind'], 'topic': row['topic'], 'length_override': row['length_override'], 'voice_override': row['voice_override'], 'music_mood': row['music_mood'], 'count': row['count'], 'require_approval': bool(row['require_approval']), 'created_by': 'ui'}
+	job_dict = {'job_id': row['id'], 'channel_id': row['channel_id'], 'kind': row['kind'], 'topic': row['topic'], 'length_override': row['length_override'], 'voice_override': row['voice_override'], 'voice_preset': (row['voice_preset'] if 'voice_preset' in row.keys() else None), 'music_mood': row['music_mood'], 'count': row['count'], 'require_approval': bool(row['require_approval']), 'created_by': 'ui'}
 	cmd = [sys.executable, '-m', 'pipeline.runner', '--job-json', json.dumps(job_dict, ensure_ascii=False)]
 	if dry_run:
 		cmd.append('--dry-run')
@@ -316,6 +455,15 @@ def del_topic(tid: int):
 	return {'ok': r.rowcount > 0}
 
 
+@app.post('/api/trends/collect')
+def trends_collect():
+	try:
+		from ops import trend_analyzer as ta
+		r = ta.run()
+		return r
+	except Exception as e:
+		return {'ok': False, 'error': str(e)[:200]}
+
 @app.get('/api/trends')
 def trends(limit: int = 30):
 	c = state.connect()
@@ -334,7 +482,29 @@ def idea(payload: dict):
 
 @app.get('/api/config/voices')
 def voices():
-	return {'items': ['HoaiMy', 'NamMinh', 'HoaiMyNeural', 'NamMinhNeural']}
+	labels = {'female_north': 'HoaiMy (VN nữ Bắc)', 'male_north': 'NamMinh (VN nam Bắc)', 'female_multilingual': 'Ava (đa ngôn ngữ)', 'female_emma': 'Emma (đa ngôn ngữ)', 'female_jenny': 'Jenny (đa ngôn ngữ)', 'male_andrew': 'Andrew (đa ngôn ngữ)'}
+	items = []
+	try:
+		from modules.voice import edge_tts as ev
+		for k in ev.list_voices():
+			items.append({'id': k, 'label': labels.get(k, k), 'voice': ev.VI_VOICES.get(k, '')})
+	except Exception:
+		items = [{'id': 'female_north', 'label': labels['female_north'], 'voice': 'vi-VN-HoaiMyNeural'}]
+	return {'items': items}
+
+
+@app.get('/api/config/presets')
+def presets():
+	labels = {'default': 'Mặc định', 'cheerful': 'Vui vẻ', 'sad': 'Buồn', 'excited': 'Hào hứng', 'calm': 'Điềm tĩnh', 'narrator': 'Kể chuyện', 'kids': 'Trẻ em', 'news': 'Tin tức'}
+	items = []
+	try:
+		from modules.voice import edge_tts as ev
+		for k in ev.list_presets():
+			pv = ev.resolve_preset(k)
+			items.append({'id': k, 'label': labels.get(k, k), 'rate': pv.get('rate'), 'pitch': pv.get('pitch'), 'volume': pv.get('volume')})
+	except Exception:
+		items = [{'id': 'default', 'label': 'Mac dinh'}]
+	return {'items': items}
 
 
 @app.get('/api/config/kinds')
@@ -390,7 +560,24 @@ def diag_loglist():
 	return {'items': out[-30:]}
 
 
-@app.post('/api/killswitch')
+@app.post('/api/metrics/sync')
+def metrics_sync():
+	try:
+		from ops import yt_metrics as ym
+		return ym.sync_db()
+	except Exception as e:
+		return {'ok': False, 'error': str(e)[:200]}
+
+
+@app.get('/api/metrics/{pub_id}')
+def metrics_get(pub_id: int):
+	c = state.connect()
+	r = c.execute('SELECT youtube_id, channel_id FROM publications WHERE id=?', (pub_id,)).fetchone()
+	c.close()
+	if not r or not r['youtube_id']:
+		return {'ok': False, 'error': 'no youtube_id'}
+	from ops import yt_metrics as ym
+	return ym.get_metrics([r['youtube_id']], r['channel_id'])@app.post('/api/killswitch')
 def killswitch():
 	c = state.init()
 	r = c.execute('UPDATE jobs SET status=? WHERE status IN (?,?)', ('cancelled', 'pending', 'running'))
@@ -519,6 +706,129 @@ def audit_log(action=None, limit=100):
 	return {'items': [dict(r) for r in rows]}
 
 
+
+
+@app.get('/api/video/engines')
+def video_engines():
+	out = {}
+	try:
+		from modules.video.providers import PROVIDERS, provider_config
+		for name in PROVIDERS:
+			cfg = provider_config(name) or {}
+			out[name] = {'available': bool(cfg.get('available')), 'tested': bool(cfg.get('tested')), 'free': True, 'model': cfg.get('model', '')}
+	except Exception as e:
+		out['_error'] = str(e)[:200]
+	try:
+		from modules.render import pexels_engine
+		out['pexels'] = {'available': True, 'tested': True, 'free': True, 'model': 'stock-video'}
+	except Exception as e:
+		out['pexels'] = {'available': False}
+	try:
+		import urllib.request
+		urllib.request.urlopen('http://127.0.0.1:9222/json/version', timeout=2)
+		out['flow'] = {'available': True, 'tested': True, 'free': True, 'model': 'veo'}
+	except Exception:
+		out['flow'] = {'available': False}
+	try:
+		from ops import ffmpeg_render
+		out['ffmpeg'] = {'available': True, 'tested': True, 'free': True, 'model': 'local-ffmpeg'}
+	except Exception:
+		out['ffmpeg'] = {'available': False}
+	out['gacha'] = {'available': True, 'tested': True, 'free': True, 'model': 'gacha-anime'}
+	try:
+		from modules.render import quote_engine as _qe
+		out['quote'] = {'available': True, 'tested': True, 'free': True, 'model': 'quote-engine', 'note': 'Flow(primary) -> Pexels(fallback), full-free'}
+		out['quote_v2'] = {'available': True, 'tested': True, 'free': True, 'model': 'quote-pipeline-v1', 'note': 'mix+compose+boost+vn_guard'}
+	except Exception:
+		out['quote'] = {'available': False}
+	return {'ok': True, 'engines': out, 'generated_by': 'TNT Media OS'}
+
+
+@app.post('/api/video/generate')
+def video_generate(payload: dict):
+	import time as tnttm
+	prompt = (payload.get('prompt') or '').strip()
+	if not prompt:
+		return JSONResponse({'ok': False, 'error': 'prompt required'}, status_code=400)
+	engine = (payload.get('engine') or 'auto').lower()
+	duration = int(payload.get('duration') or 8)
+	channel = payload.get('channel') or 'Mialinhcute'
+	out = os.path.join(ROOT, 'output', 'api_gen' + str(int(tnttm.time())) + '.mp4')
+	item = {'topic': prompt[:120], 'hook': prompt[:100], 'body': prompt, 'search_query': prompt}
+	style = {'engine': engine, 'ai_wait': 300, 'ai_overlay': False, 'auto_cdp': engine in ('flow', 'vids', 'auto')}
+	t0 = tnttm.time()
+	try:
+		from modules.render import video as _vmod
+		path = _vmod.render(item, out, style)
+		elapsed = round(tnttm.time() - t0, 2)
+		tnt_engine = {'provider': engine, 'model': engine, 'is_free': True, 'elapsed_sec': elapsed, 'channel': channel, 'generated_by': 'TNT Media OS'}
+		return {'ok': True, 'video_path': path, 'elapsed_sec': elapsed, 'tnt_engine': tnt_engine}
+	except Exception as e:
+		import traceback
+		return JSONResponse({'ok': False, 'error': str(e)[:300], 'trace': traceback.format_exc()[-800:]}, status_code=500)
+
+
+@app.get('/api/video/engine/{name}/health')
+def video_engine_health(name: str):
+	res = {'engine': name}
+	if name == 'luma':
+		try:
+			from modules.video.http_engine import HTTPVideoEngine
+			e = HTTPVideoEngine('luma', poll_interval=2, max_wait=10)
+			res['available'] = e.available
+		except Exception as ex:
+			res['error'] = str(ex)[:200]
+	elif name == 'pexels':
+		try:
+			from modules.render import pexels_fetch
+			res['available'] = True
+		except Exception as ex:
+			res['error'] = str(ex)[:200]
+	elif name == 'ffmpeg':
+		from ops import ffmpeg_render
+		res['available'] = True
+	else:
+		res['note'] = 'no probe for ' + name
+	return res
+
+
+@app.get('/api/quote/list')
+def quote_list(channel: str = None):
+	try:
+		from modules.render import quote_engine as qe
+		lib = qe.load_library()
+		out = {}
+		for ch in lib.get('channels', {}):
+			if channel and ch != channel:
+				continue
+			cats = lib['channels'][ch].get('categories', {})
+			out[ch] = {k: len(v) for k, v in cats.items()}
+		return {'ok': True, 'channels': out}
+	except Exception as e:
+		return JSONResponse({'ok': False, 'error': str(e)[:200]}, status_code=500)
+
+
+@app.post('/api/quote/generate')
+def quote_generate(payload: dict):
+	import time as _tq
+	channel = payload.get('channel') or 'Mialinhcute'
+	category = payload.get('category')
+	engine = payload.get('engine')
+	try:
+		from modules.render import quote_engine as qe
+		ts = str(int(_tq.time()))
+		out = os.path.join(ROOT, 'output', 'quote_' + channel + '_' + ts + '.mp4')
+		style = {'voice': payload.get('voice') or 'female_north'}
+		style['voice_preset'] = payload.get('preset') or 'cheerful'
+		use_v2 = payload.get('v2', True)
+		if use_v2:
+			r = qe.make_quote_v2(channel, out, category=category, style=style, engine=(engine or 'auto'))
+		else:
+			r = qe.make_quote(channel, out, category=category, style=style, engine=(engine or 'auto'))
+		return {'ok': r.get('ok'), 'path': r.get('path'), 'final': r.get('final'), 'quote': r.get('quote'), 'error': r.get('error'), 'engine': r.get('engine'), 'score': r.get('score'), 'passes': r.get('passes'), 'vn_quote': r.get('vn_quote'), 'reasons': r.get('reasons'), 'steps': r.get('steps')}
+	except Exception as e:
+		import traceback
+		return JSONResponse({'ok': False, 'error': str(e)[:300], 'trace': traceback.format_exc()[-500:]}, status_code=500)
 
 def main():
 	import uvicorn

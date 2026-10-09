@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS jobs (
 	id TEXT PRIMARY KEY,
 	channel_id TEXT NOT NULL,
 	topic TEXT, kind TEXT,
-	length_override INTEGER, voice_override TEXT, music_mood TEXT,
+	length_override INTEGER, voice_override TEXT, voice_preset TEXT, music_mood TEXT,
 	count INTEGER DEFAULT 1, require_approval INTEGER DEFAULT 1,
 	run_at TEXT, repeat TEXT,
 	status TEXT DEFAULT 'pending', priority INTEGER DEFAULT 5,
@@ -74,6 +74,10 @@ def connect():
 def init():
 	c = connect()
 	c.executescript(SCHEMA)
+	try:
+		c.execute('ALTER TABLE jobs ADD COLUMN voice_preset TEXT')
+	except Exception:
+		pass
 	c.commit()
 	return c
 
