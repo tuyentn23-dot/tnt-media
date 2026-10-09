@@ -148,3 +148,72 @@ Video dung dot ngot -> TODO: them outro fade
 
 Phien truoc da xong: Task 1 (Content live RSS) + Task 2 (Voice diversity).
 Phien sau can lam: Task 3 (Khong dung dot ngot) + Test E2E.
+
+
+## 13. VIDEO ENGINES (2026-10-08)
+
+TNT Media ho tro 9 engine tao video, tat ca MIEN PHI:
+
+| Engine | Provider | Cach dung | Trang thai |
+|---|---|---|---|
+| pexels | Pexels.com | REST API | OK (1080x1920, audio) |
+| luma | LumaLabs | REST | Can key rieng |
+| fal | fal.ai | client | Can key |
+| replicate | Replicate | REST | Can key |
+| kling | KlingAI | REST | Can key |
+| wavespeed | WaveSpeed | REST | Can key |
+| flow | Google Flow/Veo | CDP Playwright | OK v7.0.0 (720p, 10s, audio) |
+| vids | Google Vids | Playwright | Chua test |
+| gacha | Local | Python | OK |
+| ffmpeg | Local | subprocess | OK |
+
+### API Endpoints
+- GET /api/video/engines
+- POST /api/video/generate body={prompt, engine, duration, channel}
+- GET /api/video/engine/{name}/health
+
+### UI Tab
+Vao app -> nhom He thong -> Video Engines -> bang engine + form generate.
+
+### Response field
+Moi video tra ve co tnt_engine: provider, model, is_free, elapsed_sec, channel, generated_by.
+
+### Fallback order
+flow -> vids -> luma -> pexels -> ffmpeg
+
+
+## 14. VOICE + PRESET (2026-10-09)
+
+6 giong doc + 8 sac thai, tat ca mien phi (edge-tts).
+
+Giong: female_north (HoaiMy, mac dinh), male_north (NamMinh),
+female_multilingual (Ava), female_emma (Emma), female_jenny (Jenny),
+male_andrew (Andrew).
+
+Preset (rate/pitch/volume): default, cheerful (mac dinh pipeline),
+sad, excited, calm, narrator, kids, news.
+
+Module: modules/voice/edge_tts.py
+API: GET /api/config/voices | GET /api/config/presets
+UI: Pipeline view -> dropdown Giong doc + Sac thai
+Job fields: voice_override, voice_preset (cot moi trong bang jobs)
+runner merge vao style[voice], style[voice_preset], style[preset].
+
+## 15. STOCK FALLBACK (2026-10-09)
+
+Khi Pexels khong du clip -> tu dong fallback Pixabay + Coverr.
+Module: modules/render/stock_fallback.py (33 modules tong cong).
+Tich hop trong modules/render/pexels_builder.build().
+Keys tuy chon: PIXABAY_API_KEY, COVERR_API_KEY trong .env.
+Khong co key -> tra [] graceful. Thu tu: Pexels -> Pixabay -> Coverr.
+
+## 16. PHIEN 2026-10-09 DA XONG
+
+- P1: Dropdown Giong doc + Sac thai end-to-end (UI -> API -> DB -> render)
+- P2: Pixabay + Coverr fallback cho Pexels
+- P3: Commit 1324c75 (guardian manifest re-signed)
+- P4: Update AGENT_RULES.md + SYSTEM_OVERVIEW.md (file nay)
+
+Phien sau: P0 test UI that (run_desktop.bat), test render voi preset khac nhau,
+them API key Pixabay/Coverr that de test fallback.
+

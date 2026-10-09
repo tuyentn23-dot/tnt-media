@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-10-09T22:45:32.277229",
+  "generated": "2026-10-09T22:51:12.396327",
   "files": {
     "ops/vids_agent.py": "6a0ee08287d7d6c2522acae18664b533cfbf5b05901dd4bcea4b5374d781fc43",
     "ops/vids_edit.py": "7c1fcccb442a46508879df24018679e24e103ba9d8906b260aed4716bc6c1e5c",
@@ -43,11 +43,11 @@
     "channels/vilevi5676.json": "17256b507fdccbd9d15fad375007f6c2e6b72263b84d6a46c2dfbefa619161e6",
     "config/scripts_vi.json": "60b034a5b6e92a0ebe18fee525436364e5be498e4820de5bfb7ea2ed145862c6",
     "BOOTSTRAP.md": "7783157979d344347d58287cf9d48761daa0a9b5deb50a395242eefe558ef339",
-    "AGENT_RULES.md": "03813417c5b522771d780ddc54f6434f036a4f9978b7c3ce0d75a39a1059dbf3",
-    "SYSTEM_OVERVIEW.md": "e6837b49375b27dc8e6f9b3b5dd917f449853fb58762a28765afc6b27fa753c9",
+    "AGENT_RULES.md": "70c2181cc0a307fa21068d56a5b00ef5ecb83238dc2899c6cf93c319707c98a3",
+    "SYSTEM_OVERVIEW.md": "86deaf7067686edb531051d9ca512f4337852368c474d20cfec359d6671d067e",
     "PIPELINE_SPEC.md": "677a6c72f35da3ea76711d199ed87af06c7ca875430ebedaa2b0fed09957ea44",
     "STATE.md": "2f9d52df8b460cd325e702702212484c505d708801d0e3283cb55639339ed47e",
-    "CHANGELOG.md": "76574b9466b022c9de7307c5e86f5162899d60982778c31a5d8c2181842b0dde",
+    "CHANGELOG.md": "0cc6b96f7a5f43e65ea8fa6815d71607e5663f6533a2a9e520f347fef04e50a1",
     "guardian/agent_boot.py": "344864f782086b8084ec920a13e10184198acfc0f97ce635c84cd0edd1d7eb9e",
     "pipeline/__init__.py": "8baa4caa61689b8eb57cc88fe7bab94505ed1f733fd2aa9309fb23d71ae25f7c",
     "pipeline/runner.py": "33772401b6806dea6f33881495cac1aca087cbfdd1460feb7422a042f75acf06",

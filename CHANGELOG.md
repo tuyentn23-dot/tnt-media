@@ -1,4 +1,81 @@
 # CHANGELOG - XEM _archive_CHANGELOG.md cho lich su cu
+## 2026-10-09 (toi) - Voice/Preset dropdown end-to-end + Stock fallback
+
+### Added
+- modules/render/stock_fallback.py v1.0.0 - Pixabay + Coverr fallback khi Pexels thieu clip
+- API GET /api/config/presets - 8 sac thai (default/cheerful/sad/excited/calm/narrator/kids/news)
+- Cot jobs.voice_preset trong state/pipeline.db (kem migration ALTER TABLE)
+- Job.voice_preset field (constructor, to_dict, from_dict)
+- UI: dropdown Giong doc + Sac thai trong desktop_app/views/pipeline.py
+- i18n keys: pipe.voice, pipe.preset (strings_vi.json)
+- api.presets() helper trong desktop_app/api.py
+
+### Changed
+- GET /api/config/voices: tu 4 giong hardcode -> 6 giong dong tu edge_tts.VI_VOICES
+- pipeline/runner.py: merge voice_override + voice_preset vao render style
+- pipeline/runner.py + app/server.py: INSERT/SELECT jobs kem cot voice_preset
+- modules/render/pexels_builder.py: goi stock_fallback khi Pexels < 2 clip
+- .env.example: document PIXABAY_API_KEY + COVERR_API_KEY
+- AGENT_RULES.md: them VOICE + PRESET CONTRACT + STOCK FALLBACK CONTRACT
+- SYSTEM_OVERVIEW.md: muc 14/15/16 ve voice, fallback, phien nay
+
+### Fixed
+- Voice dropdown truoc day chi hien thi, khong anh huong render (runner bo qua voice_override)
+
+### Verify
+- pipeline.selfcheck: 27 PASS / 0 FAIL
+- modules_discoverable: 33 modules, bad=[]
+- guardian integrity: 63 files OK
+- Commit: 1324c75
+
+
+
+
+## 2026-10-09 (phien chieu) - Quote Pipeline v1 + VN Guard + Hook 2 doan
+
+### Added modules
+- modules/render/visual_map.py v1.0.0 - category -> cu the Pexels query + flow hint
+- modules/render/vn_guard.py v1.0.0 - BAT BUOC tieng Viet co dau (check/assert_vn)
+- modules/render/mix_core.py v1.0.0 - ghep Flow clip + Pexels clips voi xfade, zoom nhe 1.22x
+- modules/render/booster.py v1.0.0 - tpad black 0.8s+2.5s -> loop_gap=0 -> score 100
+- modules/render/quote_pipeline.py v1.0.0 - unified: guard -> mix -> compose -> boost -> gate
+
+### Updated
+- content/quote_library.json v3.0.0 - 68/68 quote co dau tieng Viet day du
+- modules/render/quote_engine.py v1.3.0 - make_quote_v2 (dung quote_pipeline) + vn_guard gate + visual_map query
+- modules/render/caption_engine.py - build_hook_ass (2 doan, split theo dau cau . ! ?)
+- modules/render/compose.py - step_overlay dung ASS hook (fade 0.5s giua 2 doan), step_mux tpad video extend theo voice
+- modules/render/video.py v4.4.0 - them engine quote_v2
+- app/server.py - /api/quote/generate ho tro v2 (default), /api/video/engines them quote_v2
+- module_registry.json - dang ky 5 module moi
+- MODULES.md - them muc 9-13
+
+### Fixed
+- Chu hook tran man hinh -> auto-wrap 18 ky tu/dong, font size auto-reduce
+- Voice bi cat dot ngot -> tpad clone frame cuoi keo dai video theo voice
+- Zoom qua gan -> giam punch (1.6->1.22x), fast (1.8->1.28x), pulse (0.15->0.08)
+- Hook cat giua cau -> split theo dau cau (. ! ?) gan giua nhat
+
+### Test results
+- 4 video upload YouTube (2 Mialinhcute + 2 vilevi5676), score 100, VN co dau
+- selfcheck: 27 PASS / 0 FAIL
+
+## 2026-10-08 (FLOW VIDEO v7.0.0 - Google Veo 100%)
+- modules/render/flow_video.py v7.0.0: workflow hoan chinh 5 buoc
+ - new_project -> submit_prompt -> wait_video_tile -> open_editor -> download_video
+ - Force 9:16 qua prompt hint "vertical 9:16 portrait"
+ - Auto click Always approve credit (15 credits/video)
+ - Download 720p mac dinh (TNT_FLOW_QUALITY env)
+- Profile Chrome sach _flow_chrome_clean (khong extension) -> khong bi Google block
+- FIX BUG AUDIO: ops/vids_post.py [gg][vo]amix -> [bg][vo]amix
+- Da tao 5+ video AI that 720x1280 (9:16), 10s, AAC stereo
+- HANDOFF_FLOW_v7_2026-10-08.md: tai lieu day du
+- Video engine integration (Task A3):
+ - modules/render/video.py: them try_pexels, try_luma, ENGINES +cloud
+ - app/server.py: 3 endpoint moi /api/video/engines, /api/video/generate, /api/video/engine/{name}/health
+ - ops/migrate_add_engine_fields.py: them 4 cot engine_used, provider, is_free, engine_meta
+ - UI tab Video Engines
+
 
 
 ## 2026-10-04 (He thong bao ve 4 lop + Cleanup)
