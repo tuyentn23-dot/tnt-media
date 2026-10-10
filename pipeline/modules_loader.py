@@ -3,6 +3,8 @@
 import os, sys, importlib.util
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODULES_DIR = os.path.join(ROOT, 'modules')
+if MODULES_DIR not in sys.path:
+	sys.path.insert(0, MODULES_DIR)
 
 REQUIRED_KEYS = ['name', 'version', 'interface']
 
@@ -38,10 +40,8 @@ def discover():
 
 def load_module(path, name):
 	try:
-		spec = importlib.util.spec_from_file_location(name, path)
-		mod = importlib.util.module_from_spec(spec)
-		spec.loader.exec_module(mod)
-		return mod
+		import importlib as _il
+		return _il.import_module(name)
 	except Exception as e:
 		print('[load err] ', path, str(e)[:100])
 		return None

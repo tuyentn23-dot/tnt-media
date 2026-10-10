@@ -253,6 +253,18 @@ def _write_status(alive=True, last_tick_created=0):
 	except Exception:
 		pass
 
+def _first_kind(row):
+	try:
+		ks = row['kinds']
+		if isinstance(ks, str):
+			ks = json.loads(ks or '[]')
+		if isinstance(ks, list) and ks:
+			return str(ks[0])
+	except Exception:
+		pass
+	return 'short'
+
+
 def tick():
 	if _paused():
 		return 0
@@ -268,7 +280,7 @@ def tick():
 		rows_at = []
 	# run_at jobs duoc xu ly boi drain_pending() (chi dispatch job due), tranh trung
 	pass
-	rows = c.execute('SELECT id, schedule FROM channels WHERE enabled=1').fetchall()
+	rows = c.execute('SELECT id, schedule, kinds FROM channels WHERE enabled=1').fetchall()
 	for r in rows:
 		try:
 			sched = json.loads(r['schedule'] or '{}')
@@ -284,7 +296,7 @@ def tick():
 				continue
 			c.execute(
 				'INSERT INTO jobs (id, channel_id, kind, topic, status, created_at, count, require_approval) VALUES (?,?,?,?,?,?,?,?)',
-				(jid, r['id'], sched.get('kind', 'short'), sched.get('topic', ''),
+				(jid, r['id'], sched.get('kind') or _first_kind(r), sched.get('topic', ''),
 				 'pending', state.now(), int(sched.get('count', 1)), int(sched.get('require_approval', 1))),
 			)
 			c.commit()

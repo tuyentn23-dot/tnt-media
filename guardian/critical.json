@@ -67,9 +67,6 @@
     "pipeline/quota.py",
     "pipeline/recovery.py"
   ],
-  "state_truth": [
-    "state/pipeline.db"
-  ],
   "guardian_system": [
     "guardian/guard.py",
     "guardian/snapshot.py",

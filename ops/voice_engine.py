@@ -5,6 +5,14 @@ ROOT = next((p for p in CAND if p and os.path.isdir(os.path.join(p, 'tools'))), 
 FFMPEG = os.path.join(ROOT, 'tools', 'ffmpeg.exe')
 
 VI_VOICES = {
+	'HoaiMy': 'vi-VN-HoaiMyNeural',
+	'NamMinh': 'vi-VN-NamMinhNeural',
+	'HoaiMyNeural': 'vi-VN-HoaiMyNeural',
+	'NamMinhNeural': 'vi-VN-NamMinhNeural',
+	'Ava': 'en-US-AvaMultilingualNeural',
+	'Emma': 'en-US-EmmaMultilingualNeural',
+	'Brian': 'en-US-BrianMultilingualNeural',
+
 	'female_north': 'vi-VN-HoaiMyNeural',
 	'male_north': 'vi-VN-NamMinhNeural',
 	'female_ava': 'en-US-AvaMultilingualNeural',
@@ -18,6 +26,7 @@ PRESETS = {
  'story': {'rate': '+4%', 'pitch': '+0Hz', 'volume': '+0%'},
  'calm': {'rate': '-4%', 'pitch': '-2Hz', 'volume': '+0%'},
  'cute': {'rate': '+6%', 'pitch': '+8Hz', 'volume': '+6%'},
+ 'female_cute': {'rate': '+6%', 'pitch': '+8Hz', 'volume': '+6%'},
 }
 
 def _run(coro):

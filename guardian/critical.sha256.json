@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-10-09T22:51:12.396327",
+  "generated": "2026-10-10T12:01:34.772961",
   "files": {
     "ops/vids_agent.py": "6a0ee08287d7d6c2522acae18664b533cfbf5b05901dd4bcea4b5374d781fc43",
     "ops/vids_edit.py": "7c1fcccb442a46508879df24018679e24e103ba9d8906b260aed4716bc6c1e5c",
@@ -52,18 +52,17 @@
     "pipeline/__init__.py": "8baa4caa61689b8eb57cc88fe7bab94505ed1f733fd2aa9309fb23d71ae25f7c",
     "pipeline/runner.py": "33772401b6806dea6f33881495cac1aca087cbfdd1460feb7422a042f75acf06",
     "pipeline/job.py": "17b709813b2d73d6cef6f83df0ddce08932689d2720176699103ecaf989cca37",
-    "pipeline/scheduler.py": "1584b8c08a0b838c641935eab8c3379264cdb7b4343cc71ec3c06e4c3d1c8897",
+    "pipeline/scheduler.py": "cda8b08007b139340105efb1185f16156a4b932214e6a9a0e6cd092e4cf0f72d",
     "pipeline/state.py": "15c559491e054d9dfbed4655f8139508faae23e907fb04ee651dad29c08041c9",
     "pipeline/selfcheck.py": "9b0670bdc5f226f2559af71a3180e89167cfb749688e03d4ce5e91b5c6425a9b",
     "pipeline/quota.py": "46a951489714e586ce6dc3f7932749b9776158ebbd6b1e9716edf661fb5dc6d5",
     "pipeline/recovery.py": "4dc6ce9181fe3ff4fba2a9abcfff93f0b20e245c322cdabf30ed67533cfd08d3",
-    "state/pipeline.db": "7591247b2f3030406733029c10a23f2c7fc9c8ace471016c8a3834be718af72c",
     "guardian/guard.py": "0259d41970fa56066e25e6a679984eb07e41c12df2d478e98f64a2109d127ab9",
     "guardian/snapshot.py": "e9de73aeb3d3ab89fd79ffe0529e61e39841f0e6374991d57e78f6aefeee845b",
     "guardian/safe_fs.py": "c707e48c425333dd8a3b27b91efac2d0eff2983d21d5115be81b77aa5e16e493",
     "guardian/session_end.py": "2b3321234058eea70cacc5e8951461b38ef06675dd3f86a74712bc90332c2397",
     "guardian/integrity.py": "272a2879757376ef09785438068fde6f4cb42ca7b65ef96a0f09311e16ad1dce",
-    "guardian/critical.json": "df85a075e5f2656a2ac9d99e57f14eb62571e3828347fcafe69da4a69c296904",
+    "guardian/critical.json": "780f1cad3c0f19091726abb27866b086b2234ef318aa2bc09012d8734db26b62",
     "guardian/zones.py": "4bff29e264d0470096331dd28d40035711678d135d09860d36c92d29d6f48e45"
   }
 }
