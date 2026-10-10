@@ -113,16 +113,18 @@ class Pipeline(QWidget):
 		row1.addWidget(QLabel(i18n.t('pipe.channel') + ':'))
 		self.ch = QComboBox()
 		self.ch.setMinimumWidth(200)
+		self.ch.currentIndexChanged.connect(self.load_kinds)
 		row1.addWidget(self.ch)
 		row1.addSpacing(16)
-		row1.addWidget(QLabel(i18n.t('pipe.style') + ':'))
-		self.style = QComboBox()
-		self.style.addItems(['Tự động', 'Anime', 'Dễ thương', 'Khoa học', 'Đời sống'])
-		row1.addWidget(self.style)
+		row1.addWidget(QLabel('Kind:'))
+		self.kind = QComboBox()
+		self.kind.setMinimumWidth(150)
+		row1.addWidget(self.kind)
 		row1.addSpacing(16)
 		row1.addWidget(QLabel(i18n.t('pipe.length') + ':'))
 		self.length = QComboBox()
-		self.length.addItems([i18n.t('pipe.short'), i18n.t('pipe.long')])
+		self.length.addItem(i18n.t('pipe.short'), None)
+		self.length.addItem(i18n.t('pipe.long'), 90)
 		row1.addWidget(self.length)
 		row1.addStretch()
 		body.addLayout(row1)
@@ -196,6 +198,7 @@ class Pipeline(QWidget):
 		body.addLayout(bottom)
 		root.addLayout(body)
 		self.load_channels()
+		self.load_kinds()
 		self.load_modules()
 		self.load_voice_presets()
 
@@ -216,6 +219,22 @@ class Pipeline(QWidget):
 				nm = str(it)
 				iid = it
 			self.ch.addItem(nm, iid)
+
+	def load_kinds(self):
+		cid = self.ch.currentData()
+		self.kind.clear()
+		if not cid:
+			self.kind.addItem('(chua chon kenh)', None)
+			return
+		try:
+			d = api.get('/api/config/kinds?channel_id=' + str(cid))
+			items = d.get('items', [])
+		except Exception:
+			items = []
+		if not items:
+			self.kind.addItem('(khong co kind)', None)
+		for k in items:
+			self.kind.addItem(str(k), str(k))
 
 	def load_modules(self):
 		d = api.modules()
@@ -331,11 +350,14 @@ class Pipeline(QWidget):
 			self.logline('! Chua chon kenh')
 			return
 		body = {'channel_id': cid}
-		body['style'] = self.style.currentText()
-		body['length'] = self.length.currentIndex()
+		k = self.kind.currentData()
+		if k:
+			body['kind'] = k
+		lo = self.length.currentData()
+		if lo:
+			body['length_override'] = lo
 		body['topic'] = self.topic.text()
 		body['require_approval'] = (self.mode.currentIndex() == 1)
-		body['when'] = self.when.currentIndex()
 		body['voice_override'] = self.voice.currentData()
 		body['voice_preset'] = self.preset.currentData()
 		if self.when.currentIndex() == 1:

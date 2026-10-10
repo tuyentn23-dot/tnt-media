@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-10-10T14:02:44.696857",
+  "generated": "2026-10-10T14:14:14.665946",
   "files": {
     "ops/vids_agent.py": "6a0ee08287d7d6c2522acae18664b533cfbf5b05901dd4bcea4b5374d781fc43",
     "ops/vids_edit.py": "7c1fcccb442a46508879df24018679e24e103ba9d8906b260aed4716bc6c1e5c",
@@ -27,7 +27,7 @@
     "desktop_app/widgets.py": "a0166062fbfd3fc6e4e49f6e79cd9da617bc968e4d8ad9c11356bb49803da124",
     "desktop_app/icon.ico": "10c9e9bdb243f7312ff60cb253a9893f838aa189fb5b3aa639594dc72143d4f9",
     "desktop_app/tray.py": "5e38d0edc59b34f3cb6f2f598e504f9f431cb06cec2518667b95246dc1b60588",
-    "desktop_app/views/pipeline.py": "70e7ee4deee5a97e564bcef4a5c36dfa76b126d730373e08f327b7f2e310f909",
+    "desktop_app/views/pipeline.py": "7e4c4af0f0430a9cfc6276f2fdc6427d318fd3acf65dd4fd2b05cf76e48181e6",
     "desktop_app/strings_vi.json": "6db406e475d761631c11d865bd38e893dfff893b5c61b22590b97259c971040f",
     "desktop_app/strings_en.json": "69ef52903da17da31552efaf1019adadd9c856c13e2880968d79f04c6cc9e372",
     "desktop_app/views/channels.py": "8e25ebd34672d632126a131abd261fafda17769db92463e372f52fb83be6ca8c",
