@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QHBoxLayout, QVBoxLayout, QLabel, QPushButton, QStackedWidget, QButtonGroup, QFrame, QStatusBar)
 from PySide6.QtCore import Qt, QTimer
-from PySide6.QtGui import QIcon
+from PySide6.QtGui import QIcon, QShortcut, QKeySequence
 import i18n, theme, tray
 
 
@@ -32,7 +32,7 @@ class Toast(QLabel):
 		self.setText(text)
 		self.adjustSize()
 		self.setVisible(True)
-		self.raise__()
+		self.raise_()
 		QTimer.singleShot(ms, lambda: self.setVisible(False))
 
 
@@ -134,6 +134,34 @@ class MainWindow(QMainWindow):
 		self._status_timer.timeout.connect(self._refresh_status)
 		self._status_timer.start(10000)
 		self._refresh_status()
+		self._setup_shortcuts()
+
+	def _setup_shortcuts(self):
+		sc = QShortcut(QKeySequence('Ctrl+R'), self)
+		sc.activated.connect(self._refresh_current)
+		sc = QShortcut(QKeySequence('F5'), self)
+		sc.activated.connect(self._refresh_status)
+		sc = QShortcut(QKeySequence('Ctrl+F'), self)
+		sc.activated.connect(self._focus_search)
+		for i in range(8):
+			sc = QShortcut(QKeySequence('Ctrl+' + str(i+1)), self)
+			sc.activated.connect(lambda ix=i: self.go(ix))
+	def _refresh_current(self):
+		try:
+			w = self.stack.currentWidget()
+			if hasattr(w, 'refresh'):
+				w.refresh()
+			self.pop('Da lam moi', 1500)
+		except Exception as e:
+			self.pop('Loi: ' + str(e)[:80])
+	def _focus_search(self):
+		try:
+			w = self.stack.currentWidget()
+			if hasattr(w, 'search'):
+				w.search.setFocus()
+				w.search.selectAll()
+		except Exception:
+			pass
 
 	def pop(self, msg, ms=3000):
 		self.toast.pop(msg, ms)
