@@ -44,27 +44,40 @@ def ensure_cdp(auto_launch=True):
 def build_prompt(item, style):
 	if style.get('ai_prompt'):
 		return str(style['ai_prompt'])
-	parts = []
-	topic = item.get('topic', '') or item.get('title', '')
-	if topic:
-		parts.append(str(topic))
-	for k in ('hook', 'body', 'payoff'):
-		v = item.get(k, '')
-		if v:
-			parts.append(str(v))
-	p = ' '.join(parts).strip()
-	if not p:
-		p = item.get('search_query', '') or 'a short engaging scene'
-	tmpl = style.get('ai_prompt_template')
-	if tmpl:
-		try:
-			p = tmpl.format(prompt=p, topic=topic, hook=item.get('hook', ''))
-		except Exception:
-			pass
+	kind = (item.get('kind') or '').lower()
+	topic = (item.get('topic') or item.get('title') or '').strip()
+	hook = (item.get('hook') or '').strip()
+	body = (item.get('body') or '').strip()
+	VISUAL = {
+		'anime': 'anime style, vibrant colors, 2D animation, japanese anime aesthetic, smooth motion',
+		'roblox': 'roblox blocky 3D style, voxel art, minecraft-like, colorful, playful',
+		'cute_animals': 'cute baby animals, soft pastel colors, kawaii style, fluffy, wholesome, natural lighting',
+		'meme': 'funny cartoon style, expressive characters, bold colors, comedic timing',
+		'gacha': 'cute chibi anime style, gacha club aesthetic, colorful pastel, expressive',
+		'facts': 'cinematic documentary style, realistic, 4K, dramatic lighting',
+		'curiosity': 'cinematic wonder, awe-inspiring, dramatic lighting, realistic',
+		'whatif': 'cinematic sci-fi, dramatic, realistic, epic scale',
+		'nostalgia': 'warm vintage tones, nostalgic, sepia, film grain, soft',
+		'lifestyle': 'warm lifestyle, cozy, natural lighting, aesthetic, soft',
+		'food': 'appetizing food photography, close-up, warm lighting, steam',
+		'animals': 'wildlife documentary, nature, realistic, cinematic',
+	}
+	vs = VISUAL.get(kind, 'cinematic, high quality, engaging')
+	subject = topic
+	if topic.endswith(chr(63)) or topic.endswith(chr(65311)):
+		cand = hook or body or topic
+		subject = cand[:200].rstrip('?.').strip()
+	if not subject:
+		subject = item.get('search_query') or 'engaging short scene'
 	sh = style.get('ai_style')
 	if sh:
-		p = p + '. ' + str(sh)
-	return p[:1500]
+		vs = vs + chr(44) + chr(32) + str(sh)
+	parts = []
+	parts.append('Generate a short 9:16 vertical video scene about: ' + subject[:300])
+	parts.append('Visual style: ' + vs)
+	parts.append('Requirements: vertical portrait 9:16, smooth camera motion, cinematic, engaging for YouTube Shorts, 8-10 seconds, no text overlay, no dialogue, high quality render')
+	p = chr(32).join(parts)
+	return p[:1200]
 
 
 def download_inner(url, out_path):
