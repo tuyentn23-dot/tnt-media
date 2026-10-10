@@ -98,7 +98,7 @@ class _Table(QWidget):
 
 
 class Jobs(_Table):
-	HEADERS = ['ID', 'Kenh', 'Kind', 'Trang thai', 'Thoi gian (s)', 'Log cuoi', 'Tao luc']
+	HEADERS = ['ID', 'Kenh', 'Kind', 'Trang thai', 'Tien do', 'Thoi gian (s)', 'Log cuoi', 'Tao luc']
 	NAVKEY = 'nav.jobs'
 	KEYS = ['id', 'channel_id', 'kind', 'status', 'elapsed_sec', 'log_tail', 'created_at']
 	def fetch(self):
@@ -108,12 +108,26 @@ class Jobs(_Table):
 		for row in rows:
 			r = self.table.rowCount()
 			self.table.insertRow(r)
-			for c, v in enumerate(row):
-				if c == 5 and isinstance(v, list):
-					txt = v[-1] if v else ''
-					self.table.setItem(r, c, QTableWidgetItem(str(txt)[:120]))
-				else:
-					self.table.setItem(r, c, QTableWidgetItem(str(v)))
+			# row = [id, ch, kind, status, elapsed, log_tail, created]
+			out = [row[0], row[1], row[2], row[3]]
+			status = str(row[3] or '')
+			tail = row[5] if isinstance(row[5], list) else []
+			n = len([x for x in tail if 'rendered' in str(x)])
+			if status in ('done', 'completed', 'success'):
+				pct = '100%'
+			elif status in ('failed', 'error'):
+				pct = 'Loi'
+			elif status == 'running':
+				pct = (str(n) + ' video') if n else 'dang chay...'
+			else:
+				pct = status
+			out.append(pct)
+			out.append(row[4])
+			lg = (tail[-1] if tail else '')
+			out.append(str(lg)[:120])
+			out.append(row[6])
+			for c, v in enumerate(out):
+				self.table.setItem(r, c, QTableWidgetItem(str(v)))
 	def _build_actions(self, bar):
 		self.btn_appr = QPushButton('Duyet')
 		self.btn_appr.setObjectName('Primary')
