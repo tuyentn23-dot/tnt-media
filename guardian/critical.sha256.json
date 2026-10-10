@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-10-10T14:01:37.160696",
+  "generated": "2026-10-10T14:02:44.696857",
   "files": {
     "ops/vids_agent.py": "6a0ee08287d7d6c2522acae18664b533cfbf5b05901dd4bcea4b5374d781fc43",
     "ops/vids_edit.py": "7c1fcccb442a46508879df24018679e24e103ba9d8906b260aed4716bc6c1e5c",
@@ -36,7 +36,7 @@
     "ops/oauth_setup.py": "d61ab07b88a21b826204baa055c05e9a1d338d9f22435f7ae6eab604412bae0d",
     "quality_policy.json": "3c3f108d3f90f50e2ff90de900c28cc130e7e12e6674c22928d1fd8ec708006f",
     "ops/quality_gate.py": "f3ea404b23eefeb406ee93ae4836d9e512a303eac73bee77853e2645334f931d",
-    "desktop_app/views/tables.py": "c9d244502bb63867cd0a3a96ed388c2cc1071fe8f3e14a5281ffd3b0a0392fb0",
+    "desktop_app/views/tables.py": "3ca8193cbd61280937c29184bb0a938808378e97cc47858136709f9498dc1139",
     "HANDOFF_2026-10-05_PHIEN_SAU.md": "b2eb64c938466c1e042d531fd80c5640ba36af5375790634d5d9ad7131f34c05",
     "module_registry.json": "9e71737025e5aab27bacd82b1e909575297bb576a8d14504c145fb369955d8c4",
     "channels/Mialinhcute.json": "568cb0f6ccfc84688b5db1466f6252bedd2585329594d99b14487386e6361195",

@@ -1,0 +1,35 @@
+QWidget{background:#F5F5F7;color:#1D1D1F;font-family:'Segoe UI',sans-serif;font-size:13px}
+QMainWindow,QDialog{background:#F5F5F7}
+#Sidebar{background:#ECECEE;border-right:1px solid #D9D9DE}
+#Sidebar QPushButton{background:transparent;border:none;text-align:left;padding:9px 14px;border-radius:8px;color:#3A3A3C;font-size:13px}
+#Sidebar QPushButton:hover{background:#E0E0E4}
+#Sidebar QPushButton:checked{background:#0A84FF;color:#FFFFFF;font-weight:600}
+#TopBar{background:#FFFFFF;border-bottom:1px solid #E5E5EA}
+#Card{background:#FFFFFF;border:1px solid #E5E5EA;border-radius:12px}
+#CardTitle{font-size:12px;color:#8E8E93;font-weight:600}
+#CardValue{font-size:26px;color:#1D1D1F;font-weight:700}
+#PageTitle{font-size:22px;font-weight:700;color:#1D1D1F}
+#PageSub{font-size:12px;color:#8E8E93}
+QPushButton{border-radius:8px;padding:7px 14px;background:#FFFFFF;border:1px solid #D9D9DE;color:#1D1D1F}
+QPushButton:hover{background:#F0F0F2}
+QPushButton#Primary{background:#0A84FF;color:#FFFFFF;border:none;font-weight:600}
+QPushButton#Primary:hover{background:#0070E0}
+QPushButton#Danger{background:#FF453A;color:#FFFFFF;border:none}
+QTableWidget,QTreeWidget{background:#FFFFFF;border:1px solid #E5E5EA;border-radius:10px;gridline-color:#F0F0F2;selection-background-color:#D6E9FF;selection-color:#1D1D1F}
+QHeaderView::section{background:#FAFAFB;color:#8E8E93;border:none;border-bottom:1px solid #E5E5EA;padding:8px;font-weight:600}
+QComboBox,QLineEdit,QSpinBox,QDoubleSpinBox{background:#FFFFFF;border:1px solid #D9D9DE;border-radius:8px;padding:6px 10px}
+QComboBox:focus,QLineEdit:focus{border:1px solid #0A84FF}
+QScrollBar:vertical{background:transparent;width:10px;margin:2px}
+QScrollBar::handle:vertical{background:#C7C7CC;border-radius:5px;min-height:30px}
+QScrollBar::add-line,QScrollBar::sub-line{height:0}
+QStatusBar{background:#FFFFFF;border-top:1px solid #E5E5EA;color:#8E8E93}
+QProgressBar{border:1px solid #E5E5EA;border-radius:6px;background:#FFFFFF;text-align:center}
+QProgressBar::chunk{background:#0A84FF;border-radius:5px}
+#Toast{background:#1D1D1F;color:#FFFFFF;border-radius:10px;padding:10px 18px;font-weight:600;font-size:13px}
+#Sidebar QPushButton{text-align:left;padding:10px 14px;font-size:13px;border-radius:8px}
+QTableWidget::item{padding:6px 8px}
+QTableWidget::item:selected{background:#D6E9FF;color:#1D1D1F}
+QLineEdit,QComboBox{padding:7px 12px;font-size:13px}
+QComboBox::drop-down{border:none;width:20px}
+QScrollArea{border:none;background:transparent}
+QScrollArea > QWidget > QWidget{background:transparent}
