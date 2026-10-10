@@ -711,24 +711,43 @@ def presets():
 
 @app.get('/api/config/kinds')
 def kinds(channel_id: str = None):
-	import json as j
-	CH = os.path.join(ROOT, 'channels')
-	out = set()
+	import os
+	out = []
+	seen = set()
 	if channel_id:
-		fp = os.path.join(CH, channel_id + '.json')
-		if os.path.exists(fp):
-			d = j.load(open(fp, encoding='utf-8'))
-			out.update(d.get('topics', []))
-	else:
-		for f in os.listdir(CH):
-			if f.endswith('.json') and 'template' not in f:
+		try:
+			from ops import channel_loader as chl
+			cfg = chl.load(channel_id)
+			kinds = (cfg.get('content') or {}).get('kinds') or []
+			if isinstance(kinds, list):
+				out = [str(k) for k in kinds]
+		except Exception:
+			pass
+		return {'items': out}
+	try:
+		from ops import channel_loader as chl
+		ch_dir = chl.channels_dir()
+		if os.path.isdir(ch_dir):
+			for name in sorted(os.listdir(ch_dir)):
+				if name.startswith('_'):
+					continue
+				p = os.path.join(ch_dir, name, 'channel.json')
+				if not os.path.exists(p):
+					continue
 				try:
-					d = j.load(open(os.path.join(CH, f), encoding='utf-8'))
-					out.update(d.get('topics', []))
+					import json as j
+					cfg = j.load(open(p, encoding='utf-8'))
+					ks = (cfg.get('content') or {}).get('kinds') or []
+					for k in ks:
+						sk = str(k)
+						if sk not in seen:
+							seen.add(sk)
+							out.append(sk)
 				except Exception:
 					pass
+	except Exception:
+		pass
 	return {'items': sorted(out)}
-
 
 @app.get('/api/diagnostics/selfcheck')
 def diag_selfcheck():
