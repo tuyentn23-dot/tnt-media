@@ -160,7 +160,7 @@ def run_job(job, dry_run=False, item_id=None):
 		auto_pub = (pmode == 'auto') and (job.require_approval is False or job.require_approval == 0)
 		if rendered and auto_pub:
 			try:
-				from modules.publish import youtube as ytmod
+				from ops import os_publish as _op
 				for r in rendered:
 					row2 = c.execute('SELECT id, title FROM publications WHERE signature=? AND channel_id=?', (r['sig'], job.channel_id)).fetchone()
 					if not row2:
@@ -168,8 +168,8 @@ def run_job(job, dry_run=False, item_id=None):
 					pid = row2['id']
 					ttl = row2['title'] or r['kind']
 					try:
-						res = ytmod.publish(r['path'], ttl, '', job.channel_id)
-						vid = res.get('youtube_id', res.get('id')) if isinstance(res, dict) else None
+						res = _op.publish(r['path'], ttl, '', force=False)
+						vid = (res.get('youtube_id') or res.get('id') or res.get('video_id')) if isinstance(res, dict) else None
 						c.execute('UPDATE publications SET status=?, youtube_id=?, published_at=? WHERE id=?', ('published', vid, state.now(), pid))
 						c.commit()
 						published.append(vid)

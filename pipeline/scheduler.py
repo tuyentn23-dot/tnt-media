@@ -6,6 +6,10 @@ import os, sys, time, threading, json, subprocess, datetime
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 from pipeline import state
+try:
+	from pipeline import auto_publish as _ap
+except Exception:
+	_ap = None
 
 try:
 	from zoneinfo import ZoneInfo
@@ -306,8 +310,14 @@ def tick():
 			_note_error('create job fail ' + str(r['id']) + ': ' + str(e))
 	c.close()
 	drained = drain_pending()
-	_write_status(True, len(created) + drained)
-	return len(created) + drained
+	published = 0
+	if _ap:
+		try:
+			published = _ap.publish_due()
+		except Exception:
+			published = 0
+	_write_status(True, len(created) + drained + published)
+	return len(created) + drained + published
 
 
 def run(interval=30, stop_event=None):

@@ -307,10 +307,10 @@ def approve(pub_id: int, upload: bool = True):
 	err = None
 	if upload:
 		try:
-			from modules.publish import youtube as ytmod
+			from ops import os_publish as _op
 			ttl = row['title'] or ('Video ' + str(pub_id))
-			res = ytmod.publish(row['file_path'], ttl, '', row['channel_id'])
-			vid = res.get('youtube_id', res.get('id'))
+			res = _op.publish(row['file_path'], ttl, '', force=False)
+			vid = res.get('youtube_id') or res.get('id') or res.get('video_id')
 		except Exception as e:
 			err = str(e)[:200]
 	if vid:
@@ -331,6 +331,62 @@ def reject(pub_id: int, reason: str = ''):
 	c.execute('INSERT INTO audit (session, actor, action, target, reason, ts) VALUES (?,?,?,?,?,?)', ('api', 'ui', 'reject', str(pub_id), reason[:200], state.now()))
 	c.commit()
 	return {'ok': r.rowcount > 0, 'rejected': r.rowcount}
+
+
+
+
+@app.get('/api/publications/queue')
+def publications_queue(status: str = None, channel_id: str = None, limit: int = 100):
+	c = state.connect()
+	sql = "SELECT id, job_id, channel_id, kind, topic, title, file_path, status, schedule_at, created_at, engine_used, provider FROM publications WHERE status IN ('rendered','scheduled','approved')"
+	params = []
+	if status:
+		sql += ' AND status=?'
+		params.append(status)
+	if channel_id:
+		sql += ' AND channel_id=?'
+		params.append(channel_id)
+	sql += ' ORDER BY CASE WHEN schedule_at IS NULL THEN 0 ELSE 1 END, schedule_at ASC, created_at DESC LIMIT ?'
+	params.append(limit)
+	rows = c.execute(sql, tuple(params)).fetchall()
+	c.close()
+	return {'items': [dict(r) for r in rows]}
+
+
+@app.post('/api/publications/{pub_id}/publish')
+def publish_pub(pub_id: int):
+	return approve(pub_id, upload=True)
+
+
+@app.post('/api/publications/{pub_id}/schedule')
+def schedule_pub(pub_id: int, payload: dict = None):
+	c = state.init()
+	row = c.execute('SELECT id, status, schedule_at FROM publications WHERE id=?', (pub_id,)).fetchone()
+	if not row:
+		c.close()
+		return JSONResponse({'ok': False, 'error': 'not found'}, status_code=404)
+	if row['status'] not in ('rendered', 'scheduled', 'approved'):
+		c.close()
+		return JSONResponse({'ok': False, 'error': 'status=' + str(row['status'])}, status_code=400)
+	at = (payload or {}).get('at') or (payload or {}).get('schedule_at')
+	if not at:
+		c.close()
+		return JSONResponse({'ok': False, 'error': 'at required (YYYY-MM-DD HH:MM)'}, status_code=400)
+	c.execute('UPDATE publications SET status=?, schedule_at=? WHERE id=?', ('scheduled', at, pub_id))
+	c.execute('INSERT INTO audit (session, actor, action, target, reason, ts) VALUES (?,?,?,?,?,?)', ('api', 'ui', 'schedule', str(pub_id), at[:200], state.now()))
+	c.commit()
+	c.close()
+	return {'ok': True, 'id': pub_id, 'schedule_at': at}
+
+
+@app.post('/api/publications/{pub_id}/unschedule')
+def unschedule_pub(pub_id: int):
+	c = state.init()
+	r = c.execute('UPDATE publications SET status=?, schedule_at=NULL WHERE id=? AND status=?', ('rendered', pub_id, 'scheduled'))
+	c.commit()
+	c.close()
+	return {'ok': r.rowcount > 0}
+
 
 
 @app.get('/api/audit')

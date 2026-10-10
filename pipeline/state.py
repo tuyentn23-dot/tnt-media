@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS publications (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	job_id TEXT, channel_id TEXT, signature TEXT UNIQUE,
 	topic TEXT, kind TEXT, title TEXT, youtube_id TEXT, file_path TEXT,
-	status TEXT, view_count INTEGER DEFAULT 0, like_count INTEGER DEFAULT 0,
+	status TEXT, schedule_at TEXT, view_count INTEGER DEFAULT 0, like_count INTEGER DEFAULT 0,
 	quota_cost INTEGER DEFAULT 0, published_at TEXT, created_at TEXT
 );
 CREATE TABLE IF NOT EXISTS topics (
@@ -76,6 +76,10 @@ def init():
 	c.executescript(SCHEMA)
 	try:
 		c.execute('ALTER TABLE jobs ADD COLUMN voice_preset TEXT')
+	except Exception:
+		pass
+	try:
+		c.execute('ALTER TABLE publications ADD COLUMN schedule_at TEXT')
 	except Exception:
 		pass
 	c.commit()

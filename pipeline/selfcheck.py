@@ -119,7 +119,7 @@ def c13():
 @check('ui_phase5')
 def c14():
 	t = open(os.path.join(ROOT, 'app/ui/index.html'), encoding='utf-8').read()
-	need = ['Pending Approval', 'Audit Log', 'approve(id)', 'loadAnalytics']
+	need = ['Video Queue', 'Audit Log', 'approve(id)', 'loadAnalytics']
 	miss = [k for k in need if k not in t]
 	return (len(miss) == 0), 'miss=' + str(miss)
 

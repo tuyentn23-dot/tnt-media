@@ -76,6 +76,47 @@ th{background:#f9fafb;font-weight:600}
 		</template></tbody></table>
 	</div>
 </div>
+<!-- Quote Studio -->
+<div x-show='tab=="quote_studio"'>
+	<div class="card mb-4">
+		<h2 class="font-bold mb-3">Quote Studio - Tao video tu Quote Library</h2>
+		<p class="text-sm text-gray-500 mb-3">Pipeline: vn_guard → mix(flow+pexels) → compose(hook 2 doan) → boost(score 100) → gate</p>
+		<div class="grid grid-cols-2 gap-4 mb-3">
+			<label class="block">
+				<span class="text-sm text-gray-600">Channel</span>
+				<select x-model="quote_studio.channel" class="w-full border rounded px-2 py-1 mt-1">
+					<option value="Mialinhcute">Mialinhcute</option>
+					<option value="vilevi5676">vilevi5676</option>
+				</select>
+			</label>
+			<label class="block">
+				<span class="text-sm text-gray-600">Category (tuy chon)</span>
+				<select x-model="quote_studio.category" class="w-full border rounded px-2 py-1 mt-1">
+					<option value="">Ngau nhien</option>
+					<template x-for="c in Object.keys(quote_studio.cats[quote_studio.channel] || {})" :key="c">
+						<option :value="c" x-text="c"></option>
+					</template>
+				</select>
+			</label>
+		</div>
+		<div class="flex gap-2 mb-3">
+			<button @click="loadCats()" class="px-3 py-1 border rounded text-sm">Load categories</button>
+			<button @click="generateQuote()" :disabled="busy" class="px-4 py-1 bg-blue-600 text-white rounded text-sm disabled:opacity-50">
+				<span x-show="!busy">Tao video quote</span>
+				<span x-show="busy">Dang tao... (60-120s)</span>
+			</button>
+		</div>
+		<div x-show="result" class="border rounded p-3 bg-gray-50">
+			<div class="text-sm mb-1"><b>Ket qua:</b> <span x-text="quote_studio.result && quote_studio.result.ok ? "OK" : "FAIL""></span></div>
+			<div class="text-xs text-gray-600" x-show="quote_studio.result && quote_studio.result.quote">Quote: <span x-text="quote_studio.result && quote_studio.result.quote"></span></div>
+			<div class="text-xs text-gray-600" x-show="quote_studio.result && quote_studio.result.score !== undefined">Score: <span x-text="quote_studio.result && quote_studio.result.score"></span> - Passes: <span x-text="quote_studio.result && quote_studio.result.passes"></span></div>
+			<div class="text-xs text-gray-600" x-show="quote_studio.result && quote_studio.result.final">File: <span x-text="quote_studio.result && quote_studio.result.final"></span></div>
+			<div class="text-xs text-red-600 mt-1" x-show="quote_studio.result && quote_studio.result.error" x-text="quote_studio.result && quote_studio.result.error"></div>
+			<div class="text-xs text-gray-500 mt-2">Steps: <span x-text="quote_studio.result && quote_studio.result.steps ? JSON.stringify(result.steps) : """></span></div>
+		</div>
+	</div>
+</div>
+
 <!-- Channels -->
 <div x-show='tab=="channels"'>
 	<div class="card">
@@ -142,15 +183,53 @@ th{background:#f9fafb;font-weight:600}
 			</div>
 			<div x-show="lastResult" class="mt-3 text-sm text-gray-700" x-text="lastResult"></div>
 		</div>
-	</div>
-	<div x-show='tab=="pending"'>
-		<div class="card"><h2 class="font-bold mb-2">Pending Approval</h2>
-			<table><thead><tr><th>ID</th><th>Channel</th><th>Kind</th><th>Topic</th><th>Actions</th></tr></thead>
-			<tbody><template x-for="p in pending"><tr><td x-text="p.id"></td><td x-text="p.channel_id"></td><td x-text="p.kind"></td><td x-text="p.topic"></td>
-			<td><button @click="approve(p.id)" class="px-2 py-1 bg-green-500 text-white rounded text-xs mr-1">Approve</button>
-			<button @click="reject(p.id)" class="px-2 py-1 bg-red-500 text-white rounded text-xs">Reject</button><button @click="showPreview(p.id)" class="px-2 py-1 bg-blue-500 text-white rounded text-xs ml-1">Xem</button></td></tr></template></tbody></table>
-		</div>
-	</div>
+	<<div x-show='tab=="pending"'>
+  <div class="card mb-3">
+    <div class="flex flex-wrap gap-2 items-center mb-3">
+      <h2 class="font-bold text-lg">Video Queue</h2>
+      <span class="text-sm text-gray-500" x-text="queueList.length + ' video'"></span>
+      <div class="ml-auto flex gap-2 flex-wrap">
+        <select x-model="queueFilterChannel" @change="loadQueue()" class="border rounded px-2 py-1 text-sm">
+          <option value="">Tat ca channel</option>
+          <template x-for="c in channels" :key="c.id"><option :value="c.id" x-text="c.id"></option></template>
+        </select>
+        <select x-model="queueFilterStatus" @change="loadQueue()" class="border rounded px-2 py-1 text-sm">
+          <option value="">Tat ca trang thai</option>
+          <option value="rendered">Chua len lich</option>
+          <option value="scheduled">Da len lich</option>
+          <option value="approved">Da duyet</option>
+        </select>
+        <button @click="loadQueue()" class="px-3 py-1 bg-blue-500 text-white rounded text-sm">Refresh</button>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+      <template x-for="q in queueList" :key="q.id">
+        <div class="border rounded overflow-hidden bg-white hover:shadow-lg transition">
+          <div class="relative bg-black" style="padding-top:150%">
+            <video :src="'/api/media/preview/' + q.id" preload="metadata" muted class="absolute inset-0 w-full h-full object-cover"></video>
+            <div class="absolute top-1 right-1 text-xs bg-black bg-opacity-60 text-white px-2 py-0.5 rounded" x-text="q.kind"></div>
+          </div>
+          <div class="p-2 text-xs">
+            <div class="font-bold truncate" :title="q.topic || q.title" x-text="q.topic || q.title || "'#' + q.id"></div>
+            <div class="text-gray-500 mt-1" x-text="q.channel_id"></div>
+            <div class="text-gray-400 mt-0.5" x-text="(q.engine_used || "'?') + "' | ' + (q.created_at || "'')"></div>
+            <div x-show="q.schedule_at" class="text-blue-600 mt-1">Lich: <span x-text="q.schedule_at"></span></div>
+            <div class="text-gray-500 mt-1" x-text="q.status"></div>
+            <div class="flex flex-wrap gap-1 mt-2">
+              <button @click="showPreview(q.id)" class="px-2 py-1 bg-gray-200 text-gray-800 rounded">Xem</button>
+              <button @click="publishQueue(q.id)" class="px-2 py-1 bg-green-500 text-white rounded">Dang ngay</button>
+              <button x-show="!q.schedule_at" @click="scheduleQueue(q.id)" class="px-2 py-1 bg-yellow-500 text-white rounded">Len lich</button>
+              <button x-show="q.schedule_at" @click="unscheduleQueue(q.id)" class="px-2 py-1 bg-orange-500 text-white rounded">Huy lich</button>
+              <button @click="reject(q.id)" class="px-2 py-1 bg-red-500 text-white rounded">Bo</button>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+    <div x-show="queueList.length===0" class="text-gray-400 text-center py-8">Khong co video trong hang doi</div>
+  </div>
+</div>
+	/div>
 	<div x-show='tab=="analytics"'>
 		<div class="grid grid-cols-2 gap-4">
 			<div class="card"><div class="text-gray-500">Total</div><div class="text-3xl font-bold" x-text="analytics.total"></div></div>
@@ -239,6 +318,49 @@ th{background:#f9fafb;font-weight:600}
 		</tr></template></tbody></table>
 	</div>
 </div>
+<div x-show="tab==='engines'">
+	<div class="card mb-4">
+		<div class="flex justify-between mb-3">
+			<h2 class="font-bold">Video Engines (AI + Free APIs)</h2>
+			<button @click="loadEngines()" class="px-3 py-1 bg-blue-500 text-white rounded text-sm">Refresh</button>
+		</div>
+		<table><thead><tr><th>Engine</th><th>Provider</th><th>Model</th><th>Free</th><th>Available</th><th>Tested</th></tr></thead>
+		<tbody><template x-for="(v, k) in engines" :key="k"><tr>
+			<td x-text="k"></td>
+			<td x-text="v.provider || k"></td>
+			<td x-text="v.model || ''"></td>
+			<td><span class="text-green-600" x-show="v.free">YES</span></td>
+			<td><span class="text-green-600" x-show="v.available">OK</span><span class="text-red-600" x-show="!v.available">--</span></td>
+			<td><span class="text-green-600" x-show="v.tested">OK</span><span class="text-gray-400" x-show="!v.tested">?</span></td>
+		</tr></template></tbody></table>
+	</div>
+	<div class="card">
+		<h2 class="font-bold mb-3">Test Generate Video</h2>
+		<div class="grid grid-cols-2 gap-3">
+			<label>Prompt<input x-model="genForm.prompt" placeholder="vd: cute cat playing" class="w-full border rounded p-2"></label>
+			<label>Engine<select x-model="genForm.engine" class="w-full border rounded p-2">
+				<option value="auto">auto</option>
+				<option value="luma">luma</option>
+				<option value="pexels">pexels</option>
+				<option value="flow">flow</option>
+				<option value="ffmpeg">ffmpeg</option>
+				<option value="gacha">gacha</option>
+			</select></label>
+			<label>Duration (s)<input type="number" x-model.number="genForm.duration" class="w-full border rounded p-2"></label>
+			<label>Channel<select x-model="genForm.channel" class="w-full border rounded p-2">
+				<template x-for="c in channels"><option :value="c.id" x-text="c.id"></option></template>
+			</select></label>
+		</div>
+		<div class="flex gap-2 mt-4">
+			<button @click="generateVideo()" class="px-4 py-2 bg-green-500 text-white rounded">Generate</button>
+			<span x-show="genLoading" class="text-gray-500 self-center">Dang tao video... (co the mat 30-120s)</span>
+		</div>
+		<div x-show="genResult" class="mt-3 p-3 bg-gray-50 rounded text-sm">
+			<div class="font-bold mb-1">Ket qua:</div>
+			<pre x-text="genResult" class="whitespace-pre-wrap text-xs"></pre>
+		</div>
+	</div>
+</div>
 <div x-show="tab==='modules'">
 	<div class="card">
 		<h2 class="font-bold mb-3">Module Versioning</h2>
@@ -271,9 +393,36 @@ th{background:#f9fafb;font-weight:600}
 <script>
 function app(){return{
 	tab: "dashboard",
-	tabs: [{id:"dashboard",label:"Dashboard"},{id:"publications",label:"Publications"},{id:"jobs",label:"Jobs"},{id:"pending",label:"Duyệt"}],
-	groups: [{id:"content",label:"Nội dung",items:[{id:"channels",label:"Channels"},{id:"topics",label:"Topics"},{id:"assets",label:"Assets"},{id:"builder",label:"Job Builder"}]},{id:"analytics",label:"Phân tích",items:[{id:"analytics",label:"Analytics"},{id:"audit",label:"Audit"},{id:"diagnostics",label:"Diagnostics"}]},{id:"system",label:"Hệ thống",items:[{id:"modules",label:"Modules"},{id:"settings",label:"Settings"}]}],
-	allTabs: [{id:"dashboard",label:"Dashboard"},{id:"channels",label:"Channels"},{id:"publications",label:"Publications"},{id:"jobs",label:"Jobs"},{id:"builder",label:"Job Builder"},{id:"pending",label:"Duyệt"},{id:"analytics",label:"Analytics"},{id:"audit",label:"Audit"},{id:"topics",label:"Topics"},{id:"diagnostics",label:"Diagnostics"},{id:"assets",label:"Assets"},{id:"modules",label:"Modules"},{id:"settings",label:"Settings"}],
+	tabs: [{id:"dashboard",label:"Dashboard"},{id:"quote_studio",label:"Quote Studio"},{id:"publications",label:"Publications"},{id:"jobs",label:"Jobs"},{id:"pending",label:"Video Queue"}],
+	groups: [{id:"content",label:"Nội dung",items:[{id:"channels",label:"Channels"},{id:"topics",label:"Topics"},{id:"assets",label:"Assets"},{id:"builder",label:"Job Builder"}]},{id:"analytics",label:"Phân tích",items:[{id:"analytics",label:"Analytics"},{id:"audit",label:"Audit"},{id:"diagnostics",label:"Diagnostics"}]},{id:"system",label:"Hệ thống",items:[{id:"engines",label:"Video Engines"},{id:"modules",label:"Modules"},{id:"settings",label:"Settings"}]}],
+	quote_studio: {
+		channel: 'Mialinhcute',
+		category: '',
+		engine: 'quote_v2',
+		result: null,
+		busy: false,
+		cats: {},
+		async loadCats() {
+			try {
+				const r = await fetch('/api/quote/list');
+				const j = await r.json();
+				this.cats = (j.channels || {});
+			} catch (e) {}
+		},
+		async generateQuote() {
+			this.busy = true; this.result = null;
+			const body = { channel: this.quote_studio.channel, engine: this.quote_studio.engine };
+			if (this.quote_studio.category) body.category = this.quote_studio.category;
+			try {
+				const r = await fetch('/api/quote/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+				const j = await r.json();
+				this.result = j;
+				if (j.ok) this.toast('Quote video OK: ' + String(j.score || j.engine || ''));
+			} catch (e) { this.result = { ok: false, error: String(e) }; }
+			this.busy = false;
+		}
+	},
+	allTabs: [{id:"dashboard",label:"Dashboard"},{id:"quote_studio",label:"Quote Studio"},{id:"channels",label:"Channels"},{id:"publications",label:"Publications"},{id:"jobs",label:"Jobs"},{id:"builder",label:"Job Builder"},{id:"pending",label:"Video Queue"},{id:"analytics",label:"Analytics"},{id:"audit",label:"Audit"},{id:"topics",label:"Topics"},{id:"diagnostics",label:"Diagnostics"},{id:"assets",label:"Assets"},{id:"engines",label:"Video Engines"},{id:"modules",label:"Modules"},{id:"settings",label:"Settings"}],
 	menuOpen: null,
 	paletteOpen: false,
 	search: "",
@@ -285,11 +434,13 @@ function app(){return{
 	toast: "",
 	settings: {publish_mode:"approve", api_url:"http://127.0.0.1:7777"},
 	kinds: [], voices: [], assets: [], moduleVersions: [], quotaInfo: {}, schedulerStatus: [],
+	engines: {}, genForm: {prompt: '', engine: 'luma', duration: 8, channel: 'Mialinhcute'}, genLoading: false, genResult: '',
 	topics: [], ideaHooks: [], topicForm: {channel_id:"Mialinhcute", kind:"anime", topic:""},
 	logFiles: [], logFile: "notify.log", logContent: "",
 	diagOut: "",
 	form: {channel_id:"Mialinhcute", kind:"anime", topic:"", count:1, require_approval:true},
 	pending: [], audit: [], assets: [],
+	queueList: [], queueFilterChannel: '', queueFilterStatus: 'rendered',
 	analytics: {total:0, by_channel:[], by_status:[]},
 	async init(){
 		try {
@@ -307,6 +458,7 @@ function app(){return{
 		this.loadPublications()
 		this.jobs = (await fetch("/api/jobs?limit=20").then(r=>r.json())).items
 		this.loadPending()
+	this.loadQueue()
 		this.loadAudit()
 		this.loadAnalytics()
 		this.loadTopics()
@@ -315,6 +467,7 @@ function app(){return{
 		this.loadVoices()
 		this.loadQuota()
 		this.loadScheduler()
+		this.loadEngines()
 		if (!this._tick) { this._tick = setInterval(() => { this.loadPublications(); this.loadPending(); this.loadJobs() }, 5000) }
 	},
 	async loadConfig(){
@@ -406,6 +559,24 @@ async refreshAll(){
 		this.assets = (await fetch("/api/assets/list?kind="+kind).then(r=>r.json())).items
 		this.showToast("Assets: "+this.assets.length)
 	},
+	async loadEngines(){
+		try {
+			const j = await fetch("/api/video/engines").then(r=>r.json())
+			this.engines = j.engines || {}
+		} catch(e) { this.showToast("Loi load engines") }
+	},
+	async generateVideo(){
+		if (!this.genForm.prompt) { this.showToast("Nhap prompt truoc"); return }
+		this.genLoading = true
+		this.genResult = "Dang tao..."
+		try {
+			const r = await fetch("/api/video/generate", {method:"POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(this.genForm)})
+			const j = await r.json()
+			this.genResult = JSON.stringify(j, null, 2)
+			this.showToast(j.ok ? "Video OK!" : "Loi: " + (j.error || "?"))
+		} catch(e) { this.genResult = "ERR: " + e.message; this.showToast("Fetch loi") }
+		this.genLoading = false
+	},
 	async loadModuleVersions(){
 		this.moduleVersions = (await fetch("/api/modules/versions").then(r=>r.json())).items
 	},
@@ -425,8 +596,47 @@ async refreshAll(){
 		await fetch("/api/publications/"+id+"/reject",{method:"POST"})
 		this.loadPending()
 	},
-	async loadPending(){
-		this.pending = (await fetch("/api/pending").then(r=>r.json())).items
+	async loadQueue(){
+	const params = new URLSearchParams()
+	if (this.queueFilterStatus) params.set('status', this.queueFilterStatus)
+	if (this.queueFilterChannel) params.set('channel_id', this.queueFilterChannel)
+	try {
+		const j = await fetch('/api/publications/queue?' + params.toString()).then(r=>r.json())
+		this.queueList = j.items || []
+	} catch(e) { this.queueList = [] }
+	},
+async publishQueue(id){
+	if (!confirm('Dang video ' + id + ' len YouTube?')) return
+	try {
+		const r = await fetch('/api/publications/' + id + '/publish', {method:'POST'})
+		const j = await r.json()
+		this.showToast(j.ok ? 'Da dang: ' + (j.youtube_id || 'OK') : ('Loi: ' + (j.error || '?')))
+	} catch(e) { this.showToast('Loi fetch') }
+	this.loadQueue()
+	this.loadPublications()
+	},
+async scheduleQueue(id){
+	const at = prompt('Nhap thoi gian dang (YYYY-MM-DD HH:MM):', '')
+	if (!at) return
+	try {
+		const r = await fetch('/api/publications/' + id + '/schedule', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({at: at})})
+		const j = await r.json()
+		this.showToast(j.ok ? 'Da len lich: ' + at : ('Loi: ' + (j.error || '?')))
+	} catch(e) { this.showToast('Loi fetch') }
+	this.loadQueue()
+	},
+async unscheduleQueue(id){
+	if (!confirm('Huy lich dang cua video ' + id + '?')) return
+	try {
+		const r = await fetch('/api/publications/' + id + '/unschedule', {method:'POST'})
+		const j = await r.json()
+		this.showToast(j.ok ? 'Da huy lich' : 'Khong huy duoc')
+	} catch(e) {}
+	this.loadQueue()
+	},
+async loadPending(){
+	this.pending = (await fetch('/api/pending').then(r=>r.json())).items
+	this.loadQueue()
 	},
 	async loadAudit(){
 		this.audit = (await fetch("/api/audit?limit=30").then(r=>r.json())).items
