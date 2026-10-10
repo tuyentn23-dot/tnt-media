@@ -1,3 +1,15 @@
+# *** CAP NHAT QUAN TRONG 2026-10-10 - DOC TRUOC ***
+#
+# QUY UOC: Khi ai noi "APP" / "ung dung" / "giao dien" -> LUON LUON la:
+# TNT Media Studio (shortcut: C:/Users/DELL/Desktop/TNT Media Studio.lnk)
+# Target: run_desktop.bat | Code: desktop_app/ (PyQt desktop)
+# KHONG PHAI web UI (app/ui/index.html + :7777).
+#
+# Phien 2026-10-10 da fix 6 bug + Phase 1+2 web UI, nhung CAN LAM LAI Phase 1+2
+# cho desktop_app/ vi do moi la "app" nguoi dung dung thuc su.
+#
+# ============================================================
+
 # HANDOFF PHIEN 2026-10-09 (TOI) - VOICE/PRESET DROPDOWN + STOCK FALLBACK
 
 > Doc file nay dau tien khi bat dau phien moi.

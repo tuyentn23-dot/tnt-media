@@ -85,3 +85,22 @@ def kinds():
 
 def job_detail(jid):
 	return get('/api/jobs/' + str(jid))
+
+
+def publications_queue(status=None, channel_id=None):
+	qs = []
+	if status:
+		qs.append('status=' + str(status))
+	if channel_id:
+		qs.append('channel_id=' + str(channel_id))
+	q = ('?' + '&'.join(qs)) if qs else ''
+	return get('/api/publications/queue' + q)
+
+def publish_pub(pid):
+	return post('/api/publications/' + str(pid) + '/publish')
+
+def schedule_pub(pid, at):
+	return post('/api/publications/' + str(pid) + '/schedule', {'at': at})
+
+def unschedule_pub(pid):
+	return post('/api/publications/' + str(pid) + '/unschedule')

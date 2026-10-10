@@ -1,3 +1,8 @@
+> QUY UOC: "APP" trong du an nay = TNT Media Studio
+> (shortcut C:/Users/DELL/Desktop/TNT Media Studio.lnk, code desktop_app/, PyQt).
+> KHONG phai web UI :7777.
+
+
 ---
 title: TNT Media OS
 emoji: 🎬

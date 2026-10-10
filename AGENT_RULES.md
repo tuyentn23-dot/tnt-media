@@ -1,3 +1,22 @@
+# ============================================================
+# QUY UOC BAT BUOC - DOC TRUOC KHI LAM BAT CU DIEU GI
+# ============================================================
+#
+# Khi nguoi dung / bat ky ai trong du an nay noi "APP" / "ung dung" / "giao dien" / "UI" -> LUON LUON co nghia la:
+#
+# TNT Media Studio
+# Shortcut: C:/Users/DELL/Desktop/TNT Media Studio.lnk
+# Target: D:/TNT_AI/venture_foundry/media/run_desktop.bat
+# Code: desktop_app/ (PyQt desktop app)
+#
+# KHONG PHAI web UI (app/ui/index.html + FastAPI :7777).
+# Web UI chi la backend/dev tool, KHONG phai "app" nguoi dung dung.
+#
+# Sua chuc nang "app" -> sua trong desktop_app/.
+# Sua API/backend -> sua trong app/server.py + pipeline/.
+#
+# ============================================================
+
 # QUY TAC CHAT LUONG (KHONG DOI)
 Moi video PHAI:
 - Dai 15-30 giay

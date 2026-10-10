@@ -1,3 +1,9 @@
+# === QUY UOC APP ===
+# "APP" = TNT Media Studio (run_desktop.bat -> desktop_app/, PyQt)
+# Shortcut: C:/Users/DELL/Desktop/TNT Media Studio.lnk
+# KHONG PHAI web UI :7777 (chi la backend/dev tool)
+
+
 # SYSTEM OVERVIEW - TNT Media OS
 
 > Doc file nay DAU TIEN moi phien.
