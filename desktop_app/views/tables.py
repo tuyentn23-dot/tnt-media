@@ -166,9 +166,9 @@ class Jobs(_Table):
 
 
 class Pubs(_Table):
-	HEADERS = ['ID', 'Kenh', 'Kind', 'Trang thai', 'YouTube', 'Dang luc']
+	HEADERS = ['ID', 'Kenh', 'Tieu de', 'Kind', 'Trang thai', 'Views', 'Likes', 'YouTube', 'Dang luc']
 	NAVKEY = 'nav.pubs'
-	KEYS = ['id', 'channel_id', 'kind', 'status', 'youtube_id', 'published_at']
+	KEYS = ['id', 'channel_id', 'title', 'kind', 'status', 'view_count', 'like_count', 'youtube_id', 'published_at']
 	def fetch(self):
 		return api.publications()
 	def _build_actions(self, bar):
@@ -176,6 +176,9 @@ class Pubs(_Table):
 		self.btn_open.setObjectName('Primary')
 		self.btn_open.clicked.connect(self.on_open)
 		bar.addWidget(self.btn_open)
+		self.btn_copy = QPushButton('Copy link')
+		self.btn_copy.clicked.connect(self.on_copy)
+		bar.addWidget(self.btn_copy)
 		self.btn_sync = QPushButton('Sync metrics')
 		self.btn_sync.clicked.connect(self.on_sync)
 		bar.addWidget(self.btn_sync)
@@ -184,12 +187,26 @@ class Pubs(_Table):
 		if row < 0:
 			self.msg.setText('Chon 1 video')
 			return
-		vid = self.table.item(row, 4).text() if self.table.item(row, 4) else ''
+		vid = self.table.item(row, 7).text() if self.table.item(row, 7) else ''
 		if not vid or vid == 'None':
 			self.msg.setText('Video chua dang YouTube')
 			return
 		QDesktopServices.openUrl(QUrl('https://youtu.be/' + vid))
 		self.msg.setText('Da mo: ' + vid)
+	def on_copy(self):
+		row = self.table.currentRow()
+		if row < 0:
+			self.msg.setText('Chon 1 video'); return
+		vid = self.table.item(row, 7).text() if self.table.item(row, 7) else ''
+		if not vid or vid == 'None':
+			self.msg.setText('Chua co YouTube ID'); return
+		try:
+			from PySide6.QtGui import QGuiApplication
+			QGuiApplication.clipboard().setText('https://youtu.be/' + vid)
+			self.msg.setText('Da copy: https://youtu.be/' + vid)
+		except Exception as e:
+			self.msg.setText(str(e)[:60])
+
 	def on_sync(self):
 		self.msg.setText('Syncing...')
 		r = api.post('/api/metrics/sync', {})
