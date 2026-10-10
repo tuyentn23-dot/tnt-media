@@ -67,8 +67,56 @@ class EditDialog(QDialog):
 			QMessageBox.warning(self, 'Loi', str(r)[:300])
 
 
+
+
+class AIDialog(QDialog):
+	def __init__(self, pub, parent=None):
+		super().__init__(parent)
+		self.pub = pub
+		pid = pub.get('id')
+		self.setWindowTitle('AI goi y #' + str(pid))
+		self.resize(560, 500)
+		lay = QVBoxLayout(self)
+		self.sc = QLabel('Dang phan tich...')
+		self.sc.setStyleSheet('font-size:14px;font-weight:700;color:#0A84FF')
+		lay.addWidget(self.sc)
+		lay.addWidget(QLabel('Tieu de goi y:'))
+		self.tl = QPlainTextEdit()
+		self.tl.setReadOnly(True)
+		self.tl.setMaximumHeight(140)
+		lay.addWidget(self.tl)
+		lay.addWidget(QLabel('Tags goi y:'))
+		self.tg = QPlainTextEdit()
+		self.tg.setReadOnly(True)
+		self.tg.setMaximumHeight(80)
+		lay.addWidget(self.tg)
+		use = QPushButton('Ap dung title dau tien')
+		use.clicked.connect(self.apply)
+		lay.addWidget(use)
+		bb = QDialogButtonBox(QDialogButtonBox.Close)
+		bb.rejected.connect(self.reject)
+		lay.addWidget(bb)
+		self.load(pid)
+	def load(self, pid):
+		r = api.ai_suggest(pid)
+		s = api.ai_score(pid)
+		if r.get('ok'):
+			self.tl.setPlainText(chr(10).join(r.get('titles', [])))
+			self.tg.setPlainText((chr(44) + chr(32)).join(r.get('tags', [])))
+		if s.get('ok'):
+			self.sc.setText('Score: ' + str(s.get('score')) + '/100 - ' + str(s.get('label')))
+	def apply(self):
+		txt = self.tl.toPlainText().split(chr(10))
+		if not txt or not txt[0].strip():
+			return
+		pid = self.pub.get('id')
+		r = api.update_pub(pid, {'title': txt[0].strip()})
+		if r.get('ok'):
+			QMessageBox.information(self, 'OK', 'Da ap dung title')
+			self.accept()
+
 class QueueCard(QFrame):
-	def __init__(self, pub, oncheck, onview, onpublish, onschedule, onunschedule, onreject, onedit, parent=None):
+	def __init__(self, pub, oncheck, onview, onpublish, onschedule, onunschedule, onreject, onedit, onai, parent=None):
 		super().__init__(parent)
 		self.pub = pub
 		self.oncheck = oncheck
@@ -101,7 +149,9 @@ class QueueCard(QFrame):
 		b1.clicked.connect(lambda: onview(pub))
 		b1e = QPushButton('Sua')
 		b1e.clicked.connect(lambda: onedit(pub))
-		r1.addWidget(b1); r1.addWidget(b1e)
+		b1a = QPushButton('AI')
+		b1a.clicked.connect(lambda: onai(pub))
+		r1.addWidget(b1); r1.addWidget(b1e); r1.addWidget(b1a)
 		lay.addLayout(r1)
 		r2 = QHBoxLayout()
 		b2 = QPushButton('Dang')
@@ -243,7 +293,7 @@ class Queue(QWidget):
 		items = d.get('items', [])
 		self.count.setText(str(len(items)) + ' video')
 		for i, pub in enumerate(items):
-			card = QueueCard(pub, self._oncheck, self._view, self._publish, self._schedule, self._unschedule, self._reject, self._edit)
+			card = QueueCard(pub, self._oncheck, self._view, self._publish, self._schedule, self._unschedule, self._reject, self._edit, self._ai)
 			self.grid.addWidget(card, i // 5, i % 5)
 		if not items:
 			self.grid.addWidget(QLabel('Khong co video trong hang doi'), 0, 0)
@@ -253,6 +303,10 @@ class Queue(QWidget):
 
 	def _edit(self, pub):
 		if EditDialog(pub, self).exec() == QDialog.Accepted:
+			self.refresh()
+
+	def _ai(self, pub):
+		if AIDialog(pub, self).exec() == QDialog.Accepted:
 			self.refresh()
 
 	def _publish(self, pub):

@@ -454,6 +454,35 @@ def update_pub(pub_id: int, payload: dict):
 	return {'ok': True, 'id': pub_id}
 
 
+
+
+@app.get('/api/ai/suggest/{pub_id}')
+def ai_suggest(pub_id: int):
+	try:
+		from pipeline import ai_advisor as ai
+		return ai.suggest_metadata(pub_id)
+	except Exception as e:
+		return JSONResponse({'ok': False, 'error': str(e)[:150]}, status_code=500)
+
+
+@app.get('/api/ai/score/{pub_id}')
+def ai_score(pub_id: int):
+	try:
+		from pipeline import ai_advisor as ai
+		return ai.score_video(pub_id)
+	except Exception as e:
+		return JSONResponse({'ok': False, 'error': str(e)[:150]}, status_code=500)
+
+
+@app.get('/api/ai/feedback')
+def ai_feedback(channel_id: str = None):
+	try:
+		from pipeline import ai_advisor as ai
+		return ai.feedback_report(channel_id)
+	except Exception as e:
+		return JSONResponse({'ok': False, 'error': str(e)[:150]}, status_code=500)
+
+
 @app.get('/api/audit')
 def audit(limit: int = 50):
 	c = state.connect()

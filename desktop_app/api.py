@@ -114,3 +114,16 @@ def bulk_schedule(ids, at):
 
 def update_pub(pid, fields):
 	return post('/api/publications/' + str(pid) + '/update', fields)
+
+
+def ai_suggest(pid):
+	return get('/api/ai/suggest/' + str(pid))
+
+def ai_score(pid):
+	return get('/api/ai/score/' + str(pid))
+
+def ai_feedback(channel_id=None):
+	q = ''
+	if channel_id:
+		q = '?channel_id=' + str(channel_id)
+	return get('/api/ai/feedback' + q)

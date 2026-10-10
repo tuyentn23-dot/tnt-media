@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-10-10T13:17:11.450685",
+  "generated": "2026-10-10T13:29:55.985688",
   "files": {
     "ops/vids_agent.py": "6a0ee08287d7d6c2522acae18664b533cfbf5b05901dd4bcea4b5374d781fc43",
     "ops/vids_edit.py": "7c1fcccb442a46508879df24018679e24e103ba9d8906b260aed4716bc6c1e5c",
@@ -12,7 +12,7 @@
     "ops/__init__.py": "a10a3abb7e3fc8dfbb5ca5451d74d085a9936807db147543f0867274b35cdb12",
     "ops/_no_window.py": "b3d3ea6e38800781248785e1433575c7d1ac07739c1e19fcb7e5a8f3b8fbfce5",
     "ops/voice.py": "bb9f1ed7481846e39e49ed11e85d3b48c3316247bee5627d2dabeabad282ab92",
-    "app/server.py": "6a0212520292e4b8d824619f5abb7e589ca8ce9966eee6f80c93951ed16860c1",
+    "app/server.py": "513abe5d646d4a67a4926f5a002c25dbd0a536cea3d84b496eb8027d331bc7aa",
     "app/tray.py": "09be774ada332d53e87850e29560ee7f069ea6f671d8eb6187f41927bfe0a5ee",
     "app/_routes_publish.py": "fb98ce9f137f68d696532891f9eb781d0a32c4edbeae16027a0cb46367404bee",
     "app/_routes_prompts.py": "1e31682577126e09f607160dd65f205dedb7e59d841a1e5333d45d535f2d7382",
@@ -23,7 +23,7 @@
     "desktop_app/app.py": "995c46259a4ab406710c9a3f8348fdb02ad51d750cbc3493ae8cadb71808e75a",
     "desktop_app/i18n.py": "599ebcadf1534f46e11a6d610669f954cd8ac4fbb3afe508356a90f6e9411fc4",
     "desktop_app/theme.py": "11478f38584db4ed01bc9c8e1e059f69ba2e21257e17adde83530cd516d28aec",
-    "desktop_app/api.py": "d85529183969230cbd792cf2ca3cdba0a424c4f5449e3d672cb050e5e240ee61",
+    "desktop_app/api.py": "fa2a99c716aaa2e4b4b46d6f40365d95ad401c927587c26ad7719de1fb6a1f51",
     "desktop_app/widgets.py": "a0166062fbfd3fc6e4e49f6e79cd9da617bc968e4d8ad9c11356bb49803da124",
     "desktop_app/icon.ico": "6eccf10afab1635bf3d4affbce357af6bb95d9851051763d2655bcd3e7e4d585",
     "desktop_app/tray.py": "5e38d0edc59b34f3cb6f2f598e504f9f431cb06cec2518667b95246dc1b60588",
