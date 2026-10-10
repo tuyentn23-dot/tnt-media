@@ -483,6 +483,26 @@ def ai_feedback(channel_id: str = None):
 		return JSONResponse({'ok': False, 'error': str(e)[:150]}, status_code=500)
 
 
+
+
+@app.get('/api/publications/{pub_id}/thumb')
+def pub_thumb(pub_id: int):
+	from fastapi.responses import FileResponse
+	c = state.connect()
+	row = c.execute('SELECT file_path FROM publications WHERE id=?', (pub_id,)).fetchone()
+	c.close()
+	if not row or not row['file_path']:
+		return JSONResponse({'ok': False, 'error': 'no file'}, status_code=404)
+	try:
+		from pipeline import thumb_cache as tc
+		tp = tc.get_thumb(row['file_path'])
+		if tp and os.path.exists(tp):
+			return FileResponse(tp, media_type='image/jpeg')
+	except Exception as e:
+		pass
+	return JSONResponse({'ok': False, 'error': 'thumb fail'}, status_code=404)
+
+
 @app.get('/api/audit')
 def audit(limit: int = 50):
 	c = state.connect()

@@ -6,6 +6,8 @@ from PySide6.QtWidgets import (
 	QDateTimeEdit, QMessageBox, QLineEdit, QCheckBox, QPlainTextEdit
 )
 from PySide6.QtCore import Qt, QDateTime, QUrl
+from PySide6.QtGui import QPixmap
+from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest
 try:
 	from PySide6.QtMultimedia import QMediaPlayer, QAudioOutput
 	from PySide6.QtMultimediaWidgets import QVideoWidget
@@ -130,6 +132,23 @@ class QueueCard(QFrame):
 		self.cb.stateChanged.connect(lambda s: oncheck(pub, s == Qt.Checked))
 		hdr.addWidget(self.cb)
 		pid = pub.get('id')
+		# Thumbnail
+		thumb = QLabel()
+		thumb.setFixedHeight(140)
+		thumb.setAlignment(Qt.AlignCenter)
+		thumb.setStyleSheet('background:#000;color:#666;font-size:11px')
+		thumb.setText('(khong co thumb)')
+		try:
+			import urllib.request as _ur
+			url = 'http://127.0.0.1:7777/api/publications/' + str(pid) + '/thumb'
+			pm = QPixmap()
+			pm.loadFromData(_ur.urlopen(url, timeout=3).read())
+			if not pm.isNull():
+				thumb.setPixmap(pm.scaledToWidth(200, Qt.SmoothTransformation))
+				thumb.setText('')
+		except Exception:
+			pass
+		lay.addWidget(thumb)
 		ttl = QLabel(str(pub.get('topic') or pub.get('title') or ('#' + str(pid))))
 		ttl.setWordWrap(True)
 		ttl.setStyleSheet('font-weight:700;font-size:12px')
@@ -224,6 +243,10 @@ class Queue(QWidget):
 		self.btn_bulksch = QPushButton('Lên lịch tất cả chọn')
 		self.btn_bulksch.clicked.connect(self.bulk_schedule)
 		bar2.addWidget(self.btn_bulksch)
+		self.btn_bulkrej = QPushButton('Bỏ tất cả chọn')
+		self.btn_bulkrej.setObjectName('Danger')
+		self.btn_bulkrej.clicked.connect(self.bulk_reject)
+		bar2.addWidget(self.btn_bulkrej)
 		bar2.addStretch()
 		body.addLayout(bar2)
 		self.scroll = QScrollArea()
@@ -325,6 +348,22 @@ class Queue(QWidget):
 		QMessageBox.information(self, 'Kết quả', 'Đã đăng ' + str(r.get('count', 0)) + '/' + str(r.get('total', 0)))
 		self.refresh()
 
+	def bulk_reject(self):
+		ids = list(self.selected)
+		if not ids:
+			QMessageBox.information(self, 'Chon', 'Chua chon video nao'); return
+		if QMessageBox.question(self, 'Bo', 'Bo ' + str(len(ids)) + ' video?') != QMessageBox.Yes:
+			return
+		ok = 0
+		for pid in ids:
+			try:
+				r = api.reject(pid)
+				ok += 1
+			except Exception:
+				pass
+		QMessageBox.information(self, 'Ket qua', 'Da bo ' + str(ok) + '/' + str(len(ids)))
+		self.refresh()
+
 	def bulk_schedule(self):
 		ids = list(self.selected)
 		if not ids:
@@ -341,6 +380,8 @@ class Queue(QWidget):
 		v.addWidget(bb)
 		if dlg.exec() != QDialog.Accepted: return
 		at = de.dateTime().toString('yyyy-MM-dd HH:mm')
+		if QMessageBox.question(self, 'Xac nhan', 'Dat lich ' + str(len(ids)) + ' video luc ' + at + '?') != QMessageBox.Yes:
+			return
 		r = api.bulk_schedule(ids, at)
 		QMessageBox.information(self, 'Kết quả', 'Đã lên lịch ' + str(r.get('count', 0)) + '/' + str(r.get('total', 0)))
 		self.refresh()
