@@ -15,7 +15,7 @@ try:
 except Exception:
 	HAS_MULTI = False
 import i18n, api
-from widgets import PageHeader
+from widgets import PageHeader, busy_wrap, busy_wrap
 
 
 class VideoDialog(QDialog):
@@ -335,7 +335,7 @@ class Queue(QWidget):
 	def _publish(self, pub):
 		pid = pub.get('id')
 		if QMessageBox.question(self, 'Dang', 'Dang video #' + str(pid) + '?') != QMessageBox.Yes: return
-		r = api.publish_pub(pid)
+		r = busy_wrap(self, lambda: api.publish_pub(pid), 'Dang dang...')
 		QMessageBox.information(self, 'Kết quả', str(r)[:400])
 		self.refresh()
 
@@ -344,7 +344,7 @@ class Queue(QWidget):
 		if not ids:
 			QMessageBox.information(self, 'Chon', 'Chưa chọn video nào'); return
 		if QMessageBox.question(self, 'Dang', 'Dang ' + str(len(ids)) + ' video?') != QMessageBox.Yes: return
-		r = api.bulk_publish(ids)
+		r = busy_wrap(self, lambda: api.bulk_publish(ids), 'Dang dang ' + str(len(ids)) + ' video...')
 		QMessageBox.information(self, 'Kết quả', 'Đã đăng ' + str(r.get('count', 0)) + '/' + str(r.get('total', 0)))
 		self.refresh()
 
@@ -382,7 +382,7 @@ class Queue(QWidget):
 		at = de.dateTime().toString('yyyy-MM-dd HH:mm')
 		if QMessageBox.question(self, 'Xac nhan', 'Dat lich ' + str(len(ids)) + ' video luc ' + at + '?') != QMessageBox.Yes:
 			return
-		r = api.bulk_schedule(ids, at)
+		r = busy_wrap(self, lambda: api.bulk_schedule(ids, at), 'Dang len lich...')
 		QMessageBox.information(self, 'Kết quả', 'Đã lên lịch ' + str(r.get('count', 0)) + '/' + str(r.get('total', 0)))
 		self.refresh()
 
