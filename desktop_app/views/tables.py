@@ -1,6 +1,6 @@
 # -- coding: utf-8 --
 # desktop_app/views/tables.py
-from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QTableWidget, QTableWidgetItem, QHeaderView, QMessageBox, QLabel, QAbstractItemView)
+from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QTableWidget, QTableWidgetItem, QHeaderView, QMessageBox, QLabel, QAbstractItemView, QLineEdit, QComboBox)
 from PySide6.QtCore import Qt, QUrl
 from PySide6.QtGui import QDesktopServices
 import i18n, api
@@ -45,6 +45,15 @@ class _Table(QWidget):
 		b.clicked.connect(self.refresh)
 		self.bar.addWidget(b)
 		body.addLayout(self.bar)
+		fbar = QHBoxLayout()
+		fbar.addWidget(QLabel('Tim:'))
+		self.search = QLineEdit()
+		self.search.setPlaceholderText('Nhap tu khoa...')
+		self.search.setMinimumWidth(220)
+		self.search.textChanged.connect(self.refresh)
+		fbar.addWidget(self.search)
+		fbar.addStretch()
+		body.addLayout(fbar)
 		self.table = QTableWidget(0, len(self.HEADERS))
 		self.table.setHorizontalHeaderLabels(self.HEADERS)
 		self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
@@ -73,9 +82,16 @@ class _Table(QWidget):
 
 	def refresh(self):
 		rows = []
+		q = self.search.text().strip().lower() if hasattr(self, 'search') else ''
 		for it in _items(self.fetch()):
-			rows.append([ _val(it, [k]) for k in self.KEYS])
+			row = [ _val(it, [k]) for k in self.KEYS]
+			if q:
+				joined = ' '.join(str(x).lower() for x in row)
+				if q not in joined:
+					continue
+			rows.append(row)
 		self._fill(rows)
+		self.msg.setText(str(len(rows)) + ' dong')
 
 	def fetch(self):
 		return {}
