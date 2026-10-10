@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-10-10T13:37:27.414390",
+  "generated": "2026-10-10T14:01:37.160696",
   "files": {
     "ops/vids_agent.py": "6a0ee08287d7d6c2522acae18664b533cfbf5b05901dd4bcea4b5374d781fc43",
     "ops/vids_edit.py": "7c1fcccb442a46508879df24018679e24e103ba9d8906b260aed4716bc6c1e5c",
@@ -20,7 +20,7 @@
     "_serve.py": "182a5f27789b43298578e622011e04493e67792632b2fa710f75f6f782fe2574",
     "main_pipeline.py": "b2948223f1370338160de48b058afc78a669a39a3845e155b1de7f1a642a9f26",
     "scheduler.py": "1ae0298fa43133e1065a30aa0bbee039e359202c0025d931364843ad7b5e2ed9",
-    "desktop_app/app.py": "ea366c5a8e0d5c22cca2da9ce5e8dceaec7d035e969ea0e54d3aa9fdf4e465e6",
+    "desktop_app/app.py": "4aa8dc10f7ae125c8aca2dd8d4935e4e7e2d03043edf7d887aa9ffaaabc63b76",
     "desktop_app/i18n.py": "599ebcadf1534f46e11a6d610669f954cd8ac4fbb3afe508356a90f6e9411fc4",
     "desktop_app/theme.py": "11478f38584db4ed01bc9c8e1e059f69ba2e21257e17adde83530cd516d28aec",
     "desktop_app/api.py": "fa2a99c716aaa2e4b4b46d6f40365d95ad401c927587c26ad7719de1fb6a1f51",
@@ -30,7 +30,7 @@
     "desktop_app/views/pipeline.py": "70e7ee4deee5a97e564bcef4a5c36dfa76b126d730373e08f327b7f2e310f909",
     "desktop_app/strings_vi.json": "6db406e475d761631c11d865bd38e893dfff893b5c61b22590b97259c971040f",
     "desktop_app/strings_en.json": "69ef52903da17da31552efaf1019adadd9c856c13e2880968d79f04c6cc9e372",
-    "desktop_app/views/channels.py": "20911dd27bfe39b170a0ed79d9cfbe39176cca4e83282195dd42d420cd55c6d8",
+    "desktop_app/views/channels.py": "8e25ebd34672d632126a131abd261fafda17769db92463e372f52fb83be6ca8c",
     "ops/trend_analyzer.py": "1b4b02b31049ea9cd2e74c3614d2a4105abbd5b729552b0e91e43e0f1c0154ee",
     "ops/yt_metrics.py": "ca16e9d5c005c626f1a4a4144aff1f475629128bfa1b4264c9c88c060298b3cb",
     "ops/oauth_setup.py": "d61ab07b88a21b826204baa055c05e9a1d338d9f22435f7ae6eab604412bae0d",
