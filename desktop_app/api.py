@@ -104,3 +104,13 @@ def schedule_pub(pid, at):
 
 def unschedule_pub(pid):
 	return post('/api/publications/' + str(pid) + '/unschedule')
+
+
+def bulk_publish(ids):
+	return post('/api/publications/bulk_publish', {'ids': list(ids)})
+
+def bulk_schedule(ids, at):
+	return post('/api/publications/bulk_schedule', {'ids': list(ids), 'at': at})
+
+def update_pub(pid, fields):
+	return post('/api/publications/' + str(pid) + '/update', fields)

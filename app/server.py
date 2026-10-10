@@ -389,6 +389,71 @@ def unschedule_pub(pub_id: int):
 
 
 
+
+
+@app.post('/api/publications/bulk_publish')
+def bulk_publish(payload: dict):
+	ids = (payload or {}).get('ids') or []
+	if not ids:
+		return JSONResponse({'ok': False, 'error': 'ids required'}, status_code=400)
+	results = []
+	for pid in ids:
+		try:
+			r = publish_pub(int(pid))
+			if isinstance(r, dict):
+				results.append({'id': pid, 'ok': r.get('ok', False), 'result': r.get('youtube_id')})
+			else:
+				results.append({'id': pid, 'ok': True})
+		except Exception as e:
+			results.append({'id': pid, 'ok': False, 'error': str(e)[:120]})
+	ok_count = sum(1 for x in results if x.get('ok'))
+	return {'ok': True, 'count': ok_count, 'total': len(ids), 'results': results}
+
+
+@app.post('/api/publications/bulk_schedule')
+def bulk_schedule(payload: dict):
+	ids = (payload or {}).get('ids') or []
+	at = (payload or {}).get('at')
+	if not ids or not at:
+		return JSONResponse({'ok': False, 'error': 'ids + at required'}, status_code=400)
+	c = state.init()
+	ok_count = 0
+	for pid in ids:
+		try:
+			r = c.execute('UPDATE publications SET status=?, schedule_at=? WHERE id=? AND status IN (?,?,?)', ('scheduled', at, int(pid), 'rendered', 'scheduled', 'publish_failed'))
+			if r.rowcount:
+				ok_count += 1
+		except Exception:
+			pass
+	c.commit()
+	c.close()
+	return {'ok': True, 'count': ok_count, 'total': len(ids), 'at': at}
+
+
+@app.post('/api/publications/{pub_id}/update')
+def update_pub(pub_id: int, payload: dict):
+	c = state.init()
+	row = c.execute('SELECT id FROM publications WHERE id=?', (pub_id,)).fetchone()
+	if not row:
+		c.close()
+		return JSONResponse({'ok': False, 'error': 'not found'}, status_code=404)
+	fields = []
+	vals = []
+	for k in ('title', 'topic'):
+		if k in (payload or {}):
+			fields.append(k + '=?')
+			vals.append((payload or {}).get(k))
+	if not fields:
+		c.close()
+		return {'ok': False, 'error': 'no fields'}
+	vals.append(pub_id)
+	c.execute('UPDATE publications SET ' + ', '.join(fields) + ' WHERE id=?', tuple(vals))
+	c.execute('INSERT INTO audit (session, actor, action, target, reason, ts) VALUES (?,?,?,?,?,?)', ('api', 'ui', 'update_meta', str(pub_id), str(list(payload.keys())), state.now()))
+	c.commit()
+	c.close()
+	return {'ok': True, 'id': pub_id}
+
+
 @app.get('/api/audit')
 def audit(limit: int = 50):
 	c = state.connect()
