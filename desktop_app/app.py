@@ -7,7 +7,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QHBoxLayout, QVBoxLayout, QLabel, QPushButton, QStackedWidget, QButtonGroup, QFrame, QStatusBar)
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QIcon, QShortcut, QKeySequence
-import i18n, theme, tray
+import i18n, theme, tray, prefs
 
 
 ICONS = {
@@ -41,7 +41,8 @@ class MainWindow(QMainWindow):
 		super().__init__()
 		self.setMinimumSize(1180, 720)
 		self.resize(1320, 840)
-		self._theme = 'light'
+		self._prefs = prefs.load()
+		self._theme = self._prefs.get('theme', 'light')
 		self._build()
 		self._apply_theme()
 	def _apply_theme(self):
@@ -49,6 +50,11 @@ class MainWindow(QMainWindow):
 	def set_theme(self, name):
 		self._theme = name
 		self._apply_theme()
+		try:
+			self._prefs['theme'] = name
+			prefs.save(self._prefs)
+		except Exception:
+			pass
 	def _build(self):
 		self.setWindowTitle(i18n.t('app.name'))
 		icon_p = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'icon.ico')
@@ -121,7 +127,10 @@ class MainWindow(QMainWindow):
 		sv.addWidget(ver)
 		lay.addWidget(side)
 		lay.addWidget(self.stack, 1)
-		self.go(0)
+		try:
+			self.go(int(self._prefs.get('last_tab', 0)))
+		except Exception:
+			self.go(0)
 		sb = QStatusBar()
 		self.setStatusBar(sb)
 		self.status_lbl = QLabel('San sang')
@@ -196,6 +205,11 @@ class MainWindow(QMainWindow):
 		if 0 <= idx < len(self.views):
 			self.stack.setCurrentIndex(idx)
 			self.btn_map[idx].setChecked(True)
+			try:
+				self._prefs['last_tab'] = int(idx)
+				prefs.save(self._prefs)
+			except Exception:
+				pass
 	def toggle_lang(self):
 		cur = i18n.get_lang()
 		new = 'en' if cur == 'vi' else 'vi'
