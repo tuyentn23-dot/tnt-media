@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-10-10T18:47:21.890676",
+  "generated": "2026-10-10T18:48:48.494745",
   "files": {
     "ops/vids_agent.py": "6a0ee08287d7d6c2522acae18664b533cfbf5b05901dd4bcea4b5374d781fc43",
     "ops/vids_edit.py": "7c1fcccb442a46508879df24018679e24e103ba9d8906b260aed4716bc6c1e5c",
@@ -26,7 +26,7 @@
     "desktop_app/api.py": "fa2a99c716aaa2e4b4b46d6f40365d95ad401c927587c26ad7719de1fb6a1f51",
     "desktop_app/widgets.py": "29d8fda9d49ee5f96198edb66fc03656c7ca50900f4c1c22fcef0f309fb4b5b3",
     "desktop_app/icon.ico": "10c9e9bdb243f7312ff60cb253a9893f838aa189fb5b3aa639594dc72143d4f9",
-    "desktop_app/tray.py": "5e38d0edc59b34f3cb6f2f598e504f9f431cb06cec2518667b95246dc1b60588",
+    "desktop_app/tray.py": "210018231716ba342deb4dff6c05baf54fe397da7bfa0120434ec5f590663607",
     "desktop_app/views/pipeline.py": "7e4c4af0f0430a9cfc6276f2fdc6427d318fd3acf65dd4fd2b05cf76e48181e6",
     "desktop_app/strings_vi.json": "6db406e475d761631c11d865bd38e893dfff893b5c61b22590b97259c971040f",
     "desktop_app/strings_en.json": "69ef52903da17da31552efaf1019adadd9c856c13e2880968d79f04c6cc9e372",
