@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-10-10T18:50:15.316240",
+  "generated": "2026-10-10T18:51:03.955275",
   "files": {
     "ops/vids_agent.py": "6a0ee08287d7d6c2522acae18664b533cfbf5b05901dd4bcea4b5374d781fc43",
     "ops/vids_edit.py": "7c1fcccb442a46508879df24018679e24e103ba9d8906b260aed4716bc6c1e5c",
@@ -20,7 +20,7 @@
     "_serve.py": "182a5f27789b43298578e622011e04493e67792632b2fa710f75f6f782fe2574",
     "main_pipeline.py": "b2948223f1370338160de48b058afc78a669a39a3845e155b1de7f1a642a9f26",
     "scheduler.py": "1ae0298fa43133e1065a30aa0bbee039e359202c0025d931364843ad7b5e2ed9",
-    "desktop_app/app.py": "29500761afa98b370cc9b488b10084ffd7b6dc853e86779e4b9cafe5cfd4f4e2",
+    "desktop_app/app.py": "5332bb4b74792f8237b308f381f22350c67349c63ab896dd731e06c306f23fc8",
     "desktop_app/i18n.py": "599ebcadf1534f46e11a6d610669f954cd8ac4fbb3afe508356a90f6e9411fc4",
     "desktop_app/theme.py": "11478f38584db4ed01bc9c8e1e059f69ba2e21257e17adde83530cd516d28aec",
     "desktop_app/api.py": "fa2a99c716aaa2e4b4b46d6f40365d95ad401c927587c26ad7719de1fb6a1f51",

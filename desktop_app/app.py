@@ -119,6 +119,7 @@ class MainWindow(QMainWindow):
 		add('nav.settings', Settings)
 		sv.addStretch()
 		lang_btn = QPushButton("VI | EN")
+		lang_btn.setToolTip('Doi ngon ngu (VI/EN)')
 		lang_btn.setCursor(Qt.PointingHandCursor)
 		lang_btn.clicked.connect(self.toggle_lang)
 		sv.addWidget(lang_btn)

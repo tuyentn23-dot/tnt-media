@@ -217,6 +217,7 @@ class Queue(QWidget):
 		bar.addWidget(self.fst)
 		bar.addSpacing(12)
 		self.btn_reload = QPushButton(i18n.t('btn.refresh'))
+		self.btn_reload.setToolTip('Ctrl+R de lam moi')
 		self.btn_reload.clicked.connect(self.refresh)
 		bar.addWidget(self.btn_reload)
 		bar.addStretch()
