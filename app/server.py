@@ -503,6 +503,17 @@ def pub_thumb(pub_id: int):
 	return JSONResponse({'ok': False, 'error': 'thumb fail'}, status_code=404)
 
 
+
+
+@app.get('/api/dashboard/stats')
+def dash_stats():
+	try:
+		from pipeline import dash_stats as ds
+		return {'ok': True, 'days': ds.views_by_day(7), 'summary': ds.summary()}
+	except Exception as e:
+		return JSONResponse({'ok': False, 'error': str(e)[:200]}, status_code=500)
+
+
 @app.get('/api/audit')
 def audit(limit: int = 50):
 	c = state.connect()
