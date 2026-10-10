@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-10-10T18:40:12.149615",
+  "generated": "2026-10-10T18:41:44.142658",
   "files": {
     "ops/vids_agent.py": "6a0ee08287d7d6c2522acae18664b533cfbf5b05901dd4bcea4b5374d781fc43",
     "ops/vids_edit.py": "7c1fcccb442a46508879df24018679e24e103ba9d8906b260aed4716bc6c1e5c",
@@ -12,7 +12,7 @@
     "ops/__init__.py": "a10a3abb7e3fc8dfbb5ca5451d74d085a9936807db147543f0867274b35cdb12",
     "ops/_no_window.py": "b3d3ea6e38800781248785e1433575c7d1ac07739c1e19fcb7e5a8f3b8fbfce5",
     "ops/voice.py": "bb9f1ed7481846e39e49ed11e85d3b48c3316247bee5627d2dabeabad282ab92",
-    "app/server.py": "55e00e331f8a88eda0cd1bcbf9e0020795c97bc2f03c5a2e9827f857b10271f2",
+    "app/server.py": "d89a260a283539f30cfd62f3f8b6e2bf59576f7e220c39708c05461c5dfee9d1",
     "app/tray.py": "09be774ada332d53e87850e29560ee7f069ea6f671d8eb6187f41927bfe0a5ee",
     "app/_routes_publish.py": "fb98ce9f137f68d696532891f9eb781d0a32c4edbeae16027a0cb46367404bee",
     "app/_routes_prompts.py": "1e31682577126e09f607160dd65f205dedb7e59d841a1e5333d45d535f2d7382",
@@ -30,7 +30,7 @@
     "desktop_app/views/pipeline.py": "7e4c4af0f0430a9cfc6276f2fdc6427d318fd3acf65dd4fd2b05cf76e48181e6",
     "desktop_app/strings_vi.json": "6db406e475d761631c11d865bd38e893dfff893b5c61b22590b97259c971040f",
     "desktop_app/strings_en.json": "69ef52903da17da31552efaf1019adadd9c856c13e2880968d79f04c6cc9e372",
-    "desktop_app/views/channels.py": "8e25ebd34672d632126a131abd261fafda17769db92463e372f52fb83be6ca8c",
+    "desktop_app/views/channels.py": "bc6198a0522eedce35ab10490aa04078f74e67ef6eb2aaee4e5863496ca66d6e",
     "ops/trend_analyzer.py": "1b4b02b31049ea9cd2e74c3614d2a4105abbd5b729552b0e91e43e0f1c0154ee",
     "ops/yt_metrics.py": "ca16e9d5c005c626f1a4a4144aff1f475629128bfa1b4264c9c88c060298b3cb",
     "ops/oauth_setup.py": "d61ab07b88a21b826204baa055c05e9a1d338d9f22435f7ae6eab604412bae0d",

@@ -36,6 +36,22 @@ class AddChannelDialog(QDialog):
 		btn.rejected.connect(self.reject)
 		form.addRow(btn)
 
+	def set_data(self, c):
+		self.fid.setText(str(c.get('id') or ''))
+		self.fid.setReadOnly(True)
+		self.fniche.setText(str(c.get('niche') or ''))
+		k = c.get('kinds')
+		if isinstance(k, list):
+			k = ','.join(str(x) for x in k)
+		idx = self.fkinds.findText(str(k))
+		if idx >= 0: self.fkinds.setCurrentIndex(idx)
+		st = c.get('style') or {}
+		if isinstance(st, dict):
+			self.fvoice.setText(str(st.get('voice') or ''))
+		if c.get('max_length_sec'):
+			self.fmaxlen.setValue(int(c.get('max_length_sec')))
+		pm = c.get('publish_mode')
+		self.fmode.setCurrentIndex(0 if pm == 'auto' else 1)
 	def data(self):
 		d = {}
 		d['id'] = self.fid.text().strip()
@@ -66,6 +82,9 @@ class Channels(QWidget):
 		bar.addWidget(self.btnadd)
 		self.btndel = QPushButton(i18n.t('ch.delete'))
 		self.btndel.setObjectName('Danger')
+		self.btnedit = QPushButton('Sua')
+		self.btnedit.clicked.connect(self.onedit)
+		bar.addWidget(self.btnedit)
 		self.btndel.clicked.connect(self.ondel)
 		bar.addWidget(self.btndel)
 		bar.addStretch()
@@ -79,6 +98,7 @@ class Channels(QWidget):
 		self.table.verticalHeader().setVisible(False)
 		self.table.setEditTriggers(QTableWidget.NoEditTriggers)
 		self.table.setSelectionBehavior(QTableWidget.SelectRows)
+		self.table.doubleClicked.connect(self.onedit)
 		body.addWidget(self.table)
 		root.addLayout(body)
 		self.refresh()
@@ -126,6 +146,34 @@ class Channels(QWidget):
 		else:
 			QMessageBox.information(self, 'TNT', i18n.t('ch.created'))
 			self.refresh()
+
+	def onedit(self, *args):
+		row = self.table.currentRow()
+		if row < 0:
+			return
+		cid = self.table.item(row, 0).text()
+		# Load full channel
+		try:
+			d = api.channels()
+			items = d.get('channels', d.get('items', []))
+			c = next((x for x in items if isinstance(x, dict) and str(x.get('id')) == cid), None)
+		except Exception:
+			c = None
+		if not c:
+			QMessageBox.warning(self, 'TNT', 'Khong load duoc kenh'); return
+		dlg = AddChannelDialog(self)
+		dlg.setWindowTitle('Sua kenh ' + cid)
+		dlg.set_data(c)
+		if dlg.exec() != QDialog.Accepted:
+			return
+		data = dlg.data()
+		data.pop('id', None)
+		r = api.post('/api/channels/' + cid + '/update', data)
+		if r.get('ok'):
+			QMessageBox.information(self, 'TNT', 'Da cap nhat')
+			self.refresh()
+		else:
+			QMessageBox.warning(self, 'TNT', str(r)[:200])
 
 	def ondel(self):
 		row = self.table.currentRow()

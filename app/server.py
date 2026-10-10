@@ -514,6 +514,27 @@ def dash_stats():
 		return JSONResponse({'ok': False, 'error': str(e)[:200]}, status_code=500)
 
 
+
+
+@app.post('/api/channels/{cid}/update')
+def channel_update(cid: str, payload: dict):
+	try:
+		from ops import channel_loader as chl
+		cfg = chl.load(cid)
+		for k in ('niche', 'kinds', 'voice', 'max_length_sec', 'publish_mode', 'enabled'):
+			if k in (payload or {}):
+				cfg[k] = (payload or {}).get(k)
+		if 'style' in (payload or {}):
+			st = cfg.get('style') or {}
+			if isinstance(st, dict):
+				st.update(payload['style'])
+			cfg['style'] = st
+		chl.save(cid, cfg)
+		return {'ok': True, 'id': cid}
+	except Exception as e:
+		return JSONResponse({'ok': False, 'error': str(e)[:200]}, status_code=500)
+
+
 @app.get('/api/audit')
 def audit(limit: int = 50):
 	c = state.connect()
