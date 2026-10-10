@@ -1,6 +1,6 @@
 # -- coding: utf-8 --
 # desktop_app/views/tables.py
-from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QTableWidget, QTableWidgetItem, QHeaderView, QMessageBox, QLabel, QAbstractItemView, QLineEdit, QComboBox)
+from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QTableWidget, QTableWidgetItem, QHeaderView, QMessageBox, QLabel, QAbstractItemView, QLineEdit, QComboBox, QInputDialog)
 from PySide6.QtCore import Qt, QUrl
 from PySide6.QtGui import QDesktopServices
 import i18n, api
@@ -220,3 +220,41 @@ class Modules(_Table):
 	KEYS = ['name', 'category', 'version', 'valid']
 	def fetch(self):
 		return api.modules()
+	def _build_actions(self, bar):
+		self.btn_ver = QPushButton('Xem phien ban')
+		self.btn_ver.clicked.connect(self.on_versions)
+		bar.addWidget(self.btn_ver)
+		self.btn_rb = QPushButton('Rollback')
+		self.btn_rb.setObjectName('Danger')
+		self.btn_rb.clicked.connect(self.on_rollback)
+		bar.addWidget(self.btn_rb)
+	def on_versions(self):
+		row = self.table.currentRow()
+		if row < 0:
+			self.msg.setText('Chon 1 module'); return
+		name = self.table.item(row, 0).text()
+		try:
+			d = api.get('/api/modules/versions?name=' + name)
+			items = d.get('items', [])
+		except Exception as e:
+			items = []; self.msg.setText(str(e)[:60])
+		txt = chr(10).join(str(it.get('version')) + ' @ ' + str(it.get('installed_at')) for it in items) if items else '(khong co snapshot)'
+		QMessageBox.information(self, 'Phien ban ' + name, txt[:2000])
+	def on_rollback(self):
+		row = self.table.currentRow()
+		if row < 0:
+			self.msg.setText('Chon 1 module'); return
+		name = self.table.item(row, 0).text()
+		ver = QInputDialog.getText(self, 'Rollback', 'Nhap version (VD: 1.0.0):')[0]
+		if not ver:
+			return
+		if QMessageBox.question(self, 'Xac nhan', 'Rollback ' + name + ' ve ' + ver + '?') != QMessageBox.Yes:
+			return
+		# Tim path tu module name (category/file.py)
+		parts = name.split('.')
+		rel = parts[0] + '/' + parts[1] + '.py' if len(parts) == 2 else name + '.py'
+		try:
+			r = api.post('/api/modules/rollback', {'path': 'modules/' + rel, 'version': ver})
+			self.msg.setText(str(r)[:200])
+		except Exception as e:
+			self.msg.setText(str(e)[:80])
