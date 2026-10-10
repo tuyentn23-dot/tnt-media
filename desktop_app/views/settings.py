@@ -79,6 +79,28 @@ class Settings(QWidget):
 		r4.addWidget(b3); r4.addWidget(b4); r4.addStretch()
 		l4.addLayout(r4)
 		body.addWidget(c4)
+		# Card 5: Log viewer
+		c5 = QFrame(); c5.setObjectName('Card')
+		l5 = QVBoxLayout(c5); l5.setContentsMargins(16, 14, 16, 14); l5.setSpacing(6)
+		l5.addWidget(QLabel('<b>Xem log</b>'))
+		r5 = QHBoxLayout()
+		self.log_file = QComboBox()
+		self.log_file.setMinimumWidth(220)
+		self.log_level = QComboBox()
+		self.log_level.addItems(['Tat ca', 'INFO', 'WARN', 'ERROR'])
+		b5 = QPushButton('Load')
+		b5.clicked.connect(self.do_load_log)
+		b6 = QPushButton('Refresh list')
+		b6.clicked.connect(self.refresh_log_list)
+		r5.addWidget(self.log_file)
+		r5.addWidget(self.log_level)
+		r5.addWidget(b5); r5.addWidget(b6); r5.addStretch()
+		l5.addLayout(r5)
+		self.log_view = QTextEdit()
+		self.log_view.setReadOnly(True)
+		self.log_view.setMinimumHeight(120)
+		l5.addWidget(self.log_view)
+		body.addWidget(c5)
 		lbl = QLabel('Ket qua')
 		body.addWidget(lbl)
 		self.out = QTextEdit()
@@ -88,6 +110,7 @@ class Settings(QWidget):
 		root.addLayout(body)
 		self.refresh_creds()
 		self.refresh_backups()
+		self.refresh_log_list()
 
 	def on_lang(self, idx):
 		i18n.set_lang('vi' if idx == 0 else 'en')
@@ -141,6 +164,25 @@ class Settings(QWidget):
 		self.out.append('selfcheck:')
 		self.out.append(out[-1500:] if isinstance(out, str) else str(out)[:1500])
 
+	def refresh_log_list(self):
+		self.log_file.clear()
+		try:
+			d = api.get('/api/diagnostics/logs/list')
+			for it in d.get('items', []):
+				self.log_file.addItem(it.get('name'))
+		except Exception as e:
+			self.log_file.addItem(str(e)[:50])
+	def do_load_log(self):
+		nm = self.log_file.currentText()
+		lv = self.log_level.currentText()
+		try:
+			d = api.get('/api/diagnostics/logs?name=' + nm + '&limit=500')
+			lines = d.get('items', [])
+		except Exception as e:
+			lines = []; self.out.append(str(e)[:80])
+		if lv != 'Tat ca':
+			lines = [x for x in lines if lv in x]
+		self.log_view.setPlainText(chr(10).join(lines[-300:]))
 	def do_clear_thumb(self):
 		try:
 			import shutil
