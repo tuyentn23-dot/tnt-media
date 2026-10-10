@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-10-10T12:56:21.501602",
+  "generated": "2026-10-10T13:09:14.195098",
   "files": {
     "ops/vids_agent.py": "6a0ee08287d7d6c2522acae18664b533cfbf5b05901dd4bcea4b5374d781fc43",
     "ops/vids_edit.py": "7c1fcccb442a46508879df24018679e24e103ba9d8906b260aed4716bc6c1e5c",
@@ -14,7 +14,7 @@
     "ops/voice.py": "bb9f1ed7481846e39e49ed11e85d3b48c3316247bee5627d2dabeabad282ab92",
     "app/server.py": "127ee269a8fca29eec960aa6e56e9ded02b62b484712229e62eb3ff5430d2b2e",
     "app/tray.py": "09be774ada332d53e87850e29560ee7f069ea6f671d8eb6187f41927bfe0a5ee",
-    "app/_routes_publish.py": "950c14d1dd5456c562365d38d6891de1727a3280dca362531c08e69a4be7014e",
+    "app/_routes_publish.py": "fb98ce9f137f68d696532891f9eb781d0a32c4edbeae16027a0cb46367404bee",
     "app/_routes_prompts.py": "1e31682577126e09f607160dd65f205dedb7e59d841a1e5333d45d535f2d7382",
     "launch_chrome.py": "42e304bfe52fee384a5b5cb92866b004ac1c7360e58834743abc70ac27227623",
     "_serve.py": "182a5f27789b43298578e622011e04493e67792632b2fa710f75f6f782fe2574",

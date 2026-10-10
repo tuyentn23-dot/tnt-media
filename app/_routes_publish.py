@@ -22,6 +22,11 @@ def publish_pub(pub_id: int, privacy: str = 'public', force: bool = False):
 	if row['youtube_id']:
 		return {'ok': True, 'already_published': True, 'youtube_id': row['youtube_id']}
 	cur = row['status']
+	# Cho phep publish truc tiep tu rendered (tu dong approve)
+	if cur in ('rendered', 'scheduled', 'publish_failed'):
+		c.execute('UPDATE publications SET status=? WHERE id=?', ('approved', pub_id))
+		c.commit()
+		cur = 'approved'
 	if cur != 'approved':
 		return JSONResponse({'ok': False, 'error': 'publication chua duoc duyet (status=' + str(cur) + ')', 'status': cur}, status_code=409)
 	if not jobmod.valid_transition(jobmod.PUB_TRANSITIONS, cur, 'publishing'):
@@ -37,7 +42,8 @@ def publish_pub(pub_id: int, privacy: str = 'public', force: bool = False):
 		from ops import os_publish
 		os_publish.set_channel(row['channel_id'])
 		title = row['title'] or ('TNT Media ' + str(pub_id))
-		r = os_publish.publish(vp, title, description='', tags=[], privacy=privacy, topic=row['topic'] or '')
+		# Manual publish: bo qua topic-duplicate check (topic thuong la generic)
+		r = os_publish.publish(vp, title, description='', tags=[], privacy=privacy, topic='')
 	except Exception as e:
 		import traceback
 		err = str(e)[:300]
