@@ -109,6 +109,11 @@ class MainWindow(QMainWindow):
 		self._apply_theme()
 
 def run():
+	try:
+		import ctypes
+		ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID('TNT.Media.Studio.1')
+	except Exception:
+		pass
 	app = QApplication.instance() or QApplication(sys.argv)
 	w = MainWindow()
 	w.show()
