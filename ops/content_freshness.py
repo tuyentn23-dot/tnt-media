@@ -44,12 +44,10 @@ def _save(dd):
 
 def signature(item, kind):
 	import hashlib
+	# Chi dung id + hook de tranh doi khi edit topic/body
 	h = (item.get('hook') or '').strip().lower()
-	b = (item.get('body') or '').strip().lower()
-	p = (item.get('payoff') or '').strip().lower()
-	t = str(item.get('topic') or '').strip().lower()
-	core = h + '||' + b + '||' + p + '||' + t
-	dig = hashlib.sha1(core.encode('utf-8')).hexdigest()[:24]
+	core = h[:200]
+	dig = hashlib.sha1(core.encode('utf-8')).hexdigest()[:16]
 	return kind + '|' + str(item.get('id', '')) + '|' + dig
 
 

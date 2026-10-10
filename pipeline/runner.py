@@ -131,6 +131,10 @@ def run_job(job, dry_run=False, item_id=None):
 			sig = cf.signature(item, kind)
 			c.execute('INSERT OR IGNORE INTO publications (job_id, channel_id, signature, topic, kind, title, file_path, status, created_at) VALUES (?,?,?,?,?,?,?,?,?)', (job.job_id, job.channel_id, sig, item.get('topic'), kind, item.get('hook', '')[:100], out, 'rendered', state.now()))
 			c.commit()
+			try:
+				cf.mark_published(sig, {'job_id': job.job_id, 'kind': kind, 'file': out})
+			except Exception as _me:
+				log('mark_published err: ' + str(_me)[:80])
 			# QUALITY GATE
 			try:
 				from ops import quality_gate as qg
