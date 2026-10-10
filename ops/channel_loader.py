@@ -72,7 +72,8 @@ def load_content(cid, kind=None):
 	items = list(static.get(kind, []))
 	try:
 		from ops import live_content as lc
-		live = lc.generate(cid, kind, limit=20)
+		niche = getattr(lc, 'CHANNEL_NICHE', {}).get(cid, 'general')
+		live = [] if niche == 'kids' else lc.generate(cid, kind, limit=20)
 		if live:
 			ids = set(it.get('id') for it in items)
 			for it in live:
@@ -82,7 +83,7 @@ def load_content(cid, kind=None):
 		print('[loader] live err:', str(e)[:80])
 	try:
 		from ops import live_content as _lc2
-		items = _lc2.filter_items(items)
+		items = _lc2.filter_items(items, cid)
 	except Exception:
 		pass
 	return items
