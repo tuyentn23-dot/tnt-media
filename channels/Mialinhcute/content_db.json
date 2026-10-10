@@ -2,331 +2,367 @@
   "anime": [
     {
       "id": "anime_new_01",
-      "topic": "anime",
+      "topic": "Naruto mạnh nhất khi nào?",
       "hook": "Naruto mạnh nhất khi nào?",
       "body": "Naruto Uzumaki từ một đứa trẻ bị cả làng xa lánh đã trở thành Hokage. Sức mạnh thật sự của cậu không đến từ Cửu Vĩ, mà từ việc không bao giờ bỏ rơi bạn bè.",
       "payoff": "Bài học: sức mạnh lớn nhất là tình bạn và ý chí.",
-      "search_query": "naruto anime fight scene"
+      "search_query": "naruto anime fight scene",
+      "kind": "anime"
     },
     {
       "id": "anime_dragonball",
-      "topic": "anime",
+      "topic": "Goku mạnh đến mức nào?",
       "hook": "Goku mạnh đến mức nào?",
       "body": "Goku từ một cậu bé Saiyan yếu đuối trở thành chiến binh mạnh nhất vũ trụ.",
       "payoff": "Sức mạnh đến từ việc không bao giờ từ bỏ!",
       "question": "Bạn thích Goku hay Vegeta?",
-      "search_query": "dragon ball anime fight"
+      "search_query": "dragon ball anime fight",
+      "kind": "anime"
     },
     {
       "id": "anime_onepiece",
-      "topic": "anime",
+      "topic": "Vì sao Luffy không bao giờ bỏ cuộc?",
       "hook": "Vì sao Luffy không bao giờ bỏ cuộc?",
       "body": "Luffy đã mất anh trai Ace và suýt mất cả đội của mình.",
       "payoff": "Đó là lý do cậu trở thành Vua Hải Tặc!",
       "question": "Bạn thích Luffy hay Zoro hơn?",
-      "search_query": "pirate ship ocean anime"
+      "search_query": "pirate ship ocean anime",
+      "kind": "anime"
     },
     {
       "id": "anime_pokemon",
-      "topic": "anime",
+      "topic": "Pikachu có thực sự là chuột?",
       "hook": "Pikachu có thực sự là chuột?",
       "body": "Pikachu được lấy cảm hứng từ loài chuột pika nhỏ bé. Nhưng nó lại có dòng điện mạnh đến mức hạ gục cả đối thủ to lớn.",
       "payoff": "Hóa ra chuột nhỏ cũng có thể trở thành huyền thoại!",
       "question": "Bạn chọn Pikachu hay Eevee?",
-      "search_query": "pokemon creature cute"
+      "search_query": "pokemon creature cute",
+      "kind": "anime"
     },
     {
       "id": "anime_naruto",
-      "topic": "anime",
+      "topic": "Naruto và bước nhảy của ninja làng lá",
       "hook": "Naruto và bước nhảy của ninja làng lá",
       "body": "Naruto xuất thân từ cô bé của làng Nhật Bản. Cô là một người tự ninja bị cái trong làng, bị ruồng bỏng và luôn chiến đấu.",
       "payoff": "Cô đã là bài học về cô đơn của và sự bảo tồn!!",
       "question": "Bạn thích nhân vật nào trong Naruto?",
-      "search_query": "ninja jump action anime"
+      "search_query": "ninja jump action anime",
+      "kind": "anime"
     },
     {
       "id": "anime_jujutsu",
-      "topic": "anime",
+      "topic": "Gojo mạnh nhất vì đôi mắt này",
       "hook": "Gojo mạnh nhất vì đôi mắt này",
       "body": "Lục Nhãn cho phép Gojo thấy dòng chảy năng lượng và vô hạn trong không gian.",
       "payoff": "Đó là lý do hắn gần như bất khả chiến bại.",
       "question": "Bạn thích nhân vật nào nhất?",
-      "search_query": "dark magic anime city"
+      "search_query": "dark magic anime city",
+      "kind": "anime"
     },
     {
       "id": "anime_demon_slayer",
-      "topic": "anime",
+      "topic": "Thanh gươm đổi màu theo người dùng",
       "hook": "Thanh gươm đổi màu theo người dùng",
       "body": "Trong Demon Slayer, gươm đổi màu dựa trên tính cách và sức mạnh của kiếm sĩ.",
       "payoff": "Màu đỏ hiếm nhất, chỉ người mạnh nhất có.",
       "question": "Gươm của bạn màu gì?",
-      "search_query": "sword fight anime"
+      "search_query": "sword fight anime",
+      "kind": "anime"
     },
     {
       "id": "anime_solo_leveling",
-      "topic": "anime",
+      "topic": "Sung Jinwoo mạnh lên nhờ hệ thống",
       "hook": "Sung Jinwoo mạnh lên nhờ hệ thống",
       "body": "Nhân vật chính Solo Leveling nhận nhiệm vụ từ hệ thống bí ẩn và lên cấp không giới hạn.",
       "payoff": "Từ yếu nhất trở thành bóng tối mạnh nhất.",
       "question": "Bạn xem chưa?",
-      "search_query": "dark fantasy warrior"
+      "search_query": "dark fantasy warrior",
+      "kind": "anime"
     },
     {
       "id": "anime_ghibli",
-      "topic": "anime",
+      "topic": "Studio Ghibli vẽ tay từng khung hình",
       "hook": "Studio Ghibli vẽ tay từng khung hình",
       "body": "Nhiều cảnh phim Ghibli mất hàng tháng để vẽ, không dùng CGI hoàn toàn.",
       "payoff": "Đó là lý do phim đẹp đến từng chi tiết.",
       "question": "Phim Ghibli bạn thích nhất?",
-      "search_query": "peaceful countryside anime"
+      "search_query": "peaceful countryside anime",
+      "kind": "anime"
     },
     {
       "id": "anime_sailormoon",
-      "topic": "anime",
+      "topic": "Sailor Moon là anime biến hình đầu tiên nổi tiếng toàn cầu",
       "hook": "Sailor Moon là anime biến hình đầu tiên nổi tiếng toàn cầu",
       "body": "Thủy thủ Mặt Trăng mở đường cho dòng anime magical girl khắp thế giới.",
       "payoff": "Nó truyền cảm hứng cho hàng nghìn bộ truyện sau này.",
       "question": "Bạn thích nhân vật biến hình nào?",
-      "search_query": "magical girl stars"
+      "search_query": "magical girl stars",
+      "kind": "anime"
     }
   ],
   "roblox": [
     {
       "id": "roblox_mm2",
-      "topic": "roblox",
+      "topic": "Dao huyền thoại trong MM2 ở đâu ra?",
       "hook": "Dao huyền thoại trong MM2 ở đâu ra?",
       "body": "MM2 là trò chơi nổi tiếng nhất của Roblox về săn lùng và trốn thoát.",
       "payoff": "Có người chơi 8 năm chưa từng có dao huyền thoại!",
       "question": "Bạn đã có dao nào chưa?",
-      "search_query": "colorful knife weapon"
+      "search_query": "colorful knife weapon",
+      "kind": "roblox"
     },
     {
       "id": "roblox_adoptme_2",
-      "topic": "roblox",
+      "topic": "Bí mật thú cưng hiếm trong Adopt Me",
       "hook": "Bí mật thú cưng hiếm trong Adopt Me",
       "body": "Trong Adopt Me có những thú cưng hiếm chỉ xuất hiện một lần trong sự kiện đặc biệt. Người chơi phải đợi hàng năm mới có cơ hội sở hữu.",
       "payoff": "Có người đã đợi 3 năm chỉ để có một chú mèo hiếm!",
       "question": "Bạn sở hữu thú cưng hiếm nào chưa?",
-      "search_query": "cute pet animals cartoon"
+      "search_query": "cute pet animals cartoon",
+      "kind": "roblox"
     },
     {
       "id": "roblox_bloxfruits",
-      "topic": "roblox",
+      "topic": "Trái ác bí mật trong Blox Fruits",
       "hook": "Trái ác bí mật trong Blox Fruits",
       "body": "Blox Fruits có những trái ác huyền thoại chỉ xuất hiện một lần trong các sự kiện. Người chơi tìz mọi chệ để có thể trở cái này.",
       "payoff": "Đến năm tác động mạnh nhất, chúng bạn chỉ cần bí quyết!!",
       "question": "Bạn đã từng có trái gìa học bá đầu chưa?",
-      "search_query": "tropical fruit island"
+      "search_query": "tropical fruit island",
+      "kind": "roblox"
     },
     {
       "id": "roblox_pet_sim",
-      "topic": "roblox",
+      "topic": "Pet khủng nhất Pet Simulator 99",
       "hook": "Pet khủng nhất Pet Simulator 99",
       "body": "Pet Huges có giá trị giao dịch cực cao và tỷ lệ nở cực thấp.",
       "payoff": "Nhiều người chơi hàng năm vẫn chưa nở được.",
       "question": "Bạn có pet hiếm chưa?",
-      "search_query": "colorful toys pets"
+      "search_query": "colorful toys pets",
+      "kind": "roblox"
     },
     {
       "id": "roblox_brookhaven",
-      "topic": "roblox",
+      "topic": "Bí mật trong Brookhaven",
       "hook": "Bí mật trong Brookhaven",
       "body": "Brookhaven có nhiều địa điểm ẩn và Easter egg mà ít người biết.",
       "payoff": "Có căn phòng bí mật dưới hồ nước.",
       "question": "Bạn khám phá hết chưa?",
-      "search_query": "suburban house street"
+      "search_query": "suburban house street",
+      "kind": "roblox"
     },
     {
       "id": "roblox_murder",
-      "topic": "roblox",
+      "topic": "Bí mật Murder Mystery 2",
       "hook": "Bí mật Murder Mystery 2",
       "body": "Dao Godly có tỷ lệ rơi cực thấp, nhiều người chơi mãi không có.",
       "payoff": "Một số người bỏ hàng triệu Robux để sở hữu.",
       "question": "Bạn có dao Godly chưa?",
-      "search_query": "dark mystery house"
+      "search_query": "dark mystery house",
+      "kind": "roblox"
     },
     {
       "id": "roblox_piggy",
-      "topic": "roblox",
+      "topic": "Bí mật đáng sợ trong Piggy",
       "hook": "Bí mật đáng sợ trong Piggy",
       "body": "Piggy là game kinh dị Roblox nổi tiếng, người chơi phải trốn con heo biến dị.",
       "payoff": "Có nhiều ending bí ẩn ít ai đạt được.",
       "question": "Bạn dám chơi một mình không?",
-      "search_query": "horror dark house"
+      "search_query": "horror dark house",
+      "kind": "roblox"
     },
     {
       "id": "roblox_arsenal",
-      "topic": "roblox",
+      "topic": "Súng nào mạnh nhất Arsenal?",
       "hook": "Súng nào mạnh nhất Arsenal?",
       "body": "Arsenal là game bắn súng Roblox với hàng trăm loại vũ khí.",
       "payoff": "Một số súng chỉ mở khóa khi đạt level cao.",
       "question": "Bạn thích súng nào?",
-      "search_query": "toy gun weapon"
+      "search_query": "toy gun weapon",
+      "kind": "roblox"
     },
     {
       "id": "roblox_jailbreak",
-      "topic": "roblox",
+      "topic": "Trốn tù trong Jailbreak khó cỡ nào?",
       "hook": "Trốn tù trong Jailbreak khó cỡ nào?",
       "body": "Jailbreak là game Roblox về trốn khỏi nhà tù và trốn cảnh sát.",
       "payoff": "Người chơi giỏi có thể trốn trong vài giây.",
       "question": "Bạn trốn giỏi không?",
-      "search_query": "police car city"
+      "search_query": "police car city",
+      "kind": "roblox"
     }
   ],
   "cute_animals": [
     {
       "id": "cute_new_01",
-      "topic": "cute_animals",
+      "topic": "Mèo con lần đầu nhìn thấy tuyết",
       "hook": "Mèo con lần đầu nhìn thấy tuyết",
       "body": "Chú mèo con ba tháng tuổi lần đầu tiên trong đời nhìn thấy tuyết rơi. Nó vừa sợ vừa tò mò, cứ nhảy lên đuổi theo từng bông tuyết.",
       "payoff": "Sự ngây thơ của mèo con khiến ai cũng phải mỉm cười.",
-      "search_query": "cute kitten snow first time"
+      "search_query": "cute kitten snow first time",
+      "kind": "cute_animals"
     },
     {
       "id": "animal_axolotl",
-      "topic": "cute_animals",
+      "topic": "Axolotl có thể tái sinh não không?",
       "hook": "Axolotl có thể tái sinh não không?",
       "body": "Axolotl là loài kỳ giọng có khả năng mọc lại chân, tay và thậm chí cả tim.",
       "payoff": "Nếu con người làm được điều này, y học sẽ thay đổi hoàn toàn!",
       "question": "Bạn thấy Axolotl đẹp không?",
-      "search_query": "axolotl water cute"
+      "search_query": "axolotl water cute",
+      "kind": "cute_animals"
     },
     {
       "id": "animal_shiba",
-      "topic": "cute_animals",
+      "topic": "Shiba Inu cưỡi thực sự nghĩa là gì?",
       "hook": "Shiba Inu cưỡi thực sự nghĩa là gì?",
       "body": "Shiba Inu là giống chó nhỏ nhất của Nhật Bản, có xinh thực là chó nhỏ buồi rối. Nhưng tiếng cưỡi của nó lại là một đặc trưng quý hiếm.",
       "payoff": "Người Nhật coi tiếng cưỡi của Shiba là biểu tượng của niềm vui!",
       "question": "Bạn thấy Shiba dễ thương không?",
-      "search_query": "shiba inu dog"
+      "search_query": "shiba inu dog",
+      "kind": "cute_animals"
     },
     {
       "id": "animal_quokka",
-      "topic": "cute_animals",
+      "topic": "Quokka - con vật hạnh phúc của Đồng Vài",
       "hook": "Quokka - con vật hạnh phúc của Đồng Vài",
       "body": "Quokka được mệnh danh là con vật cực kỳ nhất thế giới và có nụ cười loạn xã nhưn trước vì chịứu đứng vức.",
       "payoff": "Hệ được gọi là con vật hạnh phúc nhất thế giới đó!",
       "question": "Bạn có muốn nhất thấy xem Quokka không?",
-      "search_query": "quokka happy animal"
+      "search_query": "quokka happy animal",
+      "kind": "cute_animals"
     },
     {
       "id": "animal_capybara",
-      "topic": "cute_animals",
+      "topic": "Capybara thân thiện với mọi loài",
       "hook": "Capybara thân thiện với mọi loài",
       "body": "Capybara là động vật gặm nhấm lớn nhất, sống hòa bình với chim, khỉ, cả cá sấu.",
       "payoff": "Nó được mệnh danh là động vật chill nhất hành tinh.",
       "question": "Bạn muốn nuôi capybara không?",
-      "search_query": "capybara water animal"
+      "search_query": "capybara water animal",
+      "kind": "cute_animals"
     },
     {
       "id": "animal_red_panda",
-      "topic": "cute_animals",
+      "topic": "Gấu trúc đỏ không phải gấu trúc",
       "hook": "Gấu trúc đỏ không phải gấu trúc",
       "body": "Red panda là loài riêng, họ hàng gần với chồn hơn gấu.",
       "payoff": "Nó dùng đuôi làm khăn quàng khi ngủ.",
       "question": "Bạn thấy nó dễ thương không?",
-      "search_query": "red panda tree"
+      "search_query": "red panda tree",
+      "kind": "cute_animals"
     },
     {
       "id": "cute_shiba_run",
-      "topic": "cute_animals",
+      "topic": "Shiba Inu chạy như tên lửa",
       "hook": "Shiba Inu chạy như tên lửa",
       "body": "Shiba nổi tiếng với biểu cảm hài và tốc độ chạy đáng kinh ngạc.",
       "payoff": "Được mệnh danh là meme quốc dân.",
       "question": "Bạn thích shiba không?",
-      "search_query": "dog running grass"
+      "search_query": "dog running grass",
+      "kind": "cute_animals"
     },
     {
       "id": "animal_panda",
-      "topic": "cute_animals",
+      "topic": "Gấu trúc ăn 12 tiếng mỗi ngày",
       "hook": "Gấu trúc ăn 12 tiếng mỗi ngày",
       "body": "Gấu trúc dành gần nửa ngày để ăn tre, vì tre ít dinh dưỡng.",
       "payoff": "Đó là lý do nó lười và dễ thương.",
       "question": "Bạn thích gấu trúc không?",
-      "search_query": "panda bamboo eating"
+      "search_query": "panda bamboo eating",
+      "kind": "cute_animals"
     },
     {
       "id": "animal_fennec",
-      "topic": "cute_animals",
+      "topic": "Cáo Fennec có tai to hơn đầu",
       "hook": "Cáo Fennec có tai to hơn đầu",
       "body": "Tai to giúp Fennec tản nhiệt và nghe được con mồi dưới cát.",
       "payoff": "Nó là loài cáo nhỏ nhất thế giới.",
       "question": "Bạn thấy tai nó đáng yêu không?",
-      "search_query": "fennec fox desert"
+      "search_query": "fennec fox desert",
+      "kind": "cute_animals"
     }
   ],
   "meme": [
     {
       "id": "meme_new_01",
-      "topic": "meme",
+      "topic": "Khi mẹ gọi dậy đi học lúc 5 giờ sáng",
       "hook": "Khi mẹ gọi dậy đi học lúc 5 giờ sáng",
       "body": "Cảnh tượng ai cũng từng trải qua: mẹ mở cửa phòng, bật đèn, và hét lên. Bạn thì chỉ muốn ngủ thêm năm phút.",
       "payoff": "Nhưng năm phút đó kéo dài thành cả tiếng đồng hồ!",
-      "search_query": "funny morning meme"
+      "search_query": "funny morning meme",
+      "kind": "meme"
     },
     {
       "id": "meme_funny_dog_1",
-      "topic": "meme",
+      "topic": "Chó này không biết bơi mà vẫn nhảy",
       "hook": "Chó này không biết bơi mà vẫn nhảy",
       "body": "Con chó nhảy xuống hồ nước và hoảng loạn tìm bờ.",
       "payoff": "Sau đó được chủ cứu!",
       "question": "Bạn thương chú chó chứ?",
-      "search_query": "funny dog face"
+      "search_query": "funny dog face",
+      "kind": "meme"
     },
     {
       "id": "meme_funny_cat_1",
-      "topic": "meme",
+      "topic": "Mèo ngã một cái là hết cơ hội",
       "hook": "Mèo ngã một cái là hết cơ hội",
       "body": "Con mèo nhảy từ trên tủ xuống nhưng tính sai khoảng cách.",
       "payoff": "Mặt nó vẫn tỉnh bơ.",
       "question": "Bạn có thấy buồn cười không?",
-      "search_query": "funny cat playing"
+      "search_query": "funny cat playing",
+      "kind": "meme"
     },
     {
       "id": "meme_cat_vibing",
-      "topic": "meme",
+      "topic": "Mèo này đang vibe cực mạnh",
       "hook": "Mèo này đang vibe cực mạnh",
       "body": "Mèo là loài được meme hóa nhiều nhất internet.",
       "payoff": "Hơn 2 triệu video meme mèo mỗi ngày.",
       "question": "Bạn có mèo không?",
-      "search_query": "cat relaxing"
+      "search_query": "cat relaxing",
+      "kind": "meme"
     },
     {
       "id": "meme_dog_side_eye",
-      "topic": "meme",
+      "topic": "Chó này đang cười nhếch mép",
       "hook": "Chó này đang cười nhếch mép",
       "body": "Chó có biểu cảm mặt đa dạng, đôi khi trông như đang cười.",
       "payoff": "Đó là lý do chó chiếm nửa internet.",
       "question": "Bạn có ảnh chó hài không?",
-      "search_query": "dog funny look"
+      "search_query": "dog funny look",
+      "kind": "meme"
     }
   ],
   "gacha": [
     {
       "id": "gacha_new_01",
-      "topic": "gacha",
+      "topic": "Cô gái Gacha bỏ học vì gia đình nghèo",
       "hook": "Cô gái Gacha bỏ học vì gia đình nghèo",
       "body": "Cô bé Gacha tên Linh phải nghỉ học để phụ mẹ bán hàng rong. Mỗi đêm, cô vẫn lén mở game Gacha để vẽ ước mơ của mình.",
       "payoff": "Một ngày, ước mơ ấy thành sự thật theo cách không ai ngờ tới.",
-      "search_query": "gacha cute animation story"
+      "search_query": "gacha cute animation story",
+      "kind": "gacha"
     },
     {
       "id": "gacha_love_story",
-      "topic": "gacha",
+      "topic": "Câu chuyện tình Gacha khiến triệu người khóc",
       "hook": "Câu chuyện tình Gacha khiến triệu người khóc",
       "body": "Hai nhân vật Gacha yêu nhau nhưng bị chia cắt bởi số phận.",
       "payoff": "Phút cuối họ gặp lại trong giấc mơ.",
       "search_query": "cute cartoon animation love",
-      "name": "Gacha love story"
+      "name": "Gacha love story",
+      "kind": "gacha"
     },
     {
       "id": "gacha_glow_up",
-      "topic": "gacha",
+      "topic": "Màn lột xác Gacha đẹp nhất",
       "hook": "Màn lột xác Gacha đẹp nhất",
       "body": "Cô gái Gacha từ giản dị trở nên rực rỡ sau khi thay đổi bản thân.",
       "payoff": "Ai cũng có thể tỏa sáng.",
       "search_query": "girl transformation fashion beauty",
-      "name": "Gacha glow up"
+      "name": "Gacha glow up",
+      "kind": "gacha"
     },
     {
       "id": "gacha_crush",
@@ -372,97 +408,107 @@
   "edit": [
     {
       "id": "edit_anime_transition",
-      "topic": "edit",
+      "topic": "Edit chuyển cảnh anime đỉnh cao",
       "hook": "Edit chuyển cảnh anime đỉnh cao",
       "body": "Những pha chuyển cảnh mượt mà giữa các cảnh anime.",
       "payoff": "Timing khớp từng nhịp nhạc.",
       "search_query": "anime action transition effects",
-      "name": "Anime edit"
+      "name": "Anime edit",
+      "kind": "edit"
     },
     {
       "id": "edit_sad_anime",
-      "topic": "edit",
+      "topic": "Edit buồn khiến bạn khóc",
       "hook": "Edit buồn khiến bạn khóc",
       "body": "Cảnh anime buồn kết hợp nhạc sad tạo cảm xúc mạnh.",
       "payoff": "Nhiều người comment khóc theo.",
       "search_query": "sad anime rain emotional",
-      "name": "Sad anime edit"
+      "name": "Sad anime edit",
+      "kind": "edit"
     }
   ],
   "minimusical": [
     {
       "id": "musical_cat_song",
-      "topic": "minimusical",
+      "topic": "Chú mèo hát bài này hay hơn ca sĩ",
       "hook": "Chú mèo hát bài này hay hơn ca sĩ",
       "body": "Mèo nhép miệng theo bài hát nổi tiếng.",
       "payoff": "Nghe xong không thể quên.",
       "search_query": "cat singing funny cute",
-      "name": "Cat musical"
+      "name": "Cat musical",
+      "kind": "minimusical"
     },
     {
       "id": "musical_dance_trend",
-      "topic": "minimusical",
+      "topic": "Điệu nhảy trend này gây sốt",
       "hook": "Điệu nhảy trend này gây sốt",
       "body": "Nhân vật hoạt hình nhảy theo trend TikTok đang hot.",
       "payoff": "Ai xem cũng muốn nhảy theo.",
       "search_query": "cartoon dance animation fun",
-      "name": "Dance trend"
+      "name": "Dance trend",
+      "kind": "minimusical"
     }
   ],
   "mia_original": [
     {
       "id": "mia_rescue_bell_001",
-      "topic": "mia_original",
+      "topic": "Mia bỗng nghe tiếng chuông nhỏ dưới gốc cây",
       "hook": "Mia bỗng nghe tiếng chuông nhỏ dưới gốc cây",
       "body": "Cô chạy tới nhưng chỉ thấy một chiếc hộp rung nhẹ. Mia mở ra và phát hiện một chú mèo con đang mắc kẹt.",
       "payoff": "Không ngờ chiếc chuông trên cổ bé mèo đã gọi Mia đến cứu đúng lúc.",
       "question": "Bạn sẽ đặt tên gì cho bé mèo?",
-      "search_query": "cute original girl kitten rescue cartoon"
+      "search_query": "cute original girl kitten rescue cartoon",
+      "kind": "mia_original"
     },
     {
       "id": "mia_rain_star_002",
-      "topic": "mia_original",
+      "topic": "Một ngôi sao giấy bỗng rơi trước cửa nhà Mia",
       "hook": "Một ngôi sao giấy bỗng rơi trước cửa nhà Mia",
       "body": "Mia nhặt lên rồi chạy theo những ngôi sao khác đang xuất hiện dọc con đường sau cơn mưa.",
       "payoff": "Hóa ra chúng dẫn cô tới chiếc ô của một em nhỏ bị gió cuốn mất.",
       "question": "Nếu là Mia bạn sẽ làm gì tiếp?",
-      "search_query": "cute girl rainy day paper stars cartoon"
+      "search_query": "cute girl rainy day paper stars cartoon",
+      "kind": "mia_original"
     },
     {
       "id": "mia_tiny_door_003",
-      "topic": "mia_original",
+      "topic": "Mia phát hiện một cánh cửa bé xíu sau chậu hoa",
       "hook": "Mia phát hiện một cánh cửa bé xíu sau chậu hoa",
       "body": "Cô mở cửa và thấy dấu chân nhỏ chạy vào khu vườn. Nhưng mỗi dấu chân lại biến mất ngay sau lưng cô.",
       "payoff": "Không ngờ thủ phạm chỉ là một chú nhím con đang tha lá về làm tổ.",
       "question": "Bạn có muốn Mia quay lại khu vườn này không?",
-      "search_query": "cute girl secret garden tiny door hedgehog cartoon"
+      "search_query": "cute girl secret garden tiny door hedgehog cartoon",
+      "kind": "mia_original"
     },
     {
       "id": "mia_lost_cloud_004",
-      "topic": "mia_original",
+      "topic": "Một đám mây nhỏ bỗng rơi xuống ban công của Mia",
       "hook": "Một đám mây nhỏ bỗng rơi xuống ban công của Mia",
       "body": "Mia chạy lấy chiếc khăn mềm nhưng đám mây cứ trốn sau các chậu cây rồi biến mất.",
       "payoff": "Cuối cùng cô phát hiện nó chỉ đang tìm giọt nước cuối cùng để bay trở lại bầu trời.",
       "question": "Mia nên giúp đám mây bằng cách nào?",
-      "search_query": "cute girl tiny cloud balcony fantasy cartoon"
+      "search_query": "cute girl tiny cloud balcony fantasy cartoon",
+      "kind": "mia_original"
     },
     {
       "id": "mia_music_box_005",
-      "topic": "mia_original",
+      "topic": "Chiếc hộp nhạc cũ bỗng tự mở khi Mia đi ngang qua",
       "hook": "Chiếc hộp nhạc cũ bỗng tự mở khi Mia đi ngang qua",
       "body": "Mia nghe một giai điệu lạ rồi chạy theo âm thanh phát ra từ căn gác nhỏ. Nhưng bài nhạc dừng lại mỗi khi cô đến gần.",
       "payoff": "Hóa ra một chú chim non mắc kẹt đã vô tình chạm vào chiếc hộp để gọi người giúp.",
       "question": "Bạn có đoán ra trước Mia không?",
-      "search_query": "cute girl music box attic bird rescue cartoon"
+      "search_query": "cute girl music box attic bird rescue cartoon",
+      "kind": "mia_original"
     },
     {
       "id": "mia_red_balloon_006",
-      "topic": "mia_original",
+      "topic": "Mia thấy một quả bóng đỏ bỗng bay ngược chiều gió",
       "hook": "Mia thấy một quả bóng đỏ bỗng bay ngược chiều gió",
       "body": "Cô chạy theo và phát hiện sợi dây đang kéo một chiếc giỏ nhỏ qua hàng rào. Nhưng chiếc giỏ cứ rung lên liên tục.",
       "payoff": "Không ngờ bên trong là một chú thỏ con vừa trốn khỏi vườn và cần được đưa về nhà.",
       "question": "Bạn sẽ giúp Mia đưa bé thỏ về đâu?",
-      "search_query": "cute girl red balloon rabbit rescue cartoon"
+      "search_query": "cute girl red balloon rabbit rescue cartoon",
+      "kind": "mia_original"
     }
   ]
 }

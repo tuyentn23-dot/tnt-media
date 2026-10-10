@@ -2,185 +2,205 @@
   "lifestyle": [
     {
       "id": "life_morning_1",
-      "topic": "lifestyle",
+      "topic": "Buổi sáng của người Nhật có gì đặc biệt?",
       "hook": "Buổi sáng của người Nhật có gì đặc biệt?",
       "body": "Người Nhật thường dậy từ 5h sáng, dọn dẹp nhà cửa và chuẩn bị bữa sáng tỉ mỉ cho gia đình.",
       "payoff": "Thói quen này giúp họ sống khỏe mạnh và bình an hơn!",
-      "question": "Bạn dậy lúc mấy giờ?"
+      "question": "Bạn dậy lúc mấy giờ?",
+      "kind": "lifestyle"
     },
     {
       "id": "life_rain",
-      "topic": "lifestyle",
+      "topic": "Nghe tiếng mưa giúp ngủ ngon hơn",
       "hook": "Nghe tiếng mưa giúp ngủ ngon hơn",
       "body": "Tiếng mưa là white noise tự nhiên giúp não thư giãn và dễ ngủ.",
       "payoff": "Đó là lý do nhiều người mở tiếng mưa để ngủ.",
       "question": "Bạn có thích nghe mưa không?",
-      "search_query": "rain window cozy relaxing"
+      "search_query": "rain window cozy relaxing",
+      "kind": "lifestyle"
     },
     {
       "id": "life_coffee",
-      "topic": "lifestyle",
+      "topic": "Cà phê Việt đậm nhất thế giới",
       "hook": "Cà phê Việt đậm nhất thế giới",
       "body": "Cà phê phin Việt dùng robusta đậm gấp đôi arabica thông thường.",
       "payoff": "Một ly cà phê sữa đá đánh thức cả buổi sáng.",
       "question": "Bạn uống cà phê mấy ly một ngày?",
-      "search_query": "vietnamese coffee drip"
+      "search_query": "vietnamese coffee drip",
+      "kind": "lifestyle"
     },
     {
       "id": "v_market_morning",
-      "topic": "lifestyle",
+      "topic": "Chợ sớm Sài Gòn nhộn nhịp thế nào",
       "hook": "Chợ sớm Sài Gòn nhộn nhịp thế nào",
       "body": "Từ 4h sáng, chợ đầu mối đã tấp nập người mua kẻ bán.",
       "payoff": "Nhịp sống Sài Gòn bắt đầu từ đây.",
       "search_query": "morning market asia busy",
-      "name": "Cho som"
+      "name": "Cho som",
+      "kind": "lifestyle"
     }
   ],
   "food": [
     {
       "id": "food_new_01",
-      "topic": "food",
+      "topic": "Phở Việt Nam có nguồn gốc từ đâu?",
       "hook": "Phở Việt Nam có nguồn gốc từ đâu?",
       "body": "Phở ra đời đầu thế kỷ 20 tại Nam Định và Hà Nội. Nó kết hợp kỹ thuật nấu nước dùng của Pháp với nguyên liệu bản địa Việt Nam.",
       "payoff": "Ngày nay phở là món Việt được biết đến nhiều nhất thế giới.",
-      "search_query": "vietnamese pho origin history"
+      "search_query": "vietnamese pho origin history",
+      "kind": "food"
     },
     {
       "id": "food_pho_1",
-      "topic": "food",
+      "topic": "Phở Việt Nam có từ bao giờ?",
       "hook": "Phở Việt Nam có từ bao giờ?",
       "body": "Phở xuất hiện đầu thế kỷ 20 tại miền Bắc, kết hợp văn hóa ẩm thực Pháp và Việt.",
       "payoff": "Đến nay phở đã thành biểu tượng ẩm thực toàn cầu!",
-      "question": "Bạn thích phở bò hay phở gà?"
+      "question": "Bạn thích phở bò hay phở gà?",
+      "kind": "food"
     },
     {
       "id": "food_banhmi",
-      "topic": "food",
+      "topic": "Bánh mì Việt Nam được cả thế giới mê",
       "hook": "Bánh mì Việt Nam được cả thế giới mê",
       "body": "Bánh mì từng được bình chọn là một trong những món sandwich ngon nhất hành tinh.",
       "payoff": "Sự kết hợp giữa Pháp và Việt tạo nên huyền thoại.",
       "question": "Bạn thích bánh mì nhân gì?",
-      "search_query": "vietnamese banh mi sandwich street food"
+      "search_query": "vietnamese banh mi sandwich street food",
+      "kind": "food"
     },
     {
       "id": "food_pho",
-      "topic": "food",
+      "topic": "Phở mất 12 tiếng để nấu nước dùng",
       "hook": "Phở mất 12 tiếng để nấu nước dùng",
       "body": "Nước dùng phở truyền thống ninh xương bò suốt nhiều giờ với quế hồi.",
       "payoff": "Đó là lý do phở ngon khó quên.",
       "question": "Bạn thích phở bò hay gà?",
-      "search_query": "vietnamese pho noodle soup"
+      "search_query": "vietnamese pho noodle soup",
+      "kind": "food"
     },
     {
       "id": "v_streetfood_hanoi",
-      "topic": "food",
+      "topic": "Quán phở 50 năm không đổi giá",
       "hook": "Quán phở 50 năm không đổi giá",
       "body": "Quán nhỏ ở Hà Nội bán phở suốt nửa thế kỷ, khách xếp hàng từ 5h sáng.",
       "payoff": "Bí quyết nằm ở nồi nước dùng gia truyền.",
       "search_query": "vietnamese street food pho hanoi",
-      "name": "Pho 50 nam"
+      "name": "Pho 50 nam",
+      "kind": "food"
     },
     {
       "id": "v_coffee_egg",
-      "topic": "food",
+      "topic": "Cà phê trứng - đặc sản chỉ Hà Nội có",
       "hook": "Cà phê trứng - đặc sản chỉ Hà Nội có",
       "body": "Cà phê trứng ra đời từ thời thiếu sữa, dùng lòng đỏ trứng đánh bông.",
       "payoff": "Giờ thành thức uống huyền thoại.",
       "search_query": "vietnamese egg coffee drink",
-      "name": "Ca phe trung"
+      "name": "Ca phe trung",
+      "kind": "food"
     }
   ],
   "animals": [
     {
       "id": "animal_dolphin_1",
-      "topic": "animals",
+      "topic": "Cá heo có thật sự giao tiếp bằng tên gọi?",
       "hook": "Cá heo có thật sự giao tiếp bằng tên gọi?",
       "body": "Cá heo phát ra âm thanh riêng để gọi tên nhau, giống như con người.",
       "payoff": "Chúng có văn hóa xã hội phức tạp hơn ta tưởng!",
-      "question": "Bạn có tin điều này không?"
+      "question": "Bạn có tin điều này không?",
+      "kind": "animals"
     }
   ],
   "nostalgia": [
     {
       "id": "nost_90s_1",
-      "topic": "nostalgia",
+      "topic": "Tuổi thơ 9x Việt Nam có gì?",
       "hook": "Tuổi thơ 9x Việt Nam có gì?",
       "body": "Kẹo kéo, bi ve, nhảy dây, truyện tranh Đôrêmôn là những ký ức không thể quên.",
       "payoff": "Thời đó nghèo mà vui hơn bây giờ!",
-      "question": "Bạn nhớ nhất điều gì?"
+      "question": "Bạn nhớ nhất điều gì?",
+      "kind": "nostalgia"
     },
     {
       "id": "nost_tet",
-      "topic": "nostalgia",
+      "topic": "Tết xưa có gì mà ai cũng nhớ?",
       "hook": "Tết xưa có gì mà ai cũng nhớ?",
       "body": "Pháo hoa, bánh chưng, lì xì đỏ - những ký ức Tết khó phai.",
       "payoff": "Càng lớn càng thấy Tết quý giá.",
       "question": "Ký ức Tết của bạn là gì?",
-      "search_query": "vietnamese tet festival red"
+      "search_query": "vietnamese tet festival red",
+      "kind": "nostalgia"
     },
     {
       "id": "v_rain_saigon",
-      "topic": "nostalgia",
+      "topic": "Mưa Sài Gòn có mùi rất riêng",
       "hook": "Mưa Sài Gòn có mùi rất riêng",
       "body": "Mưa chiều Sài Gòn mang mùi đất ẩm và khói xe, ai đi xa cũng nhớ.",
       "payoff": "Đó là nỗi nhớ không tên.",
       "search_query": "rain city street wet night",
-      "name": "Mua Saigon"
+      "name": "Mua Saigon",
+      "kind": "nostalgia"
     }
   ],
   "curiosity": [
     {
       "id": "curio_new_01",
-      "topic": "curiosity",
+      "topic": "Cá heo có thể nhận ra mình trong gương không?",
       "hook": "Cá heo có thể nhận ra mình trong gương không?",
       "body": "Cá heo là một trong số ít loài động vật vượt qua bài kiểm tra gương. Chúng biết đó là hình ảnh của chính mình, không phải con cá heo khác.",
       "payoff": "Chỉ con người, cá heo, tinh tinh và voi mới làm được điều này.",
-      "search_query": "dolphin mirror self awareness"
+      "search_query": "dolphin mirror self awareness",
+      "kind": "curiosity"
     },
     {
       "id": "cur_why_sky_1",
-      "topic": "curiosity",
+      "topic": "Vì sao bầu trời màu xanh?",
       "hook": "Vì sao bầu trời màu xanh?",
       "body": "Ánh sáng mặt trời tán xạ qua khí quyển, màu xanh lam bị tán xạ mạnh nhất.",
       "payoff": "Đó là lý do bầu trời xanh và hoàng hôn đỏ!",
-      "question": "Bạn có từng tự hỏi điều này?"
+      "question": "Bạn có từng tự hỏi điều này?",
+      "kind": "curiosity"
     },
     {
       "id": "cur_why_yawh",
-      "topic": "curiosity",
+      "topic": "Vì sao chúng ta ngáp?",
       "hook": "Vì sao chúng ta ngáp?",
       "body": "Ngáp có thể giúp điều hòa nhiệt độ não và tăng tỉnh táo.",
       "payoff": "Ngáp còn lây sang người khác vì đồng cảm.",
       "question": "Bạn vừa ngáp khi xem không?",
-      "search_query": "person yawning tired"
+      "search_query": "person yawning tired",
+      "kind": "curiosity"
     },
     {
       "id": "v_why_dejavu",
-      "topic": "curiosity",
+      "topic": "Vì sao bạn thấy việc này từng xảy ra",
       "hook": "Vì sao bạn thấy việc này từng xảy ra",
       "body": "Deja vu là cảm giác lạ quen, khoa học vẫn chưa giải thích hết.",
       "payoff": "Não bạn có thể đang nhớ nhầm.",
       "search_query": "person thinking confused portrait",
-      "name": "Deja vu"
+      "name": "Deja vu",
+      "kind": "curiosity"
     },
     {
       "id": "v_why_hair_gray",
-      "topic": "curiosity",
+      "topic": "Tóc bạc vì đâu",
       "hook": "Tóc bạc vì đâu",
       "body": "Tế bào tạo màu tóc chết dần theo tuổi, khiến tóc mất sắc tố.",
       "payoff": "Căng thẳng có thể làm tóc bạc sớm.",
       "search_query": "gray hair elderly portrait",
-      "name": "Toc bac"
+      "name": "Toc bac",
+      "kind": "curiosity"
     }
   ],
   "whatif": [
     {
       "id": "whatif_new_01",
-      "topic": "whatif",
+      "topic": "Điều gì xảy ra nếu Mặt Trời đột ngột tắt?",
       "hook": "Điều gì xảy ra nếu Mặt Trời đột ngột tắt?",
       "body": "Trong 8 phút đầu, chúng ta vẫn thấy ánh sáng cũ. Sau đó, nhiệt độ Trái Đất sẽ giảm xuống âm 100 độ C trong vài tuần.",
       "payoff": "Sự sống sẽ chỉ tồn tại quanh các miệng núi lửa và lỗ khoan sâu.",
-      "search_query": "sun going out simulation"
+      "search_query": "sun going out simulation",
+      "kind": "whatif"
     },
     {
       "id": "blackhole",
@@ -298,11 +318,12 @@
   "facts": [
     {
       "id": "facts_new_01",
-      "topic": "facts",
+      "topic": "Vì sao bầu trời có màu xanh?",
       "hook": "Vì sao bầu trời có màu xanh?",
       "body": "Ánh sáng Mặt Trời chứa mọi màu, nhưng phân tử không khí tán xạ ánh sáng xanh nhiều hơn các màu khác. Hiện tượng này gọi là tán xạ Rayleigh.",
       "payoff": "Đó cũng là lý do hoàng hôn có màu đỏ cam.",
-      "search_query": "rayleigh scattering sky blue"
+      "search_query": "rayleigh scattering sky blue",
+      "kind": "facts"
     },
     {
       "id": "octopus3heart",
@@ -378,11 +399,12 @@
     },
     {
       "id": "honey_never",
-      "topic": "food",
+      "topic": "Mật ong không bao giờ hỏng.",
       "hook": "Mật ong không bao giờ hỏng.",
       "body": "Mật ong trong mộ Ai Cập 3000 năm vẫn ăn được.",
       "payoff": "Độ ẩm thấp và axit cao khiến vi khuẩn không sống nổi.",
-      "question": "Bạn biết thực phẩm nào bền hơn?"
+      "question": "Bạn biết thực phẩm nào bền hơn?",
+      "kind": "facts"
     },
     {
       "id": "octopus_blue",
@@ -394,11 +416,12 @@
     },
     {
       "id": "banana_berry",
-      "topic": "food",
+      "topic": "Quả chuối là một loại quả mọng.",
       "hook": "Quả chuối là một loại quả mọng.",
       "body": "Chuối là quả mọng vì hạt nằm bên trong thịt.",
       "payoff": "Dâu tây mới KHÔNG phải quả mọng.",
-      "question": "Bạn có tin dâu tây không phải quả mọng?"
+      "question": "Bạn có tin dâu tây không phải quả mọng?",
+      "kind": "facts"
     },
     {
       "id": "venus_day",
