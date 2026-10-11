@@ -309,6 +309,12 @@ def tick():
 		except Exception as e:
 			_note_error('create job fail ' + str(r['id']) + ': ' + str(e))
 	c.close()
+	# Recovery stale jobs (running > 5 min)
+	try:
+		from pipeline import recovery as _rec
+		_rec.recover_stale_jobs(300)
+	except Exception:
+		pass
 	drained = drain_pending()
 	published = 0
 	if _ap:
