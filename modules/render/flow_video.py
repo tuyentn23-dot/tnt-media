@@ -328,23 +328,46 @@ def _inner_body(p, b, ctx, prompt, out_path, wait, aspect, res):
 
 
 def create_with_timeout(prompt, out_path, wait, aspect, hard_timeout):
-	import threading
-	box = {}
-	def worker():
+	import subprocess, json, os, sys
+	worker = os.path.join(ROOT, 'ops', 'flow_worker.py')
+	if not os.path.exists(worker):
+		return {'ok': False, 'path': None, 'error': 'flow_worker.py missing'}
+	payload = {'prompt': prompt, 'out': out_path, 'wait': wait, 'aspect': aspect}
+	cmd = [sys.executable, worker, '--json', json.dumps(payload, ensure_ascii=False)]
+	flags = 0
+	for nm in ('CREATE_NEW_PROCESS_GROUP', 'CREATE_NO_WINDOW'):
+		flags = flags | getattr(subprocess, nm, 0)
+	log_p = os.path.join(ROOT, 'logs', 'flow_worker.log')
+	os.makedirs(os.path.dirname(log_p), exist_ok=True)
+	try:
+		f = open(log_p, 'a', encoding='utf-8')
+		f.write(chr(10) + chr(61)*40 + chr(10))
+		f.write('flow worker start: ' + str(out_path) + chr(10))
+		f.flush()
+		proc = subprocess.Popen(cmd, stdout=f, stderr=subprocess.STDOUT, creationflags=flags, cwd=ROOT)
+	except Exception as e:
+		return {'ok': False, 'path': None, 'error': 'spawn worker fail: ' + str(e)[:200]}
+	try:
+		proc.wait(timeout=hard_timeout)
+	except subprocess.TimeoutExpired:
 		try:
-			from ops import pw_bridge
-			box['r'] = pw_bridge.run_isolated(lambda: inner(prompt, out_path, wait, aspect))
-		except Exception as e:
-			box['e'] = e
-	th = threading.Thread(target=worker, daemon=True)
-	th.start()
-	th.join(hard_timeout)
-	if th.is_alive():
-		return {'ok': False, 'path': None, 'error': 'flow hard timeout ' + str(hard_timeout) + 's'}
-	if 'e' in box:
-		return {'ok': False, 'path': None, 'error': 'flow ex: ' + str(box['e'])[:200]}
-	return box.get('r') or {'ok': False, 'path': None, 'error': 'no result'}
-
+			proc.kill()
+		except Exception:
+			pass
+		try:
+			proc.wait(timeout=10)
+		except Exception:
+			pass
+		return {'ok': False, 'path': None, 'error': 'flow hard timeout ' + str(hard_timeout) + 's (worker killed)'}
+	try:
+		f.close()
+	except Exception:
+		pass
+	if proc.returncode != 0:
+		return {'ok': False, 'path': None, 'error': 'flow worker exit ' + str(proc.returncode)}
+	if os.path.exists(out_path):
+		return {'ok': True, 'path': out_path}
+	return {'ok': False, 'path': None, 'error': 'worker exit 0 but no file'}
 
 def create(prompt, out_path, wait=240, aspect=None):
 	aspect = aspect or ASPECT
