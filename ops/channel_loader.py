@@ -60,34 +60,31 @@ def save(cid, cfg):
 
 
 def load_content(cid, kind=None):
-	p = os.path.join(CHANNELS_DIR, cid, 'content_db.json')
-	static = {}
-	if os.path.exists(p):
-		try:
-			static = json.load(io.open(p, encoding='utf-8'))
-		except Exception:
-			static = {}
+	# KHONG dung content_db. Chi sinh moi bang AI.
 	if kind is None:
-		return static
-	items = list(static.get(kind, []))
+		return {}
+	items = []
 	try:
-		from ops import live_content as lc
-		niche = getattr(lc, 'CHANNEL_NICHE', {}).get(cid, 'general')
-		live = [] if niche == 'kids' else lc.generate(cid, kind, limit=20)
-		if live:
-			ids = set(it.get('id') for it in items)
-			for it in live:
-				if it.get('id') and it['id'] not in ids:
-					items.insert(0, it)
+		from ops import ai_content as ac
+		ai = ac.generate(cid, kind, limit=5)
+		if ai:
+			items = ai
 	except Exception as e:
-		print('[loader] live err:', str(e)[:80])
+		print('[loader] ai err:', str(e)[:120])
+	if not items:
+		try:
+			from ops import live_content as lc
+			niche = getattr(lc, 'CHANNEL_NICHE', {}).get(cid, 'general')
+			if niche != 'kids':
+				items = lc.generate(cid, kind, limit=5)
+		except Exception:
+			pass
 	try:
 		from ops import live_content as _lc2
 		items = _lc2.filter_items(items, cid)
 	except Exception:
 		pass
 	return items
-
 
 def load_topic_pool(cid):
 	p = os.path.join(CHANNELS_DIR, cid, 'topic_pool.json')

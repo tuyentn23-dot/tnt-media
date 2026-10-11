@@ -30,7 +30,7 @@ CHANNEL_NICHE = {
 
 FORBIDDEN_KW = ['hiếp dâm', 'cưỡng hiếp', 'tự tử', 'giết người', 'ma túy', 'đâm nhau']
 
-KIDS_FORBIDDEN = ['thủ tướng', 'tổng thống', 'chính phủ', 'bầu cử', 'quốc hội', 'bom', 'chiến tranh', 'xung đột', 'israel', 'ukraine', 'nga', 'biểu tình', 'tai nạn', 'tử vong', 'thiệt mạng', 'netanyahu', 'putin', 'trump', 'zelensky', 'ca sĩ', 'nghệ sĩ', 'tom cruise', 'hollywood', 'showbiz', 'ly hôn', 'kết hôn', 'tình ái', 'scandal', 'ma túy', 'tù', 'phạm', 'tội', 'u ám', 'kinh dị', 'chiến sự', 'quân sự', 'tên lửa', 'chết']
+KIDS_FORBIDDEN = ['thủ tướng', 'tổng thống', 'chính phủ', 'bầu cử', 'quốc hội', 'bom', 'chiến tranh', 'xung đột', 'israel', 'ukraine', 'nuoc nga', 'biểu tình', 'tai nạn', 'tử vong', 'thiệt mạng', 'netanyahu', 'putin', 'trump', 'zelensky', 'ca sĩ', 'nghệ sĩ', 'tom cruise', 'hollywood', 'showbiz', 'ly hôn', 'kết hôn', 'tình ái', 'scandal', 'ma túy', 'tù', 'phạm', 'tội', 'u ám', 'kinh dị', 'chiến sự', 'quân sự', 'tên lửa', 'chết']
 
 
 def _slug(s):
@@ -57,21 +57,30 @@ def _strip_html(s):
 	return txt.strip()
 
 
+def _norm(s):
+	import unicodedata
+	s = (s or '').lower()
+	s = unicodedata.normalize('NFD', s)
+	s = ''.join(c for c in s if unicodedata.category(c) != 'Mn')
+	return s
+
+
 def is_forbidden(text):
-	low = (text or '').lower()
+	low = _norm(text)
 	for k in FORBIDDEN_KW:
-		if k.lower() in low:
+		kl = _norm(k)
+		if (chr(32) + kl + chr(32)) in (chr(32) + low + chr(32)):
 			return True
 	return False
 
 
 def is_kids_unsafe(text):
-	low = (text or '').lower()
+	low = _norm(text)
 	for k in KIDS_FORBIDDEN:
-		if k.lower() in low:
+		kl = _norm(k)
+		if (chr(32) + kl + chr(32)) in (chr(32) + low + chr(32)):
 			return True
 	return False
-
 
 def rss_to_item(r, kind, channel):
 	title = _strip_html(r.get('title') or '')
