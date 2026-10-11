@@ -39,7 +39,42 @@ KIND_HINT = {
 }
 
 
+
+def ensure_ollama():
+	'''Kiem tra Ollama, tu start neu chua chay.'''
+	import urllib.request, subprocess, os, time, shutil
+	try:
+		urllib.request.urlopen(OLLAMA_URL + '/api/tags', timeout=2)
+		return True
+	except Exception:
+		pass
+	try:
+		exe = shutil.which('ollama')
+		if not exe:
+			return False
+		flags = 0x08000000 | 0x00000008
+		subprocess.Popen([exe, 'serve'], creationflags=flags, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+		for _ in range(15):
+			time.sleep(2)
+			try:
+				urllib.request.urlopen(OLLAMA_URL + '/api/tags', timeout=2)
+				return True
+			except Exception:
+				continue
+		return False
+	except Exception as e:
+		print('[ai_content] start err: ', str(e)[:120])
+		return False
+
+
 def _call_ollama(prompt, temperature=0.9, max_tokens=400, timeout=120):
+	if not ensure_ollama():
+		print('[ai_content] ollama unavailable')
+	try:
+		from ops import ollama_boot as _ob
+		_ob.ensure()
+	except Exception:
+		pass
 	body = json.dumps({
 		'model': OLLAMA_MODEL,
 		'prompt': prompt,
