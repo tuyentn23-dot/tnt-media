@@ -23,6 +23,21 @@ KIND_PROMPT = {
 	'animals': 'the gioi dong vat hoang da',
 }
 
+KIND_HINT = {
+	'anime': 'hook bat dau bang cau hoi ve nhan vat (VD: Naruto manh nhat khi nao?). Style vui, hype.',
+	'roblox': 'hook ve game/update Roblox (VD: Update Roblox moi co gi hot?). Style tre trung.',
+	'cute_animals': 'hook ve hanh dong de thuong (VD: Meo con lam gi khi buon ngu?). Style am ap, dang yeu.',
+	'meme': 'hook tinh huong hai huoc quen thuoc (VD: Khi ban het tien cuoi thang). Style vui nhe.',
+	'gacha': 'hook ve nhan vat gacha (VD: Gacha club co nhan vat nao hot?). Style cute.',
+	'facts': 'hook su that bat ngo (VD: Ban co biet bach tuot co 3 trai tim?). Style tom tat.',
+	'curiosity': 'hook cau hoi kich thich (VD: Vi sao bau troi xanh?). Style kham pha.',
+	'whatif': 'hook gia thuyet hap dan (VD: Neu mat troi bien mat?). Style hoi hop.',
+	'nostalgia': 'hook goi ky uc (VD: Ban con nho keo keo nay khong?). Style hoai niem.',
+	'lifestyle': 'hook loi song (VD: 3 thoi quen giup ban vui hon). Style huu ich.',
+	'food': 'hook mon an (VD: Pho Viet co gi dac biet?). Style ngon mieng.',
+	'animals': 'hook dong vat (VD: Su tu ngu bao nhieu tieng 1 ngay?). Style kham pha.',
+}
+
 
 def _call_ollama(prompt, temperature=0.9, max_tokens=400, timeout=120):
 	body = json.dumps({
@@ -64,13 +79,15 @@ def _seen(channel, kind, text):
 
 def generate_item(channel, kind, attempt=0):
 	subj = KIND_PROMPT.get(kind, 'noi dung thu vi')
+	hint = KIND_HINT.get(kind, '')
+	subj = subj + ((chr(10) + 'Goi y: ' + hint) if hint else '')
 	is_kids = channel == 'Mialinhcute'
 	nl = chr(10)
 	req = nl + 'QUAN TRONG: Tra loi HOAN TOAN bang TIENG VIET (khong dung tieng Anh).'
 	req += nl + 'Tra ve JSON 1 dong voi cac truong: topic, hook, body, payoff, search.'
-	req += nl + 'topic: cau mo ta ngan (<=60 ky tu).'
+	req += nl + 'topic: CHU DE CU THE (VD: Gau truc co may trai tim?). Khong ghi chung chung. <=60 ky tu.'
 	req += nl + 'hook: cau hoi hap dan (<=100 ky tu).'
-	req += nl + 'body: 2-3 cau giai thich (<=250 ky tu).'
+	req += nl + 'body: 2-3 cau thong tin CU THE tra loi hook (<=250 ky tu).'
 	req += nl + 'payoff: cau ket (<=80 ky tu).'
 	req += nl + 'search: 3-5 tu khoa TIENG ANH de tim video stock (VD: cute cat playing).'
 	if is_kids:
@@ -120,6 +137,14 @@ def generate(channel, kind, limit=5):
 		att += 1
 	return out
 
+
+
+
+def warmup():
+	try:
+		return _call_ollama('hi', max_tokens=5, timeout=30)
+	except Exception:
+		return ''
 
 def health():
 	try:
