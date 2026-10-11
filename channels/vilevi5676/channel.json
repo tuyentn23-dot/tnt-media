@@ -21,8 +21,8 @@
     "ai_overlay": true,
     "engine_order": [
       "pexels",
-      "flow",
       "gacha",
+      "flow",
       "vids",
       "ffmpeg"
     ],

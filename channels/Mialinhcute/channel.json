@@ -20,9 +20,9 @@
     "ai_wait": 300,
     "ai_overlay": true,
     "engine_order": [
+      "gacha",
       "pexels",
       "flow",
-      "gacha",
       "vids",
       "ffmpeg"
     ],
