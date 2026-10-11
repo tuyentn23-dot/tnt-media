@@ -403,7 +403,15 @@ class Pipeline(QWidget):
 			sb = self.log.verticalScrollBar()
 			sb.setValue(sb.maximum())
 		st = str(d.get('status') or '')
-		n = len([x for x in tail if 'rendered' in x])
+		# Dem tu DB
+		try:
+			import sqlite3
+			cc = sqlite3.connect('state/pipeline.db')
+			row = cc.execute('SELECT COUNT() FROM publications WHERE job_id=?', (jid,)).fetchone()
+			n = int(row[0]) if row else 0
+			cc.close()
+		except Exception:
+			n = len([x for x in tail if 'rendered' in x])
 		total = int(d.get('count') or 1)
 		running = bool(d.get('running'))
 		if not hasattr(self, '_started'):
