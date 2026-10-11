@@ -1,3 +1,6 @@
+import sys as _sys
+try: _sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+except Exception: pass
 # footage_fetcher.py - download fresh footage from Pexels (tab-indent)
 import os, sys, json, requests
 ROOT = os.getcwd()
@@ -57,9 +60,17 @@ def _dl_one(v, d):
 	download(bf['link'], dest) if bf else None
 	return dest if bf else None
 
+def _safe_name(s):
+	import re
+	s = str(s or 'x').strip().lower()
+	s = re.sub(r'[^a-z0-9à-ỿ\s-]+', '', s)
+	s = re.sub(r'\s+', '_', s)
+	return (s[:60] or 'x')
+
+
 def fetch_for_topic(topic, query=None, count=3):
 	q = query or topic
-	d = os.path.join(LIB, str(topic).strip().lower())
+	d = os.path.join(LIB, _safe_name(topic))
 	os.makedirs(d, exist_ok=True)
 	cache = load_cache()
 	used = set(cache.get('used', []))

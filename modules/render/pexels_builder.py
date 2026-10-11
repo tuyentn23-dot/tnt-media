@@ -1,3 +1,6 @@
+import sys as _sys
+try: _sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+except Exception: pass
 MODULE = {
 	'name': 'render.pexels_builder',
 	'version': '1.0.0',
@@ -91,7 +94,7 @@ def _fade_out(path):
 
 def build(query, out, music=None, seg_dur=2.0, n_segs=5, voice_text=None, captions=None):
 	import shutil
-	print('[1] Fetch Pexels: ' + query, flush=True)
+	print('[1] Fetch Pexels: ' + query.encode('ascii', 'replace').decode('ascii'), flush=True)
 	clips = pf.fetch_for_topic(query, n=n_segs + 2)
 	if len(clips) < 2:
 		try:

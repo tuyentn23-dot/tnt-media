@@ -1,6 +1,8 @@
 # -- coding: utf-8 --
 # pipeline/runner.py - Orchestrator chinh (HARD, cam sua)
 import os, sys, json, time, argparse
+os.environ.setdefault('PYTHONUTF8', '1')
+os.environ.setdefault('PYTHONIOENCODING', 'utf-8')
 try:
 	from ops import no_window # noqa
 except Exception:

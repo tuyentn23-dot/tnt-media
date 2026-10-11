@@ -1,6 +1,10 @@
 # -- coding: utf-8 --
 # modules/render/video.py v4.3.0 - Smart render dispatcher + Engine C overlay + auto CDP
 # Engines: flow (Veo) | vids (Google Vids) | ffmpeg (local) | auto
+try:
+	import sys as _sys
+	_sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+except Exception: pass
 import os, sys, json, time
 U = chr(95)
 FKEY = U + U + 'file' + U + U
