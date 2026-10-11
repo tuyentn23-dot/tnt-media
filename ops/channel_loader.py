@@ -59,10 +59,15 @@ def save(cid, cfg):
 	return p
 
 
-def load_content(cid, kind=None):
-	# KHONG dung content_db. Chi sinh moi bang AI.
+# Cache de tranh goi AI 2 lan trong cung 1 job
+_CONTENT_CACHE = {}
+
+def load_content(cid, kind=None, use_cache=True):
 	if kind is None:
 		return {}
+	key = (cid, kind)
+	if use_cache and key in _CONTENT_CACHE:
+		return list(_CONTENT_CACHE[key])
 	items = []
 	try:
 		from ops import ai_content as ac
@@ -84,6 +89,7 @@ def load_content(cid, kind=None):
 		items = _lc2.filter_items(items, cid)
 	except Exception:
 		pass
+	_CONTENT_CACHE[key] = list(items)
 	return items
 
 def load_topic_pool(cid):

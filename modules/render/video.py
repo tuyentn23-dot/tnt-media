@@ -214,12 +214,13 @@ def try_overlay(item, out, style):
 	return r
 
 
-def try_pexels(prompt, out, wait):
+def try_pexels(prompt, out, wait, item=None):
 	try:
 		from modules.render import pexels_engine as pe
 	except Exception as e:
 		return {'ok': False, 'error': 'import pexels_engine: ' + str(e)}
-	item = {'topic': prompt[:80], 'hook': prompt[:100], 'body': prompt, 'search_query': prompt}
+	if item is None:
+		item = {'topic': prompt[:80], 'hook': prompt[:100], 'body': prompt, 'search_query': prompt[:100]}
 	try:
 		r = pe.create(item, out, {})
 		if r.get('ok') and os.path.exists(out):
@@ -364,7 +365,10 @@ def create(prompt, out, engine='auto', wait=None, item=None, style=None, order_o
 		if not fn:
 			continue
 		log('try engine=' + eng)
-		r = fn(prompt, out, wait)
+		if eng == 'pexels':
+			r = fn(prompt, out, wait, item)
+		else:
+			r = fn(prompt, out, wait)
 		res['tried'].append({'engine': eng, 'ok': bool(r.get('ok')), 'error': r.get('error')})
 		if r.get('ok') and os.path.exists(out):
 			res.update({'ok': True, 'engine': eng, 'path': out})
