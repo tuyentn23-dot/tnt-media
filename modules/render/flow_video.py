@@ -139,8 +139,10 @@ def submit_prompt(pg, prompt):
 	return {'ok': False, 'err': 'no submit button'}
 
 
-def wait_video_tile(pg, wait):
+def wait_video_tile(pg, wait, stall_limit=120):
 	t0 = time.time()
+	last_tiles = 0
+	last_change = time.time()
 	while time.time() - t0 < wait:
 		time.sleep(10)
 		try:
@@ -148,7 +150,13 @@ def wait_video_tile(pg, wait):
 			if ap:
 				log('approve: ' + str(ap))
 			tiles = pg.locator('flow-video-tile').count()
-			log('wait t=' + str(int(time.time()-t0)) + ' tiles=' + str(tiles))
+			log('wait t=' + str(int(time.time()-t0)) + ' tiles=' + str(tiles) + ' stall=' + str(int(time.time()-last_change)))
+			if tiles != last_tiles:
+				last_tiles = tiles
+				last_change = time.time()
+			if (time.time() - last_change) > stall_limit:
+				log('STALL: abort after ' + str(stall_limit) + 's no progress')
+				return {'ok': False, 'err': 'stall ' + str(stall_limit) + 's'}
 			if tiles > 0:
 				time.sleep(15)
 				tiles2 = pg.locator('flow-video-tile').count()
@@ -318,13 +326,30 @@ def _inner_body(p, b, ctx, prompt, out_path, wait, aspect, res):
 	return res
 
 
-def create(prompt, out_path, wait=900, aspect=None):
+
+def create_with_timeout(prompt, out_path, wait, aspect, hard_timeout):
+	import threading
+	box = {}
+	def worker():
+		try:
+			from ops import pw_bridge
+			box['r'] = pw_bridge.run_isolated(lambda: inner(prompt, out_path, wait, aspect))
+		except Exception as e:
+			box['e'] = e
+	th = threading.Thread(target=worker, daemon=True)
+	th.start()
+	th.join(hard_timeout)
+	if th.is_alive():
+		return {'ok': False, 'path': None, 'error': 'flow hard timeout ' + str(hard_timeout) + 's'}
+	if 'e' in box:
+		return {'ok': False, 'path': None, 'error': 'flow ex: ' + str(box['e'])[:200]}
+	return box.get('r') or {'ok': False, 'path': None, 'error': 'no result'}
+
+
+def create(prompt, out_path, wait=240, aspect=None):
 	aspect = aspect or ASPECT
-	try:
-		from ops import pw_bridge
-		return pw_bridge.run_isolated(lambda: inner(prompt, out_path, wait, aspect))
-	except Exception as e:
-		return {'ok': False, 'path': None, 'error': 'flow ex: ' + str(e)}
+	hard = wait + 120
+	return create_with_timeout(prompt, out_path, wait, aspect, hard)
 
 
 def health():
