@@ -15,7 +15,19 @@
     "intro_seconds": 1.0,
     "outro_seconds": 2.0,
     "aspect": "16:9",
-    "max_duration_sec": 180
+    "max_duration_sec": 180,
+    "engine": "auto",
+    "ai_wait": 300,
+    "ai_overlay": true,
+    "engine_order": [
+      "pexels",
+      "flow",
+      "gacha",
+      "vids",
+      "ffmpeg"
+    ],
+    "engine_fallback_max": 4,
+    "engine_forbidden": []
   },
   "content": {
     "kinds": [

@@ -370,12 +370,14 @@ def render(item, out, style=None):
 	wait = style.get('ai_wait', DEFAULT_WAIT)
 	eo = style.get('engine_order') or []
 	use_order = None
-	if engine == 'auto':
-		use_order = list(FREE_ENGINES)
-	elif eo:
+	if eo:
 		use_order = [e for e in eo if e in ENGINES]
-		if engine in ENGINES and engine not in use_order:
+		if engine != 'auto' and engine in ENGINES and engine not in use_order:
 			use_order.insert(0, engine)
+	elif engine == 'auto':
+		use_order = list(FREE_ENGINES)
+	elif engine in ENGINES:
+		use_order = [engine]
 	r = create(prompt, out, engine=engine, wait=wait, item=item, style=style, order_override=use_order)
 	if r.get('ok'):
 		log('AI ok engine=' + str(r.get('engine')))
