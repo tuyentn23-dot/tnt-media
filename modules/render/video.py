@@ -298,18 +298,43 @@ def try_quote_v2(item, out, style):
 		return {'ok': False, 'error': 'quote_v2 ex: ' + str(e)[:200]}
 
 def try_gacha(prompt, out, wait):
-	try:
-		from ops import ffmpeg_render as fr
-	except Exception as e:
-		return {'ok': False, 'error': 'import fr: ' + str(e)}
+	import subprocess, json, os, sys
+	worker = os.path.join(ROOT, 'ops', 'gacha_worker.py')
+	if not os.path.exists(worker):
+		return {'ok': False, 'error': 'gacha_worker.py missing'}
 	item = {'topic': prompt[:80], 'hook': prompt[:100], 'body': prompt}
+	payload = {'item': item, 'out': out}
+	cmd = [sys.executable, worker, '--json', json.dumps(payload, ensure_ascii=False)]
+	flags = 0
+	for nm in ('CREATE_NEW_PROCESS_GROUP', 'CREATE_NO_WINDOW'):
+		flags = flags | getattr(subprocess, nm, 0)
+	log_p = os.path.join(ROOT, 'logs', 'gacha_worker.log')
+	os.makedirs(os.path.dirname(log_p), exist_ok=True)
 	try:
-		r = fr.render_gacha(item, out)
-		if os.path.exists(out):
-			return {'ok': True, 'path': out, 'engine': 'gacha'}
-		return {'ok': False, 'error': 'gacha no output'}
+		f = open(log_p, 'a', encoding='utf-8')
+		f.write(chr(10) + chr(61) * 40 + chr(10))
+		f.flush()
+		proc = subprocess.Popen(cmd, stdout=f, stderr=subprocess.STDOUT, creationflags=flags, cwd=ROOT)
 	except Exception as e:
-		return {'ok': False, 'error': 'gacha ex: ' + str(e)[:200]}
+		return {'ok': False, 'error': 'spawn gacha fail: ' + str(e)[:200]}
+	hard = 360
+	try:
+		proc.wait(timeout=hard)
+	except subprocess.TimeoutExpired:
+		try:
+			proc.kill()
+		except Exception:
+			pass
+		return {'ok': False, 'error': 'gacha timeout ' + str(hard) + 's'}
+	try:
+		f.close()
+	except Exception:
+		pass
+	if proc.returncode != 0:
+		return {'ok': False, 'error': 'gacha exit ' + str(proc.returncode)}
+	if os.path.exists(out):
+		return {'ok': True, 'path': out, 'engine': 'gacha'}
+	return {'ok': False, 'error': 'gacha no file'}
 
 ENGINES = {
 	'flow': try_flow,
