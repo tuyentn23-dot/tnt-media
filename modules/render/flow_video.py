@@ -261,9 +261,27 @@ def download_video(pg, out_path, quality=None):
 		dl = dl_info.value
 		os.makedirs(os.path.dirname(os.path.abspath(out_path)) or '.', exist_ok=True)
 		dl.save_as(out_path)
-		if os.path.exists(out_path):
-			return {'ok': True, 'path': out_path, 'bytes': os.path.getsize(out_path)}
-		return {'ok': False, 'err': 'no file'}
+		# Cho file ghi xong (save_as co the tra ve truoc khi ghi het)
+		last_sz = -1
+		stable = 0
+		for _i in range(120):
+			time.sleep(0.5)
+			try:
+				cur = os.path.getsize(out_path) if os.path.exists(out_path) else 0
+			except Exception:
+				cur = 0
+			if cur > 1024 and cur == last_sz:
+				stable += 1
+				if stable >= 2:
+					break
+			else:
+				stable = 0
+			last_sz = cur
+		sz = os.path.getsize(out_path) if os.path.exists(out_path) else 0
+		log('dl saved bytes=' + str(sz))
+		if sz > 1024:
+			return {'ok': True, 'path': out_path, 'bytes': sz}
+		return {'ok': False, 'err': 'file too small ' + str(sz)}
 	except Exception as e:
 		return {'ok': False, 'err': 'dl ex: ' + str(e)[:200]}
 
