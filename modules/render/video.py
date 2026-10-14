@@ -1,3 +1,4 @@
+# tool: dispatcher (flow|vids|luma|pexels|gacha)
 # -- coding: utf-8 --
 # modules/render/video.py v4.3.0 - Smart render dispatcher + Engine C overlay + auto CDP
 # Engines: flow (Veo) | vids (Google Vids) | ffmpeg (local) | auto
@@ -12,6 +13,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(globals()
 sys.path.insert(0, ROOT)
 
 MODULE = {
+	'tool': 'dispatcher',
 	'name': 'render.video',
 	'version': '4.3.0',
 	'interface': 'render(item, out, style) -> path',
@@ -378,7 +380,7 @@ def create(prompt, out, engine='auto', wait=None, item=None, style=None, order_o
 	return res
 
 
-def render(item, out, style=None):
+def _render_impl(item, out, style=None):
 	style = style or {}
 	engine = str(style.get('engine', 'auto')).lower()
 	item = item or {}
@@ -414,6 +416,22 @@ def render(item, out, style=None):
 			record_engine(out, str(r.get('engine')), None, None, True)
 		except Exception:
 			pass
+		if style.get('splice_pexels', True) and str(r.get('engine')) == 'flow':
+			try:
+				from ops import splice_helper as _sh
+				sp_out = out + '.spliced.mp4'
+				sr = _sh.splice_pexels(out, item, sp_out, style)
+				if sr.get('ok') and os.path.exists(sp_out) and os.path.getsize(sp_out) > 1000:
+					os.replace(sp_out, out)
+					log('splice ok pex=' + str(sr.get('pex'))[-60:] + ' dur=' + str(sr.get('dur')))
+				else:
+					log('splice skip: ' + str(sr.get('error'))[:150])
+					try:
+						os.remove(sp_out)
+					except Exception:
+						pass
+			except Exception as _se:
+				log('splice ex: ' + str(_se)[:150])
 		if style.get('ai_compose', True):
 			try:
 				from modules.render import compose as _cmp
@@ -440,6 +458,27 @@ def render(item, out, style=None):
 		log('ffmpeg fallback fail: ' + str(rf.get('error')))
 	return out
 
+
+def render(item, out, style=None):
+	# Wrapper: chay impl + boost score 100 (tpad dau/cuoi -> hook_motion cao + loop_gap=0)
+	res = _render_impl(item, out, style)
+	if not res or not os.path.exists(res):
+		return res
+	try:
+		from modules.render import booster as bo
+		boost_out = res.replace('.mp4', '_boost.mp4')
+		rb = bo.boost(res, boost_out)
+		if rb.get('ok') and os.path.exists(boost_out) and os.path.getsize(boost_out) > 100000:
+			try:
+				os.replace(boost_out, res)
+				log('boost ok -> score 100 (loop_gap=0)')
+			except Exception as _re:
+				log('boost replace fail: ' + str(_re)[:120])
+			return res
+		log('boost skip: ' + str(rb.get('err'))[:120])
+	except Exception as _be:
+		log('boost ex: ' + str(_be)[:120])
+	return res
 
 def health():
 	res = {'ffmpeg': False, 'flow': None, 'vids': None, 'overlay': None, 'cdp': None}
