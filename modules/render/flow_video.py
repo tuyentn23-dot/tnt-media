@@ -45,12 +45,27 @@ QUALITY_B64 = 'KHEpID0+IHsgY29uc3QgZWxzID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvckFsbCgnK
 
 
 def click_approve_if_present(pg):
+	# Flow UI moi: span.option-label Approve/Always approve -> click qua locator
+	try:
+		spans = pg.locator('span.option-label')
+		n = spans.count()
+		for i in range(n):
+			try:
+				txt = (spans.nth(i).inner_text() or '').strip()
+				if txt in ('Always approve', 'Approve'):
+					spans.nth(i).click(timeout=3000, force=True)
+					log('approve clicked: ' + txt)
+					return 'clicked ' + txt
+			except Exception:
+				continue
+	except Exception as e:
+		log('approve ex: ' + str(e)[:80])
+	# Fallback JS cu
 	try:
 		js = base64.b64decode(APPROVE_B64).decode()
 		return pg.evaluate(js)
 	except Exception as e:
 		return None
-
 
 def click_download_icon(pg):
 	js = base64.b64decode(DOWNLOAD_B64).decode()
@@ -62,12 +77,25 @@ def click_quality(pg, quality):
 	return pg.evaluate(js, quality)
 
 
+def dismiss_promo(pg):
+	try:
+		for sel in ['[aria-label=Close]', '[aria-label="Close"]', 'button[aria-label=close]', '[data-test-id=close]']:
+			el = pg.locator(sel).first
+			if el.count() > 0:
+				el.click(timeout=2000)
+				log('closed promo: ' + sel)
+				time.sleep(0.5)
+	except Exception:
+		pass
+
 def new_project(pg):
 	try:
 		pg.goto('https://flow.google.com/', wait_until='domcontentloaded', timeout=30000)
 		time.sleep(5)
 	except Exception:
 		pass
+	dismiss_promo(pg)
+	time.sleep(1)
 	clicked = False
 	try:
 		btns = pg.locator('button')
@@ -76,7 +104,7 @@ def new_project(pg):
 			try:
 				txt = (btns.nth(i).inner_text() or '').strip()
 				if 'New project' in txt:
-					btns.nth(i).click(timeout=8000)
+					btns.nth(i).click(timeout=8000, force=True)
 					clicked = True
 					log('clicked New project idx=' + str(i))
 					break
@@ -284,7 +312,7 @@ def _inner_body(p, b, ctx, prompt, out_path, wait, aspect, res):
 			for i in range(n):
 				try:
 					if "New project" in (btns.nth(i).inner_text() or ""):
-						btns.nth(i).click(timeout=8000)
+						btns.nth(i).click(timeout=8000, force=True)
 						res["steps"].append("clicked-new-project")
 						time.sleep(6)
 						break

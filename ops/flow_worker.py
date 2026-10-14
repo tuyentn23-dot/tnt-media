@@ -29,7 +29,7 @@ def main():
 		return 2
 	try:
 		from modules.render import flow_video as fv
-		r = fv.create(prompt, out, wait=wait, aspect=aspect)
+		r = fv.inner(prompt, out, wait, aspect)
 		print(json.dumps(r, ensure_ascii=False))
 		return 0 if r.get('ok') else 3
 	except Exception as e:
