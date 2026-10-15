@@ -4,6 +4,7 @@ import i18n, api
 from widgets import PageHeader
 
 STEPS = [
+	{'key': 'pipe.step.analyze', 'cat': 'analyze', 'color': '#FF375F', 'num': '0'},
 	{'key': 'pipe.step.content', 'cat': 'content', 'color': '#34C759', 'num': '1'},
 	{'key': 'pipe.step.render', 'cat': 'render', 'color': '#0A84FF', 'num': '2'},
 	{'key': 'pipe.step.voice', 'cat': 'voice', 'color': '#AF52DE', 'num': '3'},
@@ -140,6 +141,34 @@ class Pipeline(QWidget):
 		self.btn_analyze.clicked.connect(self.do_analyze)
 		row2.addWidget(self.btn_analyze)
 		body.addLayout(row2)
+		# Panel advisor
+		self.advisor_box = QFrame()
+		self.advisor_box.setObjectName('Card')
+		av = QVBoxLayout(self.advisor_box)
+		av.setContentsMargins(12, 10, 12, 10)
+		av.setSpacing(6)
+		ah = QHBoxLayout()
+		alt = QLabel(i18n.t('pipe.advisor.title'))
+		alt.setStyleSheet('font-weight:700')
+		ah.addWidget(alt)
+		ah.addStretch()
+		self.btn_adv_load = QPushButton(i18n.t('pipe.advisor.load'))
+		self.btn_adv_load.clicked.connect(self.load_advisor)
+		ah.addWidget(self.btn_adv_load)
+		self.btn_adv_force = QPushButton(i18n.t('pipe.advisor.force'))
+		self.btn_adv_force.clicked.connect(lambda: self.load_advisor(force=True))
+		ah.addWidget(self.btn_adv_force)
+		av.addLayout(ah)
+		self.advisor_text = QTextEdit()
+		self.advisor_text.setReadOnly(True)
+		self.advisor_text.setMinimumHeight(70)
+		self.advisor_text.setMaximumHeight(130)
+		av.addWidget(self.advisor_text)
+		self.advisor_ideas = QComboBox()
+		self.advisor_ideas.addItem(i18n.t('pipe.advisor.pick'), None)
+		self.advisor_ideas.currentIndexChanged.connect(self.apply_idea)
+		av.addWidget(self.advisor_ideas)
+		body.addWidget(self.advisor_box)
 		row3 = QHBoxLayout()
 		row3.addWidget(QLabel(i18n.t('pipe.mode') + ':'))
 		self.mode = QComboBox()
@@ -342,6 +371,33 @@ class Pipeline(QWidget):
 			self.logline(' => Da dang that: ' + str(pub) + ' | Cho duyet: ' + str(rend))
 		except Exception as e:
 			self.logline(' Loi: ' + str(e))
+	def load_advisor(self, force=False):
+		self.logline('> Lay goi y tu Advisor...')
+		try:
+			url = '/api/studio/advice?force=' + ('1' if force else '0')
+			cid = self.ch.currentData()
+			if cid:
+				url = url + '&channel_id=' + str(cid)
+			d = api.get(url)
+			adv = (d or {}).get('advisor') or {}
+			summary = adv.get('summary') or i18n.t('pipe.advisor.none')
+			self.advisor_text.setPlainText(summary)
+			self.advisor_ideas.clear()
+			self.advisor_ideas.addItem(i18n.t('pipe.advisor.pick'), None)
+			for idea in (adv.get('next_ideas') or []):
+				ttl = (idea.get('title') or '')[:80]
+				if ttl:
+					self.advisor_ideas.addItem(ttl, ttl)
+			self.logline(' Advisor OK: ' + str(len(adv.get('next_ideas') or [])) + ' y tuong')
+		except Exception as e:
+			self.logline('! Advisor loi: ' + str(e)[:120])
+
+	def apply_idea(self, idx):
+		t = self.advisor_ideas.currentData()
+		if t:
+			self.topic.setText(t)
+			self.logline('> Ap dung y tuong: ' + t[:60])
+
 	def on_when_changed(self, idx):
 		self.sched.setVisible(idx == 1)
 	def do_run(self):
