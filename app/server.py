@@ -30,6 +30,12 @@ try:
 except Exception as _e:
 	print("[server] prompts router FAIL:", str(_e)[:200])
 
+try:
+	from app._routes_analyze import router as _analyze_router
+	app.include_router(_analyze_router)
+except Exception as _e:
+	print("[server] analyze router FAIL:", str(_e)[:200])
+
 @app.get('/')
 def root():
 	return RedirectResponse(url='/ui/index.html')
@@ -235,6 +241,8 @@ def modules():
 	items = []
 	for k, v in mods.items():
 		r = reg.get(k, {}) or {}
+		if not r.get('visible', False):
+			continue
 		items.append({
 			'name': k,
 			'version': v['meta'].get('version'),
@@ -886,6 +894,46 @@ def analytics_feedback():
 	rows = c.execute('SELECT topic, COUNT(*) AS n, SUM(view_count) AS views FROM publications WHERE topic IS NOT NULL GROUP BY topic ORDER BY views DESC LIMIT 20').fetchall()
 	return {'items': [dict(r) for r in rows]}
 
+
+@app.get('/api/studio/history')
+def studio_history(limit: int = 10):
+	try:
+		import os as _os, glob as _g, json as _j
+		hd = _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))), 'state', 'studio_history')
+		if not _os.path.isdir(hd):
+			return {'ok': True, 'items': []}
+		files = sorted(_g.glob(_os.path.join(hd, '*.json')), reverse=True)[:int(limit)]
+		items = []
+		for f in files:
+			try:
+				d = _j.loads(open(f, encoding='utf-8').read())
+				items.append({'file': _os.path.basename(f), 'ts': d.get('ts'), 'summary': (d.get('advisor') or {}).get('summary', '')[:200], 'ideas': len((d.get('advisor') or {}).get('next_ideas', []))})
+			except Exception:
+				pass
+		return {'ok': True, 'items': items}
+	except Exception as e:
+		return {'ok': False, 'error': str(e)[:200]}
+
+@app.get('/api/studio/advice')
+def studio_advice(force: int = 0, channel_id: str = ''):
+	try:
+		from ops import studio_advisor as sa
+		if not force:
+			import os as _os, json as _json
+			cache = _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))), 'state', 'studio_advisor_cache.json')
+			if _os.path.exists(cache):
+				return _json.loads(open(cache, encoding='utf-8').read())
+		return sa.analyze(channel_id=(channel_id or None), force=bool(force))
+	except Exception as e:
+		return {'ok': False, 'error': str(e)[:300]}
+
+@app.get('/api/studio/snapshot')
+def studio_snapshot(channel_id: str = ''):
+	try:
+		from ops import studio_advisor as sa
+		return sa.fetch_channel_snapshot(channel_id=(channel_id or None))
+	except Exception as e:
+		return {'ok': False, 'error': str(e)[:300]}
 
 @app.get('/api/scheduler/status')
 def scheduler_status():
