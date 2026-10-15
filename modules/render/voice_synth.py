@@ -83,6 +83,42 @@ def _proportional_words(text, dur):
 	return segs
 
 
+
+def proportional_words_by_sentence(sentences, total_dur, gap=0.15):
+	# Chia timing THEO TUNG CAU - dam bao khong tron ranh gioi cau
+	# sentences: list[str] da duoc tach san
+	# total_dur: tong thoi luong audio (giay)
+	if not sentences or total_dur <= 0:
+		return []
+	# Tinh tong ky tu (khong tinh khoang trang thua) de phan bo thoi gian
+	lens = [max(1, len(str(s).strip())) for s in sentences]
+	total_len = sum(lens)
+	# Tru gap giua cac cau
+	n_gaps = max(0, len(sentences) - 1)
+	gap_total = gap * n_gaps
+	speech_dur = max(0.1, total_dur - gap_total)
+	segs = []
+	t = 0.0
+	for i, s in enumerate(sentences):
+		text = str(s).strip()
+		if not text:
+			continue
+		# Doan nay chiem bao nhieu thoi luong
+		d_seg = speech_dur * (lens[i] / total_len)
+		sent_start = t
+		sent_end = t + d_seg
+		# Chia tung tu trong cau
+		words = text.split()
+		if words:
+			w_total = sum(max(1, len(w)) for w in words)
+			wt = sent_start
+			for w in words:
+				wd = d_seg * (max(1, len(w)) / w_total)
+				segs.append([round(wt, 3), round(wt + wd, 3), w])
+				wt += wd
+		t = sent_end + gap
+	return segs
+
 def _synth_stream(txt, vid, out_mp3, rate, pitch):
 	import edge_tts
 	words = []

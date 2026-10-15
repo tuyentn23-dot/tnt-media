@@ -243,8 +243,16 @@ def compose(base_video, item, style, out):
 			if rv.get('ok'):
 				try:
 					from modules.render import voice_synth as vs
-					full = text + (' ' + cta if cta else '')
-					words = vs._proportional_words(full, vs.audio_dur(voice))
+					dur = vs.audio_dur(voice)
+					# CHIA TIMING THEO TUNG CAU (khong gop thanh full_text)
+					sent_list = list(sentences) if sentences else []
+					if cta:
+						sent_list = sent_list + [cta]
+					if sent_list:
+						words = vs.proportional_words_by_sentence(sent_list, dur)
+					else:
+						full = text + (' ' + cta if cta else '')
+						words = vs._proportional_words(full, dur)
 				except Exception:
 					words = []
 		except Exception as e:
