@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QLabel, QPushButton, QComboBox, QFrame, QTextEdit, QLineEdit, QDateTimeEdit, QProgressBar
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QLabel, QPushButton, QComboBox, QFrame, QTextEdit, QLineEdit, QDateTimeEdit, QProgressBar, QScrollArea
 from PySide6.QtCore import Qt
 import i18n, api
 from widgets import PageHeader
@@ -107,7 +107,11 @@ class Pipeline(QWidget):
 		root.setSpacing(0)
 		self.header = PageHeader(i18n.t('nav.pipeline'), i18n.t('pipe.title'))
 		root.addWidget(self.header)
-		body = QVBoxLayout()
+		scroll = QScrollArea()
+		scroll.setWidgetResizable(True)
+		scroll.setFrameShape(QFrame.NoFrame)
+		inner = QWidget()
+		body = QVBoxLayout(inner)
 		body.setContentsMargins(20, 16, 20, 16)
 		body.setSpacing(14)
 		row1 = QHBoxLayout()
@@ -225,7 +229,9 @@ class Pipeline(QWidget):
 		self.run.clicked.connect(self.do_run)
 		bottom.addWidget(self.run)
 		body.addLayout(bottom)
-		root.addLayout(body)
+		body.addStretch()
+		scroll.setWidget(inner)
+		root.addWidget(scroll)
 		self.load_channels()
 		self.load_kinds()
 		self.load_modules()

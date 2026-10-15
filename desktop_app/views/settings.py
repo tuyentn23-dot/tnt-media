@@ -1,7 +1,7 @@
 # -- coding: utf-8 --
 # desktop_app/views/settings.py
 import os
-from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QComboBox, QFrame, QTextEdit, QMessageBox, QListWidget, QListWidgetItem)
+from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QComboBox, QFrame, QTextEdit, QMessageBox, QListWidget, QListWidgetItem, QScrollArea)
 from PySide6.QtCore import Qt
 import i18n, api
 from widgets import PageHeader
@@ -16,7 +16,11 @@ class Settings(QWidget):
 		root.setSpacing(0)
 		self.header = PageHeader(i18n.t('nav.settings'), 'Cau hinh he thong')
 		root.addWidget(self.header)
-		body = QVBoxLayout()
+		scroll = QScrollArea()
+		scroll.setWidgetResizable(True)
+		scroll.setFrameShape(QFrame.NoFrame)
+		inner = QWidget()
+		body = QVBoxLayout(inner)
 		body.setContentsMargins(20, 16, 20, 16)
 		body.setSpacing(12)
 		# Card 1
@@ -107,7 +111,9 @@ class Settings(QWidget):
 		self.out.setReadOnly(True)
 		self.out.setMinimumHeight(100)
 		body.addWidget(self.out)
-		root.addLayout(body)
+		body.addStretch()
+		scroll.setWidget(inner)
+		root.addWidget(scroll)
 		self.refresh_creds()
 		self.refresh_backups()
 		self.refresh_log_list()

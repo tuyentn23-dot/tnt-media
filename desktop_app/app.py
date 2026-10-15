@@ -221,7 +221,57 @@ class MainWindow(QMainWindow):
 		self._apply_theme()
 
 
+def _is_up(host='127.0.0.1', port=7777, timeout=0.6):
+	import socket
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	s.settimeout(timeout)
+	try:
+		s.connect((host, port))
+		return True
+	except Exception:
+		return False
+	finally:
+		s.close()
+
+def _spawn_detached(args, cwd, log_name):
+	import subprocess
+	os.makedirs(os.path.join(cwd, 'logs'), exist_ok=True)
+	lf = open(os.path.join(cwd, 'logs', log_name), 'a', encoding='utf-8')
+	flags = 0
+	for nm in ('CREATE_NEW_PROCESS_GROUP', 'CREATE_NO_WINDOW'):
+		flags = flags | getattr(subprocess, nm, 0)
+	try:
+		p = subprocess.Popen(args, cwd=cwd, stdout=lf, stderr=subprocess.STDOUT, creationflags=flags, close_fds=True)
+		return p.pid
+	except Exception:
+		return None
+
+def _bootstrap():
+	base = _ROOT
+	py = os.path.join(base, '.venv', 'Scripts', 'python.exe')
+	if not os.path.exists(py):
+		py = sys.executable
+	if not _is_up(port=7777):
+		_spawn_detached([py, os.path.join(base, 'app', 'server.py')], base, 'desktop_server.log')
+	if not _sched_ok(base):
+		_spawn_detached([py, '-m', 'pipeline.scheduler'], base, 'desktop_scheduler.log')
+
+def _sched_ok(base):
+	import json, time
+	p = os.path.join(base, 'state', 'scheduler_status.json')
+	if not os.path.exists(p):
+		return False
+	try:
+		age = time.time() - os.path.getmtime(p)
+		return age < 170
+	except Exception:
+		return False
+
 def run():
+	try:
+		_bootstrap()
+	except Exception:
+		pass
 	try:
 		import ctypes
 		ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID('TNT.Media.Studio.1')
