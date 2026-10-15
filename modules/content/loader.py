@@ -1,34 +1,26 @@
-# -- coding: utf-8 --
-# modules/content/loader.py - Load content items cho channel
-import os, sys
-ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, ROOT)
+"""Content loader."""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
 
 MODULE = {
+	'tool': 'content-loader',
 	'name': 'content.loader',
 	'version': '1.0.0',
-	'interface': 'load(channel_id, kind) -> list[dict]',
-	'config_schema': {'channel_id': 'str', 'kind': 'str'},
-	'deps': [],
-	'health': 'True'
+	'interface': 'ContentLoader(data_dir).load_json(name) -> dict',
+	'deps': []
 }
 
 
-def load(channel_id, kind=None):
-	from ops import channel_loader as ch
-	if kind:
-		return ch.load_content(channel_id, kind)
-	cfg = ch.load(channel_id)
-	kinds = cfg.get('content', {}).get('kinds', [])
-	out = []
-	for k in kinds:
-		out.extend(ch.load_content(channel_id, k))
-	return out
+class ContentLoader:
+	def __init__(self, data_dir='data/content') -> None:
+		self.data_dir = Path(data_dir)
 
-
-def health():
-	try:
-		from ops import channel_loader
-		return True
-	except Exception:
-		return False
+	def load_json(self, name):
+		path = self.data_dir / name
+		if not path.exists():
+			return None
+		with path.open(encoding='utf-8') as fh:
+			return json.load(fh)

@@ -9,7 +9,7 @@
     "unlimited": true,
     "note": "Ổn định, miễn phí không giới hạn. Nguồn clip thật, LQ keyword.",
     "when": "Khi cần video từ kho Pexels miễn phí. Phù hợp nội dung lifestyle, thiên nhiên.",
-    "visible": true,
+    "visible": false,
     "group": 2
   },
   "render.ai_video": {
@@ -35,7 +35,7 @@
     "unlimited": true,
     "note": "Module lõi, ổn định. Dùng cho pipeline chính.",
     "when": "Wrapper ffmpeg cơ bản. Dùng khi chỉ cần render nhanh từ item + style.",
-    "visible": true,
+    "visible": false,
     "group": 2
   },
   "render.short": {
@@ -113,7 +113,7 @@
     "unlimited": true,
     "note": "Cần cho retention.",
     "when": "Thêm phụ đề ASS burn-in. Dùng khi cần subtitle/hook hiện trên video.",
-    "visible": true,
+    "visible": false,
     "group": 2
   },
   "render.caption_sync": {
@@ -126,7 +126,7 @@
     "unlimited": true,
     "note": "Ghép với voice_sync.",
     "when": "Đồng bộ caption khớp timing voice. Dùng khi đã có voice sẵn.",
-    "visible": true,
+    "visible": false,
     "group": 2
   },
   "render.voice_sync": {
@@ -139,7 +139,7 @@
     "unlimited": true,
     "note": "Nền tảng caption sync.",
     "when": "Synth từng câu + đo duration. Dùng khi cần timing caption chính xác.",
-    "visible": true,
+    "visible": false,
     "group": 2
   },
   "render.pexels_fetch": {
@@ -152,7 +152,7 @@
     "unlimited": true,
     "note": "Nguồn footage chính.",
     "when": "Tải clip Pexels theo keyword + cache. Dùng làm bước đầu của pipeline Pexels.",
-    "visible": true,
+    "visible": false,
     "group": 2
   },
   "render.video_builder": {
@@ -242,7 +242,7 @@
     "free": true,
     "unlimited": true,
     "note": "Cần cải thiện chất lượng script.",
-    "visible": true,
+    "visible": false,
     "group": 1
   },
   "content.topic_guard": {
@@ -254,7 +254,7 @@
     "free": true,
     "unlimited": true,
     "note": "Cần cải thiện chất lượng script.",
-    "visible": true,
+    "visible": false,
     "group": 1
   },
   "content.followup_item": {
@@ -278,7 +278,7 @@
     "free": true,
     "unlimited": true,
     "note": "Cần cải thiện chất lượng script.",
-    "visible": true,
+    "visible": false,
     "group": 1
   },
   "content.viral_script": {
@@ -339,7 +339,7 @@
     "unlimited": true,
     "note": "Fix hinh anh khong lien quan.",
     "when": "BẮT BUỘC khi build video từ quote. Map category -> query cụ thể.",
-    "visible": true,
+    "visible": false,
     "group": 2
   },
   "render.vn_guard": {
@@ -352,7 +352,7 @@
     "unlimited": true,
     "note": "Hard requirement - never use Vietnamese without diacritics.",
     "when": "BẮT BUỘC cho mọi text tiếng Việt. Reject text không dấu.",
-    "visible": true,
+    "visible": false,
     "group": 2
   },
   "render.mix_core": {
@@ -378,7 +378,7 @@
     "unlimited": true,
     "note": "Required for score >80 gate.",
     "when": "Dùng cuối pipeline. tpad -> loop_gap=0 -> score 100.",
-    "visible": true,
+    "visible": false,
     "group": 2
   },
   "render.quote_pipeline": {
@@ -391,7 +391,160 @@
     "unlimited": true,
     "note": "Entry point cho quote video.",
     "when": "ENTRY POINT cho quote video. Chạy toàn bộ: guard -> mix -> compose -> boost -> gate.",
+    "visible": false,
+    "group": 2
+  },
+  "analyze.video_analyzer": {
+    "title": "Video Analyzer (scene + quality)",
+    "cat": "analyze",
+    "mech": "Phan tich video: scene detection, brightness, black-frame, HTML report.",
+    "strength": "high",
+    "keep": true,
+    "free": true,
+    "unlimited": true,
+    "note": "Tool phan tich video moi.",
+    "when": "Dung dau quy trinh: phat hien loi truoc khi dang.",
+    "visible": true,
+    "group": 0
+  },
+  "render.flow_video": {
+    "title": "Flow (Veo) Video",
+    "cat": "render",
+    "mech": "Render video tu Google Flow Veo qua Playwright CDP.",
+    "strength": "high",
+    "keep": true,
+    "free": "limited",
+    "unlimited": false,
+    "note": "15 credit/video, chat luong cao.",
+    "when": "Video AI chat luong cao, can Chrome 9222.",
     "visible": true,
     "group": 2
+  },
+  "render.pexels_engine": {
+    "title": "Pexels Engine",
+    "cat": "render",
+    "mech": "Ghep video stock tu Pexels theo keyword, mien phi.",
+    "strength": "high",
+    "keep": true,
+    "free": true,
+    "unlimited": true,
+    "note": "Mien phi, on dinh.",
+    "when": "Can video stock mien phi.",
+    "visible": true,
+    "group": 2
+  },
+  "render.compose": {
+    "title": "Compose (voice+caption+music)",
+    "cat": "render",
+    "mech": "Ghep voice + caption karaoke + nhac nen + hook overlay.",
+    "strength": "high",
+    "keep": true,
+    "free": true,
+    "unlimited": true,
+    "note": "Buoc bat buoc cua pipeline.",
+    "when": "Sau khi co video tho, truoc boost.",
+    "visible": false,
+    "group": 2
+  },
+  "render.quote_engine": {
+    "title": "Quote Engine",
+    "cat": "render",
+    "mech": "Tao video quote tu thu vien.",
+    "strength": "medium",
+    "keep": true,
+    "free": true,
+    "unlimited": true,
+    "note": "",
+    "when": "",
+    "visible": false,
+    "group": 2
+  },
+  "render.produce": {
+    "title": "Produce",
+    "cat": "render",
+    "mech": "San xuat video hoan chinh.",
+    "strength": "medium",
+    "keep": true,
+    "free": true,
+    "unlimited": true,
+    "note": "",
+    "when": "",
+    "visible": false,
+    "group": 2
+  },
+  "render.stock_fallback": {
+    "title": "Stock Fallback",
+    "cat": "render",
+    "mech": "Fallback stock khi engine khac fail.",
+    "strength": "medium",
+    "keep": true,
+    "free": true,
+    "unlimited": true,
+    "note": "",
+    "when": "",
+    "visible": false,
+    "group": 2
+  },
+  "render.voice_synth": {
+    "title": "Voice Synth (edge-tts)",
+    "cat": "render",
+    "mech": "Synth voice + do timing caption.",
+    "strength": "high",
+    "keep": true,
+    "free": true,
+    "unlimited": true,
+    "note": "Da patch endpoint moi 2026-10-14.",
+    "when": "Dung trong compose.",
+    "visible": false,
+    "group": 2
+  },
+  "render.gacha": {
+    "title": "Gacha Anime",
+    "cat": "render",
+    "mech": "Render video gacha anime tu sprite.",
+    "strength": "medium",
+    "keep": true,
+    "free": true,
+    "unlimited": true,
+    "note": "",
+    "when": "Video gacha anime",
+    "group": 2,
+    "visible": true
+  },
+  "content.ollama": {
+    "title": "Ollama Content",
+    "cat": "content",
+    "mech": "Sinh noi dung bang Ollama (qwen2.5:7b).",
+    "strength": "high",
+    "keep": true,
+    "free": true,
+    "unlimited": true,
+    "note": "",
+    "when": "Sinh content tu dong bang LLM local.",
+    "visible": true
+  },
+  "content.trend": {
+    "title": "Trend Analyzer",
+    "cat": "content",
+    "mech": "Phan tich xu huong tu YouTube/Google.",
+    "strength": "high",
+    "keep": true,
+    "free": true,
+    "unlimited": true,
+    "note": "",
+    "when": "Lay chu de dang hot.",
+    "visible": true
+  },
+  "content.manual": {
+    "title": "Manual Content",
+    "cat": "content",
+    "mech": "Sinh noi dung theo prompt thu cong.",
+    "strength": "medium",
+    "keep": true,
+    "free": true,
+    "unlimited": true,
+    "note": "",
+    "when": "Khi co prompt cu the.",
+    "visible": true
   }
 }
