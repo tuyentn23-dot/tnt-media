@@ -38,9 +38,6 @@ class StepCard(QFrame):
 		self.badge.setStyleSheet('color:#8E8E93;font-size:11px;font-weight:600')
 		head.addWidget(self.badge)
 		lay.addLayout(head)
-		lbl = QLabel(i18n.t('pipe.module'))
-		lbl.setObjectName('PageSub')
-		lay.addWidget(lbl)
 		self.mod = QComboBox()
 		self.mod.setMinimumWidth(0)
 		self.mod.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
@@ -48,20 +45,19 @@ class StepCard(QFrame):
 		self.mod.currentIndexChanged.connect(self._on_mod_change)
 		lay.addWidget(self.mod)
 		self.hint = QLabel('')
-		self.hint.setWordWrap(True)
-		self.hint.setStyleSheet('color:#4f8cff;font-size:10px;padding:2px 0')
-		self.hint.setMinimumHeight(18)
+		self.hint.setWordWrap(False)
+		self.hint.setStyleSheet('color:#4f8cff;font-size:10px;padding:1px 0')
+		self.hint.setMinimumHeight(16)
+		self.hint.setMaximumHeight(16)
 		lay.addWidget(self.hint)
 		self.bar = QProgressBar()
 		self.bar.setRange(0, 100)
 		self.bar.setValue(0)
 		self.bar.setTextVisible(False)
-		self.bar.setFixedHeight(6)
+		self.bar.setFixedHeight(4)
 		lay.addWidget(self.bar)
 		self._meta = {}
 		self.msg = QLabel('')
-		self.msg.setStyleSheet('color:#8E8E93;font-size:11px')
-		lay.addWidget(self.msg)
 
 	def _on_mod_change(self):
 		d = getattr(self, '_meta', {}) or {}
@@ -70,12 +66,8 @@ class StepCard(QFrame):
 			self.hint.setText(i18n.t('pipe.hint_empty'))
 			return
 		m = d.get(cur, {}) or {}
-		parts = []
-		if m.get('when'):
-			parts.append(i18n.t('pipe.when_to_use') + ': ' + str(m.get('when')))
-		if m.get('desc'):
-			parts.append(i18n.t('pipe.func') + ': ' + str(m.get('desc')))
-		self.hint.setText(chr(10).join(parts) if parts else i18n.t('pipe.hint_empty'))
+		w = str(m.get('when') or '')[:70]
+		self.hint.setText(w if w else i18n.t('pipe.hint_empty'))
 
 	def set_status(self, state, msg='', pct=None):
 		c = STATES.get(state, '#8E8E93')
@@ -189,8 +181,8 @@ class Pipeline(QWidget):
 		# HANG 4: log
 		self.log = QTextEdit()
 		self.log.setReadOnly(True)
-		self.log.setMinimumHeight(60)
-		self.log.setMaximumHeight(120)
+		self.log.setMinimumHeight(50)
+		self.log.setMaximumHeight(90)
 		body.addWidget(self.log, 1)
 		# HANG 5: run button
 		bottom = QHBoxLayout()
