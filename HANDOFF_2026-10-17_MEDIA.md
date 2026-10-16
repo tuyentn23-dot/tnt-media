@@ -39,19 +39,22 @@
 
 ## 4. ƯU TIÊN PHIÊN SAU
 
-Cao:
-1. Verify publish qua UI (click nút Đăng thật)
-2. Verify music-only mode (checkbox → không caption)
-3. Test job với music_only=True
-
-Trung bình:
-4. studio_advisor dùng viral_ref đã inject
-5. TikTok/IG bị chặn yt-dlp — cần Playwright nếu muốn
-6. UI polish
-
-Thấp:
-7. Xoá 8 file .bak_before_syntax_repair_20260906
-8. Check auto_cleanup trigger
+TỐI KHẨN CẤP:
+- [HOT] Publish "thành công" nhưng không thấy trên YouTube — Video báo published nhưng không có trên YT, job cũng biến mất khỏi hàng đợi. Cần:
+ 1. Verify youtube_id trong DB có thật: gọi https://youtu.be/{id} hoặc YouTube API videos.list
+ 2. Check ops/os_publish.py có trả id giả không?
+ 3. Nếu id đúng nhưng video bị YT xóa → thêm verify sau 5 phút
+ 4. Job biến mất khỏi queue: check status=published có filter đúng không?
+ 5. Fix: lưu yt_verified_at + auto-verify sau 1h
+- [HOT] Notification rõ ràng — Hiện ok: true/false khó hiểu. Sửa UI:
+ - Thành công: ✅ icon xanh + "Đã đăng lên YouTube: {url}" + nút mở link
+ - Thất bại: ❌ icon đỏ + "Lỗi: {lý do cụ thể}" (vd quality gate, token hết hạn, mạng lỗi)
+ - Không hiện raw JSON. Parse error → dịch sang tiếng Việt
+ - File: desktop_app/views/queue.py, desktop_app/widgets.py
+- Debug job failed — Trong ảnh có 4 job failed (anime, animals). Cần:
+ 1. Check log: logs/runnerjob_*.log
+ 2. Phân loại lỗi: vn_guard? quality gate? timeout? token?
+ 3. Thêm retry cho lỗi tạm thời
 
 ## 5. TOOLING WARNINGS
 
