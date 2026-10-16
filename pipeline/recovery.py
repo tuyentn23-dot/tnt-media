@@ -4,7 +4,7 @@ import time, datetime
 from pipeline import state
 
 
-def recover_stale_jobs(max_age_sec=300):
+def recover_stale_jobs(max_age_sec=1800):
 	c = state.init()
 	try:
 		rows = c.execute("SELECT id, updated_at FROM jobs WHERE status='running'").fetchall()

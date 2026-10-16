@@ -15,7 +15,7 @@ try:
 except Exception:
 	HAS_MULTI = False
 import i18n, api
-from widgets import PageHeader, busy_wrap, busy_wrap
+from widgets import PageHeader, busy_wrap
 
 
 class VideoDialog(QDialog):

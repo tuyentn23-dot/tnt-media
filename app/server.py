@@ -270,7 +270,9 @@ def create_job(payload: dict):
 	if errs:
 		return JSONResponse({'ok': False, 'errors': errs}, status_code=400)
 	c = state.init()
-	c.execute('INSERT INTO jobs (id, channel_id, topic, kind, length_override, voice_override, voice_preset, music_mood, count, require_approval, run_at, repeat, status, priority, created_by, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', (j.job_id, j.channel_id, j.topic, j.kind, j.length_override, j.voice_override, j.voice_preset, j.music_mood, j.count, int(j.require_approval), j.run_at, j.repeat, 'pending', j.priority, j.created_by, state.now(), state.now()))
+	import json as _j
+	mod_json = _j.dumps(j.modules or {}, ensure_ascii=False)
+	c.execute('INSERT INTO jobs (id, channel_id, topic, kind, length_override, voice_override, voice_preset, music_mood, count, require_approval, run_at, repeat, status, priority, created_by, created_at, updated_at, modules) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', (j.job_id, j.channel_id, j.topic, j.kind, j.length_override, j.voice_override, j.voice_preset, j.music_mood, j.count, int(j.require_approval), j.run_at, j.repeat, 'pending', j.priority, j.created_by, state.now(), state.now(), mod_json))
 	c.commit()
 	return {'ok': True, 'job_id': j.job_id}
 
@@ -610,10 +612,17 @@ def jobs_approve_all():
 def run_job(job_id: str, dry_run: bool = False):
 	import subprocess
 	c = state.connect()
-	row = c.execute('SELECT id, channel_id, kind, topic, length_override, voice_override, voice_preset, music_mood, count, require_approval FROM jobs WHERE id=?', (job_id,)).fetchone()
+	row = c.execute('SELECT id, channel_id, kind, topic, length_override, voice_override, voice_preset, music_mood, count, require_approval, modules FROM jobs WHERE id=?', (job_id,)).fetchone()
 	if not row:
 		return JSONResponse({'ok': False, 'error': 'job not found'}, status_code=404)
-	job_dict = {'job_id': row['id'], 'channel_id': row['channel_id'], 'kind': row['kind'], 'topic': row['topic'], 'length_override': row['length_override'], 'voice_override': row['voice_override'], 'voice_preset': (row['voice_preset'] if 'voice_preset' in row.keys() else None), 'music_mood': row['music_mood'], 'count': row['count'], 'require_approval': bool(row['require_approval']), 'created_by': 'ui'}
+	import json as _j2
+	mod_data = {}
+	try:
+		if 'modules' in row.keys() and row['modules']:
+			mod_data = _j2.loads(row['modules'])
+	except Exception:
+		mod_data = {}
+	job_dict = {'job_id': row['id'], 'channel_id': row['channel_id'], 'kind': row['kind'], 'topic': row['topic'], 'length_override': row['length_override'], 'voice_override': row['voice_override'], 'voice_preset': (row['voice_preset'] if 'voice_preset' in row.keys() else None), 'music_mood': row['music_mood'], 'count': row['count'], 'require_approval': bool(row['require_approval']), 'created_by': 'ui', 'modules': mod_data}
 	cmd = [sys.executable, '-m', 'pipeline.runner', '--job-json', json.dumps(job_dict, ensure_ascii=False)]
 	if dry_run:
 		cmd.append('--dry-run')
@@ -666,10 +675,12 @@ def del_topic(tid: int):
 
 
 @app.post('/api/trends/collect')
-def trends_collect():
+def trends_collect(payload: dict = None):
 	try:
 		from ops import trend_analyzer as ta
-		r = ta.run()
+		p = payload or {}
+		niche = p.get('niche') or p.get('kind')
+		r = ta.run(limit=int(p.get('limit', 30)), niche=niche)
 		return r
 	except Exception as e:
 		return {'ok': False, 'error': str(e)[:200]}
@@ -1098,6 +1109,60 @@ def quote_generate(payload: dict):
 	except Exception as e:
 		import traceback
 		return JSONResponse({'ok': False, 'error': str(e)[:300], 'trace': traceback.format_exc()[-500:]}, status_code=500)
+
+@app.post('/api/viral/search')
+def viral_search(payload: dict = None):
+	try:
+		from ops import viral_research as vr
+		p = payload or {}
+		q = p.get('query') or ''
+		if not q:
+			return {'ok': False, 'error': 'missing query'}
+		r = vr.run_search(q, max_results=int(p.get('max_results', 15)), platform=p.get('platform', 'youtube'))
+		if r.get('ok'):
+			r['saved'] = vr.save(r, name='search')
+		return r
+	except Exception as e:
+		return {'ok': False, 'error': str(e)[:200]}
+
+
+@app.post('/api/viral/youtube')
+def viral_youtube(payload: dict = None):
+	try:
+		from ops import viral_research as vr
+		p = payload or {}
+		r = vr.run_youtube(region=p.get('region', 'VN'), max_results=int(p.get('max_results', 30)))
+		if r.get('ok'):
+			r['saved'] = vr.save(r, name='youtube')
+		return r
+	except Exception as e:
+		return {'ok': False, 'error': str(e)[:200]}
+
+
+@app.post('/api/viral/hashtag')
+def viral_hashtag(payload: dict = None):
+	try:
+		from ops import viral_research as vr
+		p = payload or {}
+		platform = p.get('platform') or ''
+		tag = p.get('tag') or ''
+		if not platform or not tag:
+			return {'ok': False, 'error': 'missing platform or tag'}
+		r = vr.run_hashtag(platform, tag, max_results=int(p.get('max_results', 15)))
+		if r.get('ok'):
+			r['saved'] = vr.save(r, name='hashtag')
+		return r
+	except Exception as e:
+		return {'ok': False, 'error': str(e)[:200]}
+
+
+@app.get('/api/viral/latest')
+def viral_latest(n: int = 3):
+	try:
+		from ops import viral_research as vr
+		return {'ok': True, 'items': vr.latest(n)}
+	except Exception as e:
+		return {'ok': False, 'error': str(e)[:200]}
 
 def main():
 	import uvicorn

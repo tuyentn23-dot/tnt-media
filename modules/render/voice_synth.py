@@ -112,9 +112,11 @@ def proportional_words_by_sentence(sentences, total_dur, gap=0.15):
 		if words:
 			w_total = sum(max(1, len(w)) for w in words)
 			wt = sent_start
-			for w in words:
+			last_idx = len(words) - 1
+			for wi, w in enumerate(words):
 				wd = d_seg * (max(1, len(w)) / w_total)
-				segs.append([round(wt, 3), round(wt + wd, 3), w])
+				is_end = (wi == last_idx)
+				segs.append([round(wt, 3), round(wt + wd, 3), w, is_end])
 				wt += wd
 		t = sent_end + gap
 	return segs

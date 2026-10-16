@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QLabel, QPushButton, QComboBox, QFrame, QTextEdit, QLineEdit, QDateTimeEdit, QProgressBar, QScrollArea, QSizePolicy
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QLabel, QPushButton, QComboBox, QFrame, QTextEdit, QLineEdit, QDateTimeEdit, QProgressBar, QScrollArea, QSizePolicy, QCheckBox
 from PySide6.QtCore import Qt
 import i18n, api
 from widgets import PageHeader
@@ -17,11 +17,11 @@ class StepCard(QFrame):
 		super().__init__(parent)
 		self.setObjectName('Card')
 		self.info = info
-		self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
-		self.setMaximumWidth(220)
+		self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+		self.setMinimumHeight(130)
 		lay = QVBoxLayout(self)
-		lay.setContentsMargins(8, 6, 8, 6)
-		lay.setSpacing(4)
+		lay.setContentsMargins(14, 12, 14, 12)
+		lay.setSpacing(6)
 		head = QHBoxLayout()
 		dot = QLabel()
 		dot.setFixedSize(14, 14)
@@ -107,6 +107,7 @@ class Pipeline(QWidget):
 		body = QVBoxLayout()
 		body.setContentsMargins(14, 8, 14, 8)
 		body.setSpacing(6)
+		body.setAlignment(Qt.AlignTop)
 		# HANG 1: channel + kind + length + mode + when + schedule
 		row1 = QHBoxLayout()
 		row1.setSpacing(6)
@@ -142,19 +143,30 @@ class Pipeline(QWidget):
 		row1.addWidget(self.sched)
 		row1.addStretch()
 		body.addLayout(row1)
-		# HANG 2: topic + trend + analyze + voice + preset + advisor ideas
+		# HANG 2: advisor ideas + voice + preset
 		row2 = QHBoxLayout()
 		row2.setSpacing(6)
-		row2.addWidget(QLabel(i18n.t('pipe.topic') + ':'))
+		# HANG RIENG: chu de full width
+		row_topic = QHBoxLayout()
+		row_topic.setSpacing(8)
+		row_topic.addWidget(QLabel(i18n.t('pipe.topic') + ':'))
 		self.topic = QLineEdit()
+		self.topic.setMinimumWidth(400)
 		self.topic.setPlaceholderText(i18n.t('pipe.topic_hint'))
-		row2.addWidget(self.topic, 1)
+		row_topic.addWidget(self.topic, 1)
 		self.btn_trend = QPushButton(i18n.t('pipe.trend_btn'))
 		self.btn_trend.clicked.connect(self.do_trend)
-		row2.addWidget(self.btn_trend)
+		row_topic.addWidget(self.btn_trend)
+		self.btn_viral = QPushButton('Phan tich viral')
+		self.btn_viral.setToolTip('Tim video viral tren YouTube de hoc pattern')
+		self.btn_viral.clicked.connect(self.do_viral)
+		row_topic.addWidget(self.btn_viral)
 		self.btn_adv = QPushButton(i18n.t('pipe.advisor.load'))
 		self.btn_adv.clicked.connect(self.load_advisor)
-		row2.addWidget(self.btn_adv)
+		row_topic.addWidget(self.btn_adv)
+		body.addLayout(row_topic)
+		row2 = QHBoxLayout()
+		row2.setSpacing(6)
 		self.advisor_ideas = QComboBox()
 		self.advisor_ideas.setMinimumWidth(140)
 		self.advisor_ideas.addItem(i18n.t('pipe.advisor.pick'), None)
@@ -169,21 +181,37 @@ class Pipeline(QWidget):
 		self.preset.setMinimumWidth(90)
 		row2.addWidget(self.preset)
 		body.addLayout(row2)
-		# HANG 3: 5 step cards trong 1 hang (5 cot)
-		steps_box = QHBoxLayout()
-		steps_box.setSpacing(6)
+		# HANG 3: options caption + music-only
+		row3 = QHBoxLayout()
+		row3.setSpacing(12)
+		self.chk_caption = QCheckBox('Hien caption')
+		self.chk_caption.setChecked(True)
+		row3.addWidget(self.chk_caption)
+		self.chk_music_only = QCheckBox('Chi long nhac (khong voice)')
+		self.chk_music_only.setChecked(False)
+		row3.addWidget(self.chk_music_only)
+		row3.addStretch()
+		body.addLayout(row3)
+		# 5 step cards trong 1 card trang (het soc xam)
+		steps_frame = QFrame()
+		steps_frame.setObjectName('Group')
+		steps_frame.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+		steps_box = QHBoxLayout(steps_frame)
+		steps_box.setContentsMargins(10, 10, 10, 10)
+		steps_box.setSpacing(8)
 		self.steps = []
 		for i, info in enumerate(STEPS):
 			c = StepCard(info)
 			steps_box.addWidget(c, 1)
 			self.steps.append(c)
-		body.addLayout(steps_box)
+		body.addWidget(steps_frame)
 		# HANG 4: log
 		self.log = QTextEdit()
 		self.log.setReadOnly(True)
 		self.log.setMinimumHeight(50)
-		self.log.setMaximumHeight(90)
-		body.addWidget(self.log, 1)
+		self.log.setMaximumHeight(100)
+		self.log.setPlaceholderText('Nhat ky chay se hien o day...')
+		body.addWidget(self.log)
 		# HANG 5: run button
 		bottom = QHBoxLayout()
 		bottom.addStretch()
@@ -194,6 +222,7 @@ class Pipeline(QWidget):
 		self.run.clicked.connect(self.do_run)
 		bottom.addWidget(self.run)
 		body.addLayout(bottom)
+		body.addStretch(1)
 		root.addLayout(body)
 		self.load_channels()
 		self.load_kinds()
@@ -298,7 +327,8 @@ class Pipeline(QWidget):
 	def do_trend(self):
 		self.logline('> Dang thu thap xu huong...')
 		try:
-			rc = api.post('/api/trends/collect', {})
+			_niche = (self.kind.currentData() or self.kind.currentText() or '').strip().lower()
+			rc = api.post('/api/trends/collect', {'niche': _niche, 'limit': 30})
 			self.logline(' Thu thap: ' + str(rc.get('collected', 0)) + ' / luu: ' + str(rc.get('saved', 0)) + ' moi')
 		except Exception as e:
 			self.logline(' Loi collect: ' + str(e))
@@ -313,6 +343,27 @@ class Pipeline(QWidget):
 					self.logline(' - ' + str(kw)[:70] + ' (score=' + str(sc) + ')')
 		except Exception as e:
 			self.logline(' Loi doc trends: ' + str(e))
+	def do_viral(self):
+		self.logline('> Dang phan tich video viral...')
+		kw = self.topic.text().strip() or (self.kind.currentText() if self.kind.count() else 'meo con')
+		try:
+			r = api.post('/api/viral/search', {'query': kw, 'max_results': 15})
+			if not r.get('ok'):
+				self.logline(' Loi: ' + str(r.get('error'))[:120])
+				return
+			items = r.get('items', [])
+			self.logline(' Tim thay: ' + str(len(items)) + ' video')
+			s = r.get('summary') or {}
+			self.logline(' Views max: ' + str(s.get('views_max', 0)))
+			self.logline(' Duration median: ' + str(s.get('duration_median_s', 0)) + 's')
+			self.logline(' % cau hoi: ' + str(s.get('pct_question_title', 0)) + '%')
+			self.logline(' % emoji: ' + str(s.get('pct_emoji_title', 0)) + '%')
+			saved = r.get('saved')
+			if saved:
+				self.logline(' Luu: ' + str(saved)[-60:])
+		except Exception as e:
+			self.logline(' Loi: ' + str(e)[:150])
+
 	def do_analyze(self):
 		self.logline('> Phan tich video da dang...')
 		try:
@@ -391,6 +442,7 @@ class Pipeline(QWidget):
 			cur = c.mod.currentData()
 			if cur:
 				mods[cat] = cur
+		mods['_opts'] = {'caption': self.chk_caption.isChecked(), 'music_only': self.chk_music_only.isChecked()}
 		body['modules'] = mods
 		if self.when.currentIndex() == 1:
 			body['run_at'] = self.sched.dateTime().toString('yyyy-MM-dd HH:mm:ss')

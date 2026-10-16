@@ -35,7 +35,7 @@ class Job:
 	def __init__(self, channel_id, topic=None, kind=None,
 		length_override=None, voice_override=None, voice_preset=None, music_mood=None,
 		count=1, require_approval=True, run_at=None, repeat=None,
-		priority=5, created_by='agent', job_id=None):
+		priority=5, created_by='agent', job_id=None, modules=None):
 		self.job_id = job_id or make_job_id()
 		self.channel_id = channel_id
 		self.topic = topic
@@ -50,6 +50,7 @@ class Job:
 		self.repeat = repeat
 		self.priority = int(priority) if priority else 5
 		self.created_by = created_by
+		self.modules = modules or {}
 		self.status = 'pending'
 		self.error = None
 
@@ -69,6 +70,7 @@ class Job:
 			'repeat': self.repeat,
 			'priority': self.priority,
 			'created_by': self.created_by,
+			'modules': self.modules,
 			'status': self.status,
 		}
 
@@ -92,6 +94,7 @@ class Job:
 			priority=d.get('priority', 5),
 			created_by=d.get('created_by', 'agent'),
 			job_id=d.get('job_id'),
+			modules=d.get('modules') or {},
 		)
 
 	@classmethod

@@ -106,40 +106,58 @@ def build_karaoke_ass(word_segs, out, max_chars=50, max_gap=0.5):
 	"""
 	if not word_segs:
 		return None
-	ws = sorted([(float(s[0]), float(s[1]), str(s[2])) for s in word_segs if len(s) >= 3 and str(s[2]).strip()], key=lambda x: x[0])
+	# Doc 4 phan tu [start, end, word, is_sentence_end]
+	ws = []
+	for s in word_segs:
+		if len(s) < 3 or not str(s[2]).strip():
+			continue
+		is_end = bool(s[3]) if len(s) >= 4 else False
+		ws.append((float(s[0]), float(s[1]), str(s[2]), is_end))
+	ws.sort(key=lambda x: x[0])
 	if not ws:
 		return None
 	# Bat dau phrase moi khi: (a) gap > max_gap, (b) vuot max_chars, (c) tu truoc ket thuc bang dau cau (. ! ?)
 	END_PUNCT = ('.', '!', '?', chr(8230))
 	phrases = []
+	phrase_end = [] # True neu phrase ket thuc cau (is_end)
 	cur = []
 	for i in range(len(ws)):
-		t0, t1, w = ws[i]
+		t0, t1, w, is_end = ws[i]
 		if not cur:
 			cur.append((t0, t1, w))
+			if is_end:
+				phrases.append(cur)
+				phrase_end.append(True)
+				cur = []
 			continue
 		prev_end = cur[-1][1]
-		prev_word = cur[-1][2]
 		cur_chars = sum(len(x[2]) for x in cur) + len(cur) - 1
 		gap = t0 - prev_end
-		# Bat dau phrase moi neu gap lon / qua dai / tu truoc ket thuc cau
-		prev_ends_sentence = prev_word.endswith(END_PUNCT)
-		if gap > max_gap or (cur_chars + 1 + len(w)) > max_chars or prev_ends_sentence:
+		# Cat phrase khi: gap lon | qua dai | tu truoc ket cau | tu truoc danh dau cuoi cau
+		if gap > max_gap or (cur_chars + 1 + len(w)) > max_chars or False:
 			phrases.append(cur)
+			phrase_end.append(False)
 			cur = [(t0, t1, w)]
 		else:
 			cur.append((t0, t1, w))
+		if is_end and cur:
+			phrases.append(cur)
+			phrase_end.append(True)
+			cur = []
 	if cur:
 		phrases.append(cur)
+		phrase_end.append(True)
 	# Post-process: neu phrase cuoi < 3 tu VA phrase truoc khong ket cau -> gop lai
 	if len(phrases) >= 2:
 		last = phrases[-1]
 		prev = phrases[-2]
 		prev_last_word = prev[-1][2] if prev else ''
 		prev_ends_sent = prev_last_word.endswith(END_PUNCT)
-		if len(last) < 3 and not prev_ends_sent:
+		if len(last) < 3 and not prev_ends_sent and not phrase_end[-2]:
 			phrases[-2] = prev + last
+			phrase_end[-2] = phrase_end[-1]
 			phrases.pop()
+			phrase_end.pop()
 	lines = [ASS_HEADER]
 	for ph in phrases:
 		a = ph[0][0]

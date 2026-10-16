@@ -5,12 +5,12 @@ sys.path.insert(0, _ROOT)
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QHBoxLayout, QVBoxLayout, QLabel, QPushButton, QStackedWidget, QButtonGroup, QFrame, QStatusBar)
-from PySide6.QtCore import Qt, QTimer
+from PySide6.QtCore import Qt, QTimer, QSize
 from PySide6.QtGui import QIcon, QShortcut, QKeySequence
-import i18n, theme, tray, prefs
+import i18n, theme, tray, prefs, icons
 
 
-ICONS = {
+ICONS_UNUSED = {
 	'dashboard': "🏠",
 	'channels': "📺",
 	'pipeline': "🎬",
@@ -67,10 +67,10 @@ class MainWindow(QMainWindow):
 		lay.setSpacing(0)
 		side = QFrame()
 		side.setObjectName('Sidebar')
-		side.setFixedWidth(230)
+		side.setFixedWidth(240)
 		sv = QVBoxLayout(side)
-		sv.setContentsMargins(12, 18, 12, 12)
-		sv.setSpacing(4)
+		sv.setContentsMargins(16, 20, 16, 14)
+		sv.setSpacing(2)
 		brand = QLabel("TNT")
 		brand.setStyleSheet('font-size:24px;font-weight:800;color:#0A84FF;padding:6px 10px')
 		sv.addWidget(brand)
@@ -99,8 +99,11 @@ class MainWindow(QMainWindow):
 			self.views.append(w)
 			self.stack.addWidget(w)
 			lbl = i18n.t(key)
-			ic = ICONS.get(icon_key or key.replace('nav.',''), '')
-			b = QPushButton(ic + chr(32) + lbl)
+			ic_name = icon_key or key.replace('nav.','')
+			b = QPushButton(lbl)
+			b.setIcon(icons.icon(ic_name, 18, '#3A3A3C'))
+			b.setIconSize(QSize(18, 18))
+			b.setStyleSheet('text-align:left;padding-left:12px')
 			b.setCheckable(True)
 			b.setCursor(Qt.PointingHandCursor)
 			b.setMinimumHeight(38)

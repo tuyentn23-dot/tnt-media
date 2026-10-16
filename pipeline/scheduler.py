@@ -270,6 +270,21 @@ def _first_kind(row):
 
 
 def tick():
+	# Daily auto-cleanup (publish-qua-14-ngay hoac >2GB)
+	try:
+		import os, time
+		from ops import auto_cleanup as _ac
+		stamp = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'state', 'last_cleanup.txt')
+		last = 0
+		if os.path.exists(stamp):
+			last = os.path.getmtime(stamp)
+		if time.time() - last > 86400:
+			r = _ac.run(dry_run=False)
+			open(stamp, 'w').write(str(int(time.time())))
+			if r.get('moved'):
+				print('[scheduler] cleanup moved ' + str(r['moved']) + ' files')
+	except Exception as _e:
+		pass
 	if _paused():
 		return 0
 	now = _now_local()
@@ -309,6 +324,17 @@ def tick():
 		except Exception as e:
 			_note_error('create job fail ' + str(r['id']) + ': ' + str(e))
 	c.close()
+	# Advisor refresh (moi 30 phut)
+	try:
+		import time as _t, os as _os
+		_c = _os.path.join(ROOT, 'state', 'studio_advisor_cache.json')
+		_age = (_t.time() - _os.path.getmtime(_c)) if _os.path.exists(_c) else 1e9
+		if _age > 1800:
+			from ops import studio_advisor as _sa
+			_sa.analyze(force=True)
+	except Exception:
+		pass
+
 	# Recovery stale jobs (running > 5 min)
 	try:
 		from pipeline import recovery as _rec

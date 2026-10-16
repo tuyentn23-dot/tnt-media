@@ -23,7 +23,7 @@ def log(msg):
 HEARTBEAT = {'stop': None, 'thread': None}
 
 
-def _start_heartbeat(job_id, interval=60):
+def _start_heartbeat(job_id, interval=30):
 	import threading
 	stop = threading.Event()
 	def _beat():
@@ -55,7 +55,7 @@ def run_job(job, dry_run=False, item_id=None):
 	except Exception:
 		pass
 	log('start job: ' + job.job_id + ' channel=' + job.channel_id)
-	_start_heartbeat(job.job_id, 60)
+	_start_heartbeat(job.job_id, 30)
 	errs = job.validate()
 	if errs:
 		log('validate FAIL: ' + str(errs))
@@ -113,6 +113,30 @@ def run_job(job, dry_run=False, item_id=None):
 			out = os.path.abspath(os.path.join(ROOT, 'output', 'ch' + job.channel_id + '' + item['id'] + '' + time.strftime('%Y%m%d_%H%M%S') + '.mp4'))
 			os.makedirs(os.path.dirname(out), exist_ok=True)
 			style = dict(cfg.get('style', {}) or {})
+			# Ap modules user chon tu UI (neu co)
+			try:
+				mods = getattr(job, 'modules', None) or {}
+				if isinstance(mods, str):
+					import json as _jj
+					mods = _jj.loads(mods)
+				# Caption + music_only
+				_opts = (mods or {}).get('_opts', {}) if isinstance(mods, dict) else {}
+				style['caption'] = bool(_opts.get('caption', True))
+				style['music_only'] = bool(_opts.get('music_only', False))
+				# render step -> engine
+				rmod = (mods or {}).get('render')
+				if rmod:
+					if 'flow' in rmod:
+						style['engine'] = 'flow'
+					elif 'pexels' in rmod:
+						style['engine'] = 'pexels'
+					elif 'mix' in rmod:
+						style['engine'] = 'auto'
+					elif 'gacha' in rmod:
+						style['engine'] = 'gacha'
+					log('module engine override: ' + str(style.get('engine')))
+			except Exception as _me:
+				log('modules override err: ' + str(_me)[:120])
 			if job.voice_override:
 				style['voice'] = job.voice_override
 			if job.voice_preset:

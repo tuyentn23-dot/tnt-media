@@ -6,6 +6,14 @@ if ROOT not in sys.path:
 
 OLLAMA_URL = os.environ.get('OLLAMA_URL', 'http://127.0.0.1:11434')
 OLLAMA_MODEL = os.environ.get('OLLAMA_MODEL', 'qwen2.5:7b')
+try:
+	from ops import vi_query as _vq
+except Exception:
+	_vq = None
+try:
+	from ops import topic_pool as _tp
+except Exception:
+	_tp = None
 SESSION_SEEN = {}
 
 KIND_PROMPT = {
@@ -67,7 +75,18 @@ def ensure_ollama():
 		return False
 
 
-def _call_ollama(prompt, temperature=0.9, max_tokens=400, timeout=120):
+def _call_ollama(prompt, temperature=0.9, max_tokens=1200, timeout=120, _allow_free=True):
+	# Uu tien free LLM (Groq/Gemini) truoc Ollama de nhanh + on dinh
+	if _allow_free:
+		try:
+			from providers import free_llm as _fl0
+			if _fl0.available():
+				r0 = _fl0.chat([{'role': 'user', 'content': prompt}], max_tokens=max_tokens, json_mode=True)
+				if r0.get('ok') and (r0.get('text') or '').strip():
+					print('[ai_content] free primary:', r0.get('provider'))
+					return (r0.get('text') or '').strip()
+		except Exception as _fe0:
+			print('[ai_content] free primary err:', str(_fe0)[:120])
 	if not ensure_ollama():
 		print('[ai_content] ollama unavailable')
 	try:
@@ -79,7 +98,8 @@ def _call_ollama(prompt, temperature=0.9, max_tokens=400, timeout=120):
 		'model': OLLAMA_MODEL,
 		'prompt': prompt,
 		'stream': False,
-		'options': {'temperature': temperature, 'num_predict': max_tokens, 'top_p': 0.95}
+	'format': 'json',
+		'options': {'temperature': 0.7, 'num_predict': max_tokens, 'top_p': 0.9, 'repeat_penalty': 1.1}
 	}).encode('utf-8')
 	req = urllib.request.Request(OLLAMA_URL + '/api/generate', data=body, headers={'Content-Type': 'application/json'}, method='POST')
 	try:
@@ -87,17 +107,40 @@ def _call_ollama(prompt, temperature=0.9, max_tokens=400, timeout=120):
 		d = json.loads(r.read().decode('utf-8'))
 		return (d.get('response') or '').strip()
 	except Exception as e:
-		print('[ai_content] err: ', str(e)[:120])
+		print('[ai_content] ollama err: ', str(e)[:120])
+		if _allow_free:
+			try:
+				from providers import free_llm as _fl
+				r = _fl.chat([{'role': 'user', 'content': prompt}], max_tokens=max_tokens, json_mode=True)
+				if r.get('ok'):
+					print('[ai_content] free fallback:', r.get('provider'))
+					return (r.get('text') or '').strip()
+			except Exception as _fe:
+				print('[ai_content] free fallback err:', str(_fe)[:120])
 		return ''
 
 
 def _clean(s):
-	s = (s or '').strip()
+	if isinstance(s, list):
+		s = ' '.join(str(x) for x in s)
+	if not isinstance(s, str):
+		s = str(s) if s else ''
+	s = s.strip()
 	for p in ['1.', '2.', '3.', '- ', '* ']:
 		if s.startswith(p):
 			s = s[len(p):].strip()
 	s = s.strip(chr(34)).strip(chr(39)).strip()
 	return s
+
+
+def _clean_scene(s):
+	s = str(s or '').strip()
+	s = s.replace(chr(91), '').replace(chr(93), '')
+	s = s.replace(chr(34), '').replace(chr(39), '')
+	s = s.strip()
+	import re as _re
+	s = _re.sub('[^a-zA-Z0-9 ,-]+', ' ', s)
+	return s.lower().strip()[:80]
 
 
 def _seen(channel, kind, text):
@@ -112,24 +155,79 @@ def _seen(channel, kind, text):
 	return False
 
 
+def _gen_scenes(hook, body, kind):
+	nl = chr(10)
+	p1 = 'Sinh mang "scenes" cho video Shorts.'
+	p2 = 'Hook: ' + (hook or '')[:100]
+	p3 = 'Body: ' + (body or '')[:200]
+	p4 = 'Tra ve JSON: {scenes: [4-6 chuoi TIENG ANH, moi chuoi 2-4 tu khoa mo ta hinh anh CU THE cho tung y].}'
+	p = p1 + nl + p2 + nl + p3 + nl + p4 + nl + 'CHI tra ve JSON.'
+	raw = _call_ollama(p, temperature=0.6, max_tokens=800, timeout=60)
+	if not raw:
+		return []
+	m = re.search(r'{.*}', raw, re.DOTALL)
+	if not m:
+		return []
+	try:
+		d = json.loads(m.group(0))
+	except Exception:
+		return []
+	sc = d.get('scenes', [])
+	if not isinstance(sc, list):
+		return []
+	return [_clean_scene(s) for s in sc if s][:6]
+
 def generate_item(channel, kind, attempt=0):
 	subj = KIND_PROMPT.get(kind, 'noi dung thu vi')
 	hint = KIND_HINT.get(kind, '')
 	subj = subj + ((chr(10) + 'Goi y: ' + hint) if hint else '')
+	try:
+		_tpick = _tp.pick(kind) if _tp else None
+	except Exception:
+		_tpick = None
+	if _tpick:
+		subj = _tpick
+		hint_extra = 'Chu de CU THE nay: ' + _tpick
+		hint = (hint + '. ' + hint_extra) if hint else hint_extra
 	is_kids = channel == 'Mialinhcute'
+	# Viral research hint (pattern hoc tu video viral)
+	viral_hint = ''
+	try:
+		from ops import viral_research as VR
+		cached = VR.latest(1)
+		if cached and cached[0].get('summary'):
+			s = cached[0]['summary']
+			parts = []
+			if s.get('pct_question_title', 0) > 30:
+				parts.append('dung cau hoi trong hook')
+			if s.get('pct_number_title', 0) > 30:
+				parts.append('co so lieu trong hook')
+			if s.get('pct_emoji_title', 0) > 30:
+				parts.append('them emoji')
+			if parts:
+				viral_hint = 'PATTERN VIRAL: ' + ', '.join(parts)
+	except Exception:
+		pass
 	nl = chr(10)
-	req = nl + 'QUAN TRONG: Tra loi HOAN TOAN bang TIENG VIET (khong dung tieng Anh).'
-	req += nl + 'Tra ve JSON 1 dong voi cac truong: topic, hook, body, payoff, search.'
-	req += nl + 'topic: CHU DE CU THE (VD: Gau truc co may trai tim?). Khong ghi chung chung. <=60 ky tu.'
-	req += nl + 'hook: cau hoi hap dan (<=100 ky tu).'
-	req += nl + 'body: 2-3 cau thong tin CU THE tra loi hook (<=250 ky tu).'
-	req += nl + 'payoff: cau ket (<=80 ky tu).'
-	req += nl + 'search: 3-5 tu khoa TIENG ANH de tim video stock (VD: cute cat playing).'
+	req = nl + '=== YEU CAU NGON NGU ==='
+	req += nl + 'topic, hook, body, payoff PHAI TIENG VIET CO DAU. search/scenes TIENG ANH.'
+	req += nl + '=== TRA VE JSON 1 DONG ==='
+	req += nl + 'topic: chu de CU THE, co so lieu/con so. VD: Gau truc co may trai tim? <=55 ky tu.'
+	req += nl + 'hook: CAU HOI GAY TO MO + CON SO/SO SANH. VD: Ban co biet trai tim gau truc dap 40 lan/phut? <=95 ky tu.'
+	req += nl + 'body: 2-3 cau PHAI co: (1) so lieu that, (2) so sanh/vi von, (3) ly do thu vi. <=240 ky tu.'
+	req += nl + 'payoff: cau chot gay bất ngờ hoac cau hoi nguoc. VD: Vay ma chung van ngu 20 tieng/ngay! <=75 ky tu.'
+	req += nl + 'search: 3-5 keyword TIENG ANH, CU THE (VD: panda eating bamboo close up).'
+	req += nl + 'scenes: mang 4-6 chuoi TIENG ANH, moi chuoi 3-5 tu khoa mo ta HANH DONG CU THE (VD: panda climbing tree slow motion).'
+	req += nl + '=== STYLE ==='
+	req += nl + 'Hook phai co 1 trong: con so gay shock, so sanh bat ngo, cau hoi nguoc, hoac tiet lo bi mat.'
+	req += nl + 'Body tranh tu chung chung (hay, thu vi). Dung dong tu manh + so lieu cu the.'
+	if viral_hint:
+		req += nl + viral_hint
 	if is_kids:
 		p = 'Ban la nha sang tao noi dung YouTube Shorts cho TRE EM. Chu de: ' + subj + req + nl + 'VUI VE TICH CUC, KHONG chinh tri, KHONG bao luc.' + nl + 'CHI tra ve 1 dong JSON, KHONG giai thich.'
 	else:
 		p = 'Ban la nha sang tao noi dung YouTube Shorts. Chu de: ' + subj + req + nl + 'KHONG chinh tri, KHONG bao luc.' + nl + 'CHI tra ve 1 dong JSON, KHONG giai thich.'
-	raw = _call_ollama(p, temperature=0.85 + attempt * 0.05)
+	raw = _call_ollama(p, temperature=0.85 + attempt * 0.05, max_tokens=1500)
 	if not raw:
 		return None
 	m = re.search(r'{.*}', raw, re.DOTALL)
@@ -144,10 +242,20 @@ def generate_item(channel, kind, attempt=0):
 	body = _clean(d.get('body', ''))
 	payoff = _clean(d.get('payoff', ''))
 	search = _clean(d.get('search', ''))
+	scenes = d.get('scenes', [])
 	if not topic or not hook:
 		return None
 	if _seen(channel, kind, topic):
 		return None
+	try:
+		from modules.render import vn_guard as _vg
+		for _t in (topic, hook, body, payoff):
+			_r = _vg.check(_t)
+			if not _r.get('ok'):
+				print('[ai_content] reject no-diacritic: '+str(_t)[:60].encode('ascii','replace').decode('ascii'))
+				return None
+	except Exception as _e:
+		print('[ai_content] vn_guard err: '+str(_e)[:80].encode('ascii','replace').decode('ascii'))
 	iid = 'ai_' + kind + '_' + hashlib.md5(topic.encode()).hexdigest()[:10]
 	return {
 		'id': iid,
@@ -155,7 +263,8 @@ def generate_item(channel, kind, attempt=0):
 		'hook': hook,
 		'body': body or hook,
 		'payoff': payoff or topic,
-		'search_query': search or topic,
+		'search_query': _vq.to_en_query(search, topic, kind),
+		'scenes': ([_clean_scene(s) for s in scenes if s][:6] if isinstance(scenes, list) and scenes else _gen_scenes(hook, body, kind)),
 		'kind': kind,
 		'source': 'ai',
 	}
@@ -163,14 +272,40 @@ def generate_item(channel, kind, attempt=0):
 
 def generate(channel, kind, limit=5):
 	out = []
-	max_attempts = limit * 4
+	max_attempts = max(limit * 3, 8)
 	att = 0
 	while len(out) < limit and att < max_attempts:
 		it = generate_item(channel, kind, attempt=att % 3)
 		if it:
 			out.append(it)
 		att += 1
+	if not out:
+		out.append(_fallback_item(kind))
 	return out
+
+def _fallback_item(kind):
+	import time as _t
+	pool = [
+		('Bạn có biết loài vật nào ngủ ít nhất không?', 'Loài vật ngủ ít nhất là hươu cao cổ, chỉ khoảng 2 tiếng mỗi ngày.', 'Hãy theo dõi để khám phá thêm!'),
+		('Bạn có biết trái tim cá voi lớn cỡ nào không?', 'Trái tim cá voi xanh có thể nặng tới 180 kg, lớn như một chiếc xe hơi nhỏ.', 'Thiên nhiên thật kỳ diệu!'),
+		('Bạn có biết loài chim nào bay cao nhất không?', 'Kền kền Rüppell có thể bay cao tới 11.000 mét, cao hơn đỉnh Everest.', 'Khám phá thêm nhiều điều thú vị nhé!'),
+	]
+	i = int(t.time()) % len(pool)
+	hook, body, payoff = pool[i]
+	topic = hook
+	iid = 'ai_fb' + str(int(_t.time()))
+	return {
+		'id': iid,
+		'topic': topic,
+		'hook': hook,
+		'body': body,
+		'payoff': payoff,
+		'search_query': 'amazing animal facts',
+		'scenes': ['amazing animals wild', 'nature documentary', 'wildlife close-up'],
+		'kind': kind,
+		'source': 'ai_fallback',
+	}
+
 
 
 

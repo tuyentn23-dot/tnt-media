@@ -91,7 +91,14 @@ def _esc_drawtext(s):
 	return t
 
 
-def pick_music(topic=''):
+def pick_music(topic='', text='', job_id=''):
+	try:
+		from ops import music_index as _mi
+		p = _mi.pick(topic=topic, text=text, job_id=job_id)
+		if p:
+			return p
+	except Exception:
+		pass
 	m = glob.glob(os.path.join(ROOT, MB, STAR + DOT + 'wav'))
 	if not m:
 		m = glob.glob(os.path.join(ROOT, MB, STAR + DOT + 'mp3'))
@@ -161,44 +168,31 @@ def step_overlay(video, out, hook='', watermark='', brand='#f6ad55'):
 
 def step_mux(video, voice, music, out, music_vol=0.14):
 	if not voice or not os.path.exists(voice):
+		# Music-only
+		if music and os.path.exists(music):
+			args = [FFMPEG, "-y", "-i", video, "-i", music, "-filter_complex", "[1:a]volume=" + str(music_vol) + ",apad,atrim=0:999[m]", "-map", "0:v", "-map", "[m]", "-c:v", "copy", "-c:a", "aac", "-shortest", out]
+			r = _run(args, timeout=600)
+			if os.path.exists(out) and os.path.getsize(out) > 1000:
+				return {"ok": True, "path": out, "mux": "music-only"}
 		shutil.copyfile(video, out)
-		return {'ok': True, 'path': out, 'mux': 'none'}
+		return {"ok": True, "path": out, "mux": "none"}
 	vd = probe_dur(video)
 	if vd <= 0:
 		vd = 20.0
 	voiced = probe_dur(voice)
-	pad_v = 0.0
-	if voiced > vd + 0.1:
-		pad_v = round(voiced - vd + 0.4, 3)
-		vd = voiced + 0.4
-	vdur = str(round(vd, 3))
+	# Cat dung bang thoi luong ngan hon: hinh + tieng ket thuc cung luc
+	vdur = str(round(min(vd, voiced), 3))
 	if music and os.path.exists(music):
-		fc = "[0:v]tpad=stop_duration=" + str(pad_v) + ":stop_mode=clone[vpad];[1:a]volume=1.0,apad[v];[2:a]volume=" + str(music_vol) + ",aloop=loop=-1:size=2e9[m];[v][m]amix=inputs=2:duration=longest:dropout_transition=2,atrim=0:" + vdur + "[a]"
-		args = [FFMPEG, "-y", "-i", video, "-i", voice, "-i", music, "-filter_complex", fc, "-map", "[vpad]", "-map", "[a]", "-c:v", "libx264", "-preset", "veryfast", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k", "-t", vdur, out]
-		r = _run(args)
-		if os.path.exists(out) and os.path.getsize(out) > 100000:
-			return {'ok': True, 'path': out, 'mux': 'voice+music+full'}
-		log("mux+music failed: " + str(r.stderr[-200:]))
-		try:
-			if os.path.exists(out):
-				os.remove(out)
-		except Exception:
-			pass
-	fc2 = "[0:v]tpad=stop_duration=" + str(pad_v) + ":stop_mode=clone[vpad];[1:a]volume=1.0,apad,atrim=0:" + vdur + "[a]"
-	args2 = [FFMPEG, "-y", "-i", video, "-i", voice, "-filter_complex", fc2, "-map", "[vpad]", "-map", "[a]", "-c:v", "libx264", "-preset", "veryfast", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k", "-t", vdur, out]
-	r2 = _run(args2)
-	if os.path.exists(out) and os.path.getsize(out) > 100000:
-		return {'ok': True, 'path': out, 'mux': 'voice+full'}
-	log("mux voice-only failed: " + str(r2.stderr[-200:]))
-	try:
-		if os.path.exists(out):
-			os.remove(out)
-	except Exception:
-		pass
-	shutil.copyfile(video, out)
-	return {'ok': True, 'path': out, 'mux': 'fallback-copy'}
-
-
+		fc = "[0:v]null[vpad];[1:a]volume=1.0[v];[2:a]volume=" + str(music_vol) + "[a]"
+		args = [FFMPEG, "-y", "-i", video, "-i", voice, "-i", music, "-filter_complex", fc, "-map", "[vpad]", "-map", "[v]", "-map", "[a]", "-t", vdur, "-c:v", "libx264", "-preset", "veryfast", "-c:a", "aac", out]
+	else:
+		fc = "[0:v]null[vpad];[1:a]volume=1.0[v]"
+		args = [FFMPEG, "-y", "-i", video, "-i", voice, "-filter_complex", fc, "-map", "[vpad]", "-map", "[v]", "-t", vdur, "-c:v", "libx264", "-preset", "veryfast", "-c:a", "aac", out]
+	r = _run(args, timeout=600)
+	if not (os.path.exists(out) and os.path.getsize(out) > 1000):
+		shutil.copyfile(video, out)
+		return {"ok": True, "path": out, "mux": "fallback-copy"}
+	return {"ok": True, "path": out, "mux": "full", "dur": vdur}
 
 def compose(base_video, item, style, out):
 	item = item or {}
@@ -229,7 +223,7 @@ def compose(base_video, item, style, out):
 		text = build_script_text(item)
 	voice = os.path.join(tmp, 'voice.mp3')
 	words = []
-	if text or cta:
+	if (text or cta) and not style.get('music_only', False):
 		try:
 			from ops import voice_express as vexp
 			base_rate = '-10%'
@@ -244,6 +238,20 @@ def compose(base_video, item, style, out):
 				try:
 					from modules.render import voice_synth as vs
 					dur = vs.audio_dur(voice)
+					# Stretch video to match voice duration
+					try:
+						vd = probe_dur(scaled)
+						if vd > 0 and dur > 0 and abs(dur - vd) > 0.3:
+							factor = dur / vd
+							vf = 'setpts=' + str(round(factor, 4)) + '*PTS'
+							stretched = os.path.join(tmp, 'stretched.mp4')
+							_args = [FFMPEG, '-y', '-i', scaled, '-vf', vf, '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '20', '-pix_fmt', 'yuv420p', '-an', stretched]
+							_run(_args, timeout=300)
+							if os.path.exists(stretched) and os.path.getsize(stretched) > 1000:
+								scaled = stretched
+								log('stretched factor=' + str(round(factor, 2)))
+					except Exception as _se:
+						log('stretch err: ' + str(_se)[:100])
 					# CHIA TIMING THEO TUNG CAU (khong gop thanh full_text)
 					sent_list = list(sentences) if sentences else []
 					if cta:
@@ -260,7 +268,7 @@ def compose(base_video, item, style, out):
 	else:
 		steps['voice'] = {'ok': False, 'error': 'no script text'}
 	cur = scaled
-	if words:
+	if words and style.get('caption', True):
 		capped = os.path.join(tmp, 'captioned.mp4')
 		sc = step_captions(cur, words, capped)
 		steps['captions'] = {'ok': sc['ok']}
@@ -273,7 +281,10 @@ def compose(base_video, item, style, out):
 	steps['overlay'] = {'ok': so['ok'], 'filters': so.get('filters')}
 	if so['ok']:
 		cur = over
-	music = pick_music(item.get('topic', '')) if style.get('music', True) else None
+	topic = item.get('topic', '') or item.get('hook', '') or ''
+	text = ' '.join([str(item.get('hook','')), str(item.get('body','')), str(item.get('payoff',''))]) + ' ' + str(topic)
+	jid = item.get('job_id') or item.get('id') or ''
+	music = pick_music(topic=topic, text=text, job_id=jid) if style.get('music', True) else None
 	steps['music'] = {'picked': bool(music)}
 	sm = step_mux(cur, voice, music, out)
 	steps['mux'] = {'ok': sm['ok'], 'mux': sm.get('mux')}

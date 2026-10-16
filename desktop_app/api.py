@@ -4,7 +4,7 @@ import json, urllib.request, urllib.error
 
 BASE = 'http://127.0.0.1:7777'
 
-def _req(method, path, body=None, timeout=8):
+def _req(method, path, body=None, timeout=3):
 	url = BASE + path
 	data = None
 	if body is not None:
@@ -20,17 +20,26 @@ def _req(method, path, body=None, timeout=8):
 	except Exception as e:
 		return {'ok': False, 'err': str(e)}
 
-def get(path, timeout=8):
+def get(path, timeout=3):
 	return _req('GET', path, None, timeout)
 
-def post(path, body=None, timeout=20):
+def post(path, body=None, timeout=15):
 	return _req('POST', path, body, timeout)
 
-def delete(path, timeout=8):
+def delete(path, timeout=3):
 	return _req('DELETE', path, None, timeout)
 
+_HEALTH_CACHE = {'t': 0, 'v': None}
 def health():
-	return get('/api/health', 3)
+	import time as _t
+	now = _t.time()
+	if _HEALTH_CACHE['v'] is not None and (now - _HEALTH_CACHE['t']) < 2.0:
+		return _HEALTH_CACHE['v']
+	r = get('/api/health', 2)
+	if r and r.get('ok'):
+		_HEALTH_CACHE['t'] = now
+		_HEALTH_CACHE['v'] = r
+	return r
 
 def config():
 	return get('/api/config')
@@ -57,7 +66,7 @@ def create_job(body):
 	return post('/api/jobs', body)
 
 def run_job(jid):
-	return post('/api/jobs/' + str(jid) + '/run')
+	return post('/api/jobs/' + str(jid) + '/run', timeout=900)
 
 def delete_job(jid):
 	return delete('/api/jobs/' + str(jid))
@@ -97,7 +106,7 @@ def publications_queue(status=None, channel_id=None):
 	return get('/api/publications/queue' + q)
 
 def publish_pub(pid):
-	return post('/api/publications/' + str(pid) + '/publish')
+	return post('/api/publications/' + str(pid) + '/publish', timeout=600)
 
 def schedule_pub(pid, at):
 	return post('/api/publications/' + str(pid) + '/schedule', {'at': at})
@@ -107,7 +116,7 @@ def unschedule_pub(pid):
 
 
 def bulk_publish(ids):
-	return post('/api/publications/bulk_publish', {'ids': list(ids)})
+	return post('/api/publications/bulk_publish', {'ids': list(ids)}, timeout=1800)
 
 def bulk_schedule(ids, at):
 	return post('/api/publications/bulk_schedule', {'ids': list(ids), 'at': at})
