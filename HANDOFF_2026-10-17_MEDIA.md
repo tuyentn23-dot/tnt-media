@@ -90,3 +90,51 @@ cd D:\TNT_AIenture_foundry\media
 - Groq 30 RPM đủ? (4 kinds × 2 items = 8 calls, OK)
 - vn_guard >70% có chặt quá?
 - TikTok/IG cần Playwright?
+
+---
+
+## 6. KET QUA DIEU TRA 3 TASK HOT (ban tiep, 2026-10-17)
+
+### ROOT CAUSE THAT SU: video BI YOUTUBE GO, KHONG phai id gia
+
+- Verify bang DUNG token tung channel (channels/{id}/token.pickle): 19 alive / 11 dead trong 30 pub.
+- Verify bang 1 token mac dinh truoc do -> 0 alive = FALSE NEGATIVE (video channel khac tra 404).
+- videos().insert() tra id THAT (audit ghi youtube_id=..., title DB == title YT).
+- Video song roi BIEN MAT trong phien (vd bKw2BCEBaYc: 200 -> 404 sau vai phut). Channel ViLe Vi: 1044 -> 1041 video.
+- Nghi nhan: YouTube takedown tu dong (medical/AI-claim content, inauthentic). Titles: health claims, AI, anime.
+
+### A. Auto-verify (da lam)
+- ops/yt_verify.py — verify qua oEmbed (khong quota).
+- pipeline/verify_pubs.py — verify bang token RIENG tung channel (fix false-negative).
+- Migration: publications.yt_verified_at, yt_verify_attempts; videos tuong tu (db.py).
+- pipeline/scheduler.py tick(): auto-verify moi 15 phut, dead -> verify_failed sau 2 lan, ghi last_error.
+
+### B. UI notification (da lam)
+- desktop_app/views/queue.py: _friendly_publish_result() dich loi sang tieng Viet (quality gate / token / mang).
+- _publish: hien "Dang thanh cong" + URL hoac warning ly do, KHONG dump JSON.
+- bulk_publish: phan biet thanh cong / mot phan / that bai.
+- Badge verify_failed do + "Da go tren YouTube"; published chua verify hien "(chua xac minh)".
+
+### C. Con lai / can lam tiep
+- Chay python -m pipeline.verify_pubs dinh ky that (scheduler da gan, can restart server).
+- Can nhac giam tan suat up + da dang noi dung (tranh takedown), them metadata phan biet.
+- Task 3 (debug 4 job failed): 73 job failed trong DB — phan loai: render/quality/token. Xem logs/runnerjob_*.log.
+
+
+### TASK 3 — Debug 4 job failed (da dieu tra + fix)
+
+- 73 job failed tong: 54 render (cung 1 message "khong render duoc video nao"), 12 stale-recovery, 4 killed-cleanup, 3 khac.
+- Doc logs/runnerjob_*.log: nguyen nhan that = no fresh content for kind=anime.
+ AI sinh topic bi loc (no-diacritic) -> het item fresh -> runner bo qua kind -> khong co video -> fail.
+- FIX: pipeline/runner.py them fallback ai_content.generate() khi fresh rong, thu lai truoc khi continue.
+- 12 job "stale running (recovery)" va killed la do restart server giua chung — khong phai bug logic.
+
+### FILE DA SUA PHIEN NAY
+- ops/yt_verify.py (moi)
+- pipeline/verify_pubs.py (moi)
+- pipeline/state.py (migration + verify job)
+- pipeline/scheduler.py (auto-verify 15m)
+- pipeline/runner.py (regen fallback)
+- desktop_app/views/queue.py (friendly notification + verify badge)
+- os_app/db.py (migration)
+

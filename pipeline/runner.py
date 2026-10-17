@@ -99,8 +99,19 @@ def run_job(job, dry_run=False, item_id=None):
 			items = ch.load_content(job.channel_id, kind)
 			fresh = [it for it in items if not cf.is_published(cf.signature(it, kind))]
 			if not fresh:
-				log('no fresh content for kind=' + kind)
-				continue
+				# Fallback: sinh noi dung moi khi het sach (tranh job fail "khong render duoc")
+				try:
+					from ops import ai_content as _ac
+					_gen = _ac.generate(job.channel_id, kind, limit=3)
+					_fresh2 = [it for it in (_gen or []) if not cf.is_published(cf.signature(it, kind))]
+					if _fresh2:
+						fresh = _fresh2
+						log('regenerated fresh for kind=' + kind + ' n=' + str(len(fresh)))
+				except Exception as _ge:
+					log('regen err: ' + str(_ge)[:120])
+				if not fresh:
+					log('no fresh content for kind=' + kind)
+					continue
 			if item_id:
 						items_all = ch.load_content(job.channel_id, kind)
 						matches = [x for x in items_all if x.get('id') == item_id]

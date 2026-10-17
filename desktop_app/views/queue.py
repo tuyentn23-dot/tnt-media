@@ -18,6 +18,31 @@ import i18n, api
 from widgets import PageHeader, busy_wrap
 
 
+def _friendly_publish_result(r):
+	if not isinstance(r, dict):
+		return False, 'Lỗi', str(r)[:200]
+	if r.get('ok'):
+		yid = r.get('youtube_id') or ""
+		url = r.get('url') or (('https://youtu.be/' + yid) if yid else "")
+		msg = 'Đã đăng lên YouTube thành công.'
+		if url:
+			msg += '\n' + url
+		return True, 'Đăng thành công', msg
+	err = r.get('error') or r.get('reason') or 'Đăng thất bại'
+	err = str(err)
+	low = err.lower()
+	if 'quality' in low or 'gate' in low or 'score' in low:
+		err = 'Video chưa đạt chất lượng tối thiểu (quality gate). Hãy tạo lại hoặc chỉnh sửa.'
+	elif 'token' in low or 'auth' in low or 'credential' in low:
+		err = 'Lỗi xác thực YouTube (token hết hạn?). Cần đăng nhập lại kênh.'
+	elif 'timeout' in low or 'network' in low or 'connect' in low:
+		err = 'Lỗi mạng khi tải lên. Kiểm tra kết nối rồi thử lại.'
+	elif 'khong tra ve id' in low:
+		err = 'YouTube không trả về ID video. Upload có thể đã thất bại.'
+	return False, 'Đăng thất bại', err[:400]
+
+
+
 class VideoDialog(QDialog):
 	def __init__(self, pub, parent=None):
 		super().__init__(parent)
@@ -159,8 +184,24 @@ class QueueCard(QFrame):
 		lay.addWidget(meta)
 		status = str(pub.get('status'))
 		sch = pub.get('schedule_at')
-		stag = QLabel(('Lịch: ' + str(sch)) if sch else status)
-		color = '#0A84FF' if sch else ('#34C759' if status=='rendered' else '#8E8E93')
+		vfa = (pub.get('yt_verify_attempts') or 0)
+		if status == 'verify_failed':
+			label_txt = 'Đã gỡ trên YouTube'
+		elif sch:
+			label_txt = 'Lịch: ' + str(sch)
+		elif status == 'published':
+			label_txt = 'Đã đăng' + (' (chưa xác minh)' if not pub.get('yt_verified_at') else '')
+		else:
+			label_txt = status
+		stag = QLabel(label_txt)
+		if status == 'verify_failed':
+			color = '#FF3B30'
+		elif sch:
+			color = '#0A84FF'
+		elif status == 'published':
+			color = '#34C759'
+		else:
+			color = '#8E8E93'
 		stag.setStyleSheet('color:' + color + ';font-size:10px;font-weight:600')
 		lay.addWidget(stag)
 		r1 = QHBoxLayout()
@@ -337,7 +378,11 @@ class Queue(QWidget):
 		pid = pub.get('id')
 		if QMessageBox.question(self, 'Dang', 'Dang video #' + str(pid) + '?') != QMessageBox.Yes: return
 		r = busy_wrap(self, lambda: api.publish_pub(pid), 'Dang dang...')
-		QMessageBox.information(self, 'Kết quả', str(r)[:400])
+		ok, ttl, body = _friendly_publish_result(r)
+		if ok:
+			QMessageBox.information(self, ttl, body)
+		else:
+			QMessageBox.warning(self, ttl, body)
 		self.refresh()
 
 	def bulk_publish(self):
@@ -346,7 +391,14 @@ class Queue(QWidget):
 			QMessageBox.information(self, 'Chon', 'Chưa chọn video nào'); return
 		if QMessageBox.question(self, 'Dang', 'Dang ' + str(len(ids)) + ' video?') != QMessageBox.Yes: return
 		r = busy_wrap(self, lambda: api.bulk_publish(ids), 'Dang dang ' + str(len(ids)) + ' video...')
-		QMessageBox.information(self, 'Kết quả', 'Đã đăng ' + str(r.get('count', 0)) + '/' + str(r.get('total', 0)))
+		cnt = r.get('count', 0)
+		tot = r.get('total', 0)
+		if cnt == tot and tot > 0:
+			QMessageBox.information(self, 'Đăng thành công', 'Đã đăng ' + str(cnt) + '/' + str(tot) + ' video lên YouTube.')
+		elif cnt > 0:
+			QMessageBox.warning(self, 'Đăng một phần', 'Đã đăng ' + str(cnt) + '/' + str(tot) + ' video. ' + str(tot - cnt) + ' video lỗi — xem chi tiết trong nhật ký.')
+		else:
+			QMessageBox.warning(self, 'Đăng thất bại', 'Không đăng được video nào. Kiểm tra token/chất lượng/mạng.')
 		self.refresh()
 
 	def bulk_reject(self):

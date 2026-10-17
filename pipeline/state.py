@@ -82,6 +82,14 @@ def init():
 		c.execute('ALTER TABLE publications ADD COLUMN schedule_at TEXT')
 	except Exception:
 		pass
+	try:
+		c.execute('ALTER TABLE publications ADD COLUMN yt_verified_at TEXT')
+	except Exception:
+		pass
+	try:
+		c.execute('ALTER TABLE publications ADD COLUMN yt_verify_attempts INTEGER NOT NULL DEFAULT 0')
+	except Exception:
+		pass
 	c.commit()
 	return c
 

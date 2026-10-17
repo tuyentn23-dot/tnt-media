@@ -341,6 +341,19 @@ def tick():
 		_rec.recover_stale_jobs(300)
 	except Exception:
 		pass
+	# Auto-verify published videos (moi 15 phut) — phat hien video bi YouTube go
+	try:
+		import os as _os2, time as _t2
+		_vstamp = _os2.path.join(ROOT, 'state', 'last_verify.txt')
+		_vlast = _os2.path.getmtime(_vstamp) if _os2.path.exists(_vstamp) else 0
+		if _t2.time() - _vlast > 900:
+			from pipeline import verify_pubs as _vp
+			_vr = _vp.verify_pending(limit=100)
+			open(_vstamp, 'w').write(str(_t2.time()))
+			if _vr.get('dead', 0) > 0:
+				_note_error('verify: ' + str(_vr.get('dead')) + ' video khong con tren YouTube')
+	except Exception:
+		pass
 	drained = drain_pending()
 	published = 0
 	if _ap:

@@ -38,6 +38,24 @@ def init():
     sql = SCHEMA_FILE.read_text(encoding="utf-8")
     with tx() as c:
         c.executescript(sql)
+    _migrate()
+
+# Columns added after initial release; safe additive migration.
+_MIGRATIONS = {
+    "videos": {
+        "yt_verified_at": "TEXT",
+        "yt_verify_attempts": "INTEGER NOT NULL DEFAULT 0",
+    },
+}
+
+def _migrate():
+    with tx() as c:
+        for table, cols in _MIGRATIONS.items():
+            cur = c.execute("PRAGMA table_info(%s)" % table)
+            existing = {r[1] for r in cur.fetchall()}
+            for col, decl in cols.items():
+                if col not in existing:
+                    c.execute("ALTER TABLE %s ADD COLUMN %s %s" % (table, col, decl))
 
 TABLES = ["cycles","videos","metrics","insights","decisions","experiments","tool_runs"]
 
