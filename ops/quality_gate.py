@@ -62,7 +62,7 @@ def evaluate(video_path):
     dur = float(metrics.get("duration", 0.0))
 
     reasons = []
-    from ops.compat import get_video_clip; _V=get_video_clip(); _c=_V(video_path); width,height=int(_c.size[0]),int(_c.size[1]); fps=float(_c.fps or 0.0); _c.close(); metrics.update({'width':width,'height':height,'fps':round(fps,2)}); reasons += ([f'resolution {width}x{height} < 540x960'] if width < 540 or height < 960 else []) + ([f'fps {fps:.2f} < 30'] if fps < 15.0 else [])
+    from ops.compat import get_video_clip; _V=get_video_clip(); _c=_V(video_path); width,height=int(_c.size[0]),int(_c.size[1]); fps=float(_c.fps or 0.0); _c.close(); metrics.update({'width':width,'height':height,'fps':round(fps,2)}); reasons += ([f'resolution {width}x{height} < 540x960'] if width < 540 or height < 960 else []) + ([f'fps {fps:.2f} < 15'] if fps < 15.0 else [])
     if score < min_score:
         reasons.append("score %d < %d" % (score, min_score))
     if hook < min_hook:

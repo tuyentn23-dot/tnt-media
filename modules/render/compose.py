@@ -184,10 +184,10 @@ def step_mux(video, voice, music, out, music_vol=0.14):
 	vdur = str(round(min(vd, voiced), 3))
 	if music and os.path.exists(music):
 		fc = "[0:v]null[vpad];[1:a]volume=1.0[v];[2:a]volume=" + str(music_vol) + "[a]"
-		args = [FFMPEG, "-y", "-i", video, "-i", voice, "-i", music, "-filter_complex", fc, "-map", "[vpad]", "-map", "[v]", "-map", "[a]", "-t", vdur, "-c:v", "libx264", "-preset", "veryfast", "-c:a", "aac", out]
+		args = [FFMPEG, "-y", "-i", video, "-i", voice, "-i", music, "-filter_complex", fc, "-map", "[vpad]", "-map", "[v]", "-map", "[a]", "-t", vdur, "-c:v", "libx264", "-preset", "veryfast", "-r", "30", "-c:a", "aac", out]
 	else:
 		fc = "[0:v]null[vpad];[1:a]volume=1.0[v]"
-		args = [FFMPEG, "-y", "-i", video, "-i", voice, "-filter_complex", fc, "-map", "[vpad]", "-map", "[v]", "-t", vdur, "-c:v", "libx264", "-preset", "veryfast", "-c:a", "aac", out]
+		args = [FFMPEG, "-y", "-i", video, "-i", voice, "-filter_complex", fc, "-map", "[vpad]", "-map", "[v]", "-t", vdur, "-c:v", "libx264", "-preset", "veryfast", "-r", "30", "-c:a", "aac", out]
 	r = _run(args, timeout=600)
 	if not (os.path.exists(out) and os.path.getsize(out) > 1000):
 		shutil.copyfile(video, out)
