@@ -168,3 +168,33 @@ cd D:\TNT_AIenture_foundry\media
 - Chua restart server de nap code moi (scheduler auto-verify + runner fallback + gate moi).
 - UI: badge verify_failed + notification tieng Viet da code, can test tren desktop app that.
 
+
+## 8. PHIEN 3 — RENDER LAI 30FPS + DANG HET BACKLOG (2026-10-17)
+
+### Vi sao "tao video nhung khong thay trong hang cho"
+- Queue chi hien status rendered/scheduled/approved (app/server.py:351).
+- Job 18:00 & 21:00 FAIL truoc khi tao publication: log = Cannot connect to host api.msedgeservices.com getaddrinfo failed (blip DNS/mang tam thoi, DNS gio OK). -> khong co gi vao queue.
+- Cac job thanh cong thi tao publication status=rendered -> MOI vao queue. Nhung video cu bi gate chan fps nen ket o publish_failed.
+
+### Sua fps that su
+- modules/render/compose.py: buoc mux (2 nhanh) thieu -r 30 -> giu fps goc 12-20. Da them -r 30. (commit 853de09)
+- Video cu: re-encode ffmpeg -r 30 (giu noi dung) roi moi publish.
+
+### Da dang lai + verify PUBLIC (6 video)
+- 513 cxn7tR7wwbU (vilevi)
+- 515 4mziLTlIm04 (vilevi)
+- 514 -pUlarYRXPs (vilevi, re-30fps)
+- 512 mMaLozfUQ8s (vilevi, re-30fps)
+- 509 Hc8B4zLaBsU (vilevi, re-30fps)
+- 511 K-f87YtgJv8 (Mialinhcute, re-30fps)
+- 7 pub publish_failed mat file -> discarded (khong the dang lai).
+- DB hien tai: published=36, discarded=183, rejected=93. Khong con rendered/publish_failed.
+
+### Commit phien 3
+- 853de09 fix(render): -r 30 on mux + gate message
+
+### Luu y con lai
+- Job 18:00/21:00 fail do DNS blip ngoai kiem soat; neu tai dien: kiem tra ket noi api.msedgeservices.com.
+- Neu muon video MOI vao queue: chay 1 job render (scheduler) -> se tao publication rendered -> hien trong hang cho.
+- 12 job failed cu (stale) van con trong jobs; khong anh huong queue.
+
