@@ -256,6 +256,18 @@ def generate_item(channel, kind, attempt=0):
 		return None
 	try:
 		from modules.render import vn_guard as _vg
+		# Phuc hoi dau cho TUNG truong neu mat do dau thap (guard chi can 1 dau la pass)
+		try:
+			from ops import voice_script as _vs2
+			def _dens(_x):
+				_w=[w for w in (_x or '').split() if w.isalpha()]
+				return (sum(1 for w in _w if _vs2.has_diacritics(w))/len(_w)) if _w else 1.0
+			topic = topic if _dens(topic)>=0.5 else _vs2.restore_diacritics(topic)
+			hook = hook if _dens(hook)>=0.5 else _vs2.restore_diacritics(hook)
+			body = body if _dens(body)>=0.5 else _vs2.restore_diacritics(body)
+			payoff = payoff if _dens(payoff)>=0.5 else _vs2.restore_diacritics(payoff)
+		except Exception as _de2:
+			print('[ai_content] density fix err: '+str(_de2)[:80])
 		# Thu 1: guard truc tiep
 		_guard_ok = True
 		for _t in (topic, hook, body, payoff):
