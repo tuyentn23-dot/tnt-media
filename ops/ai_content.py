@@ -221,6 +221,9 @@ def generate_item(channel, kind, attempt=0):
 	req += nl + '=== STYLE ==='
 	req += nl + 'Hook phai co 1 trong: con so gay shock, so sanh bat ngo, cau hoi nguoc, hoac tiet lo bi mat.'
 	req += nl + 'Body tranh tu chung chung (hay, thu vi). Dung dong tu manh + so lieu cu the.'
+	req += nl + '=== KHAC BIET ==='
+	req += nl + 'Goc nhin doc dao, tranh topic ai cung noi. Long 1 cau chuyen ngan hoac vi du cu the thay vi chi neu su that kho khan.'
+	req += nl + 'Neu topic da tung xuat hien (xem danh sach da dang neu co), phai doi sang khia canh MOI hoan toan.'
 	if viral_hint:
 		req += nl + viral_hint
 	if is_kids:
