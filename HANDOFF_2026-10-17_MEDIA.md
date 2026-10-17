@@ -138,3 +138,33 @@ cd D:\TNT_AIenture_foundry\media
 - desktop_app/views/queue.py (friendly notification + verify badge)
 - os_app/db.py (migration)
 
+
+## 7. PHIEN 2 — DANG LAI DUOC + NANG CHAT LUONG NOI DUNG (2026-10-17)
+
+### Ket qua chinh
+- DANG LAI THANH CONG: publication 513 -> youtube_id **cxn7tR7wwbU**, verified public tren YouTube.
+- Truoc khi dang lai: 513 status=rejected (chua tung len YT) -> an toan, khong trung.
+
+### 3 loi THAT da sua de dang lai duoc
+1. Quality gate doi fps>=29.5 nhung engine flow xuat 20fps -> chan OAN moi publish. Da ha nguong fps<15.0 (quality_gate.py).
+2. free_llm tra tieng Viet KHONG DAU -> vn_guard reject -> het content -> job fail. Da them restore_diacritics() dung free_llm json_mode=False (voice_script.py) + goi trong ai_content.
+3. vn_guard chi can 1 ky tu co dau la pass -> hook lot khong dau. Da them kiem mat do dau TUNG TRUONG (>=50% tu co dau) truoc khi nhan.
+
+### Nang chat luong noi dung (ai_content.py prompt)
+- Them muc KHAC BIET: goc nhin doc dao, cau chuyen/vi du cu the, doi khia canh neu topic da xuat hien.
+- Them muc NGU PHAP + AN TOAN: cau hoan chinh khong viet tat; KHONG claim y te tuyet doi (dung co the / theo nghien cuu); khong hua ket qua.
+- Ket qua test: topic Bach tuoc 3 trai tim — day du dau ca 4 truong, kien thuc chinh xac, hook hap dan.
+
+### Commit phien 2
+- d996f88 verify per-channel + UI notify
+- 0002c08 diacritic recovery
+- 2c5d484 relax fps gate + uniqueness prompt
+- 12b4a92 grammar + health-claim safety
+- 5239c49 per-field diacritic density
+
+### CON TON DONG
+- 11 publish_failed + 1 rendered con trong DB: da het chan fps, co the publish lai bang UI (nut Dang) — nhung nen dan dan, tranh dang hang loat de giam takedown.
+- 77 job failed (chu yeu render cu) — da co fallback regen, job MOI se khong con fail vi het content.
+- Chua restart server de nap code moi (scheduler auto-verify + runner fallback + gate moi).
+- UI: badge verify_failed + notification tieng Viet da code, can test tren desktop app that.
+
