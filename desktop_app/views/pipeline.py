@@ -398,6 +398,9 @@ class Pipeline(QWidget):
 			cid = self.ch.currentData()
 			if cid:
 				url = url + '&channel_id=' + str(cid)
+				kid = self.kind.currentData()
+				if kid:
+					url = url + '&kind=' + str(kid)
 			d = api.get(url)
 			adv = (d or {}).get('advisor') or {}
 			summary = adv.get('summary') or i18n.t('pipe.advisor.none')

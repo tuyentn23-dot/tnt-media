@@ -926,15 +926,10 @@ def studio_history(limit: int = 10):
 		return {'ok': False, 'error': str(e)[:200]}
 
 @app.get('/api/studio/advice')
-def studio_advice(force: int = 0, channel_id: str = ''):
+def studio_advice(force: int = 0, channel_id: str = '', kind: str = ''):
 	try:
 		from ops import studio_advisor as sa
-		if not force:
-			import os as _os, json as _json
-			cache = _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))), 'state', 'studio_advisor_cache.json')
-			if _os.path.exists(cache):
-				return _json.loads(open(cache, encoding='utf-8').read())
-		return sa.analyze(channel_id=(channel_id or None), force=bool(force))
+		return sa.analyze(channel_id=(channel_id or None), force=bool(force), kind=(kind or None))
 	except Exception as e:
 		return {'ok': False, 'error': str(e)[:300]}
 

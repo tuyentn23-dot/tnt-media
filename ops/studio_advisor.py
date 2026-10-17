@@ -214,7 +214,7 @@ def _analytics_block(an):
 			out.append('Video giu chan >=80%: ' + str(len(best_pct)) + ' -> pattern nay nen nhan rong')
 	return out
 
-def build_prompt(snap, db):
+def build_prompt(snap, db, kind=None):
 	DQ = chr(34)
 	ch = snap.get('channel', {})
 	top = snap.get('top', [])[:10]
@@ -226,6 +226,7 @@ def build_prompt(snap, db):
 	lines.append('2. Phan tich: video nao dang hieu qua? Chung co gi chung? (chu de, format, hook)')
 	lines.append('3. Moi y tuong PHAI dua tren 1 video top cu the. VD neu top la meo -> de xuat cho/meo/thu cung.')
 	lines.append('4. KHONG noi chung chung. KHONG khen subs/views. Tap trung vao CONTENT.')
+	lines.append('5. KIND BAT BUOC = ' + str(kind) + '. Moi y tuong PHAI dung kind nay, KHONG doi the loai.')
 	lines.append('')
 	lines.append('== VI DU MAU (bat chuoc chat luong nay) ==')
 	lines.append('Neu top1 la meo 12k views, top2 la AI 1k views:')
@@ -258,6 +259,16 @@ def build_prompt(snap, db):
 		for i, v in enumerate(recent, 1):
 			lines.append(str(i) + '. [' + str(v['views']) + 'v ' + str(v['likes']) + 'l] ' + str(v['title']))
 		lines.append('')
+	vref = snap.get('viral_ref') or []
+	if vref:
+		lines.append('')
+		lines.append('== VIDEO VIRAL DANG HOT (tham khao pattern) ==')
+		for v in vref[:6]:
+			lines.append('- [' + str(v.get('views', 0)) + 'v] ' + str(v.get('title', ''))[:100])
+		lines.append('Hay hoc pattern tu cac video tren (chu de, format, hook) nhung de xuat noi dung RIENG cho kenh nay.')
+		if kind:
+			lines.append('!!! UU TIEN: KIND = ' + str(kind) + '. De xuat PHAI thuoc the loai nay, dua tren TREND VIRAL o tren. BO QUA video top cua kenh neu khac the loai.')
+			lines.append('Vi du: neu kind=anime thi de xuat ve anime/AMV/nhan vat anime, KHONG de xuat meo/cho.')
 	lines.append('== YEU CAU ==')
 	lines.append('Tra ve JSON 1 dong gom cac truong:')
 	lines.append('{')
@@ -289,11 +300,11 @@ def _parse_json(raw):
 	except Exception:
 		return None
 
-def analyze(channel_id=None, force=False, ttl=3600, ingest_kind=None):
-	if not force and os.path.exists(CACHE):
+def analyze(channel_id=None, force=False, ttl=3600, ingest_kind=None, kind=None):
+	if not force and os.path.exists(_cache_path(channel_id)):
 		try:
-			c = json.loads(open(CACHE, encoding='utf-8').read())
-			if time.time() - float(c.get('ts', 0)) < ttl and c.get('data'):
+			c = json.loads(open(_cache_path(channel_id), encoding='utf-8').read())
+			if time.time() - float(c.get('ts', 0)) < ttl and c.get('advisor'):
 				c['cached'] = True
 				return c
 		except Exception:
@@ -311,7 +322,16 @@ def analyze(channel_id=None, force=False, ttl=3600, ingest_kind=None):
 		snap['analytics'] = {'ok': False}
 	if not snap.get('ok'):
 		return {'ok': False, 'error': snap.get('error', 'yt fetch failed'), 'snapshot': snap}
-	prompt = build_prompt(snap, db)
+	# Inject viral research trends vao snapshot
+	try:
+		from ops import viral_research as VR
+		cached = VR.latest(1)
+		if cached and cached[0].get('items'):
+			vitems = cached[0]['items'][:8]
+			snap['viral_ref'] = [{'title': str(x.get('title'))[:120], 'views': x.get('views')} for x in vitems]
+	except Exception:
+		pass
+	prompt = build_prompt(snap, db, kind=kind)
 	try:
 		from ops import ai_content as ac
 		raw = ac._call_ollama(prompt, temperature=0.5, max_tokens=900, timeout=300)
@@ -320,10 +340,10 @@ def analyze(channel_id=None, force=False, ttl=3600, ingest_kind=None):
 	parsed = _parse_json(raw)
 	if not parsed:
 		return {'ok': False, 'error': 'parse failed', 'raw': (raw or '')[:600]}
-	payload = {'ok': True, 'ts': time.time(), 'cached': False, 'channel': snap.get('channel'), 'top5': snap.get('top', [])[:5], 'advisor': parsed}
+	payload = {'ok': True, 'ts': time.time(), 'cached': False, 'channel': snap.get('channel'), 'top5': snap.get('top', [])[:5], 'advisor': parsed, 'kind': kind}
 	try:
 		os.makedirs(os.path.dirname(CACHE), exist_ok=True)
-		json.dump(payload, open(CACHE, 'w', encoding='utf-8'), ensure_ascii=False)
+		json.dump(payload, open(_cache_path(channel_id), 'w', encoding='utf-8'), ensure_ascii=False)
 	except Exception:
 		pass
 	# luu lich su (chi khi force hoac chua co)
