@@ -249,11 +249,25 @@ def generate_item(channel, kind, attempt=0):
 		return None
 	try:
 		from modules.render import vn_guard as _vg
+		# Thu 1: guard truc tiep
+		_guard_ok = True
 		for _t in (topic, hook, body, payoff):
-			_r = _vg.check(_t)
-			if not _r.get('ok'):
-				print('[ai_content] reject no-diacritic: '+str(_t)[:60].encode('ascii','replace').decode('ascii'))
-				return None
+			if not _vg.check(_t).get('ok'):
+				_guard_ok = False
+				break
+		# Thu 2: neu thieu dau -> phuc hoi dau roi kiem lai
+		if not _guard_ok:
+			try:
+				from ops import voice_script as _vs
+				_fix = lambda _x: _x if _vs.has_diacritics(_x) else _vs.restore_diacritics(_x)
+				topic, hook, body, payoff = _fix(topic), _fix(hook), _fix(body), _fix(payoff)
+				_guard_ok = all(_vg.check(_t).get('ok') for _t in (topic, hook, body, payoff))
+				print('[ai_content] diacritic recovered: '+str(_guard_ok))
+			except Exception as _de:
+				print('[ai_content] diacritic fix err: '+str(_de)[:80])
+		if not _guard_ok:
+			print('[ai_content] reject no-diacritic: '+str(topic)[:60].encode('ascii','replace').decode('ascii'))
+			return None
 	except Exception as _e:
 		print('[ai_content] vn_guard err: '+str(_e)[:80].encode('ascii','replace').decode('ascii'))
 	iid = 'ai_' + kind + '_' + hashlib.md5(topic.encode()).hexdigest()[:10]

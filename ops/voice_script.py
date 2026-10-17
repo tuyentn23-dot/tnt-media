@@ -40,7 +40,7 @@ def add_diacritics_simple(text):
 	# Rule-based don gian: map tung tu
 	if not text:
 		return text
-	words = re.split(r'(s+)', text)
+	words = re.split(r'(\s+)', text)
 	out = []
 	for w in words:
 		lw = w.lower().strip('.,!?:;"' + chr(39))
@@ -54,6 +54,24 @@ def add_diacritics_simple(text):
 		else:
 			out.append(w)
 	return ''.join(out)
+
+
+def restore_diacritics(text, timeout=45):
+	# Phuc hoi dau: goi free_llm json_mode=False -> text sach co dau; fallback map
+	if not text or has_diacritics(text):
+		return text
+	try:
+		from providers import free_llm as _fl
+		pr = 'Them dau tieng Viet day du cho doan sau. Chi tra ve dung 1 dong van ban tieng Viet co dau, giu nguyen y nghia va do dai, KHONG giai thich, KHONG them y.'
+		pr += NL + 'Doan goc: ' + text
+		r = _fl.chat([{'role': 'user', 'content': pr}], max_tokens=220, json_mode=False)
+		out = ((r or {}).get('text') or '').strip()
+		out = out.split(NL)[0].strip()
+		if out and has_diacritics(out):
+			return out
+	except Exception:
+		pass
+	return add_diacritics_simple(text)
 
 
 def rewrite_via_ollama(text, timeout=60):
