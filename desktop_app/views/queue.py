@@ -148,13 +148,13 @@ class QueueCard(QFrame):
 		self.pub = pub
 		self.oncheck = oncheck
 		self.setObjectName('Card')
-		self.setFixedWidth(220)
+		self.setFixedWidth(200)
 		lay = QVBoxLayout(self)
 		lay.setContentsMargins(10, 10, 10, 10)
 		lay.setSpacing(6)
 		hdr = QHBoxLayout()
 		self.cb = QCheckBox()
-		self.cb.stateChanged.connect(lambda s: oncheck(pub, s == Qt.Checked))
+		self.cb.toggled.connect(lambda checked: oncheck(pub, checked))
 		hdr.addWidget(self.cb)
 		pid = pub.get('id')
 		# Thumbnail
@@ -236,6 +236,7 @@ class Queue(QWidget):
 	def __init__(self, parent=None):
 		super().__init__(parent)
 		self.selected = set()
+		self.setMinimumWidth(400)
 		root = QVBoxLayout(self)
 		root.setContentsMargins(0, 0, 0, 0)
 		root.setSpacing(0)
@@ -245,52 +246,71 @@ class Queue(QWidget):
 		body.setContentsMargins(20, 16, 20, 16)
 		body.setSpacing(10)
 		bar = QHBoxLayout()
+		bar.setSpacing(6)
 		bar.addWidget(QLabel('Kênh:'))
-		self.fch = QComboBox(); self.fch.addItem('Tất cả', None)
+		self.fch = QComboBox()
+		self.fch.addItem('Tất cả', None)
+		self.fch.setMinimumContentsLength(6)
+		self.fch.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
 		bar.addWidget(self.fch)
-		bar.addSpacing(12)
-		bar.addWidget(QLabel('Trạng thái:'))
+		bar.addStretch()
+		self.count = QLabel('')
+		self.count.setStyleSheet('color:#8E8E93;font-size:11px')
+		bar.addWidget(self.count)
+		body.addLayout(bar)
+		bar_ft = QHBoxLayout()
+		bar_ft.setSpacing(6)
+		bar_ft.addWidget(QLabel('Trạng thái:'))
 		self.fst = QComboBox()
-		self.fst.addItem('Chưa lên lịch', 'rendered')
-		self.fst.addItem('Đã lên lịch', 'scheduled')
+		self.fst.addItem('Chưa đăng', 'rendered')
+		self.fst.addItem('Đã hẹn', 'scheduled')
 		self.fst.addItem('Đã duyệt', 'approved')
 		self.fst.addItem('Tất cả', None)
-		bar.addWidget(self.fst)
-		bar.addSpacing(12)
+		self.fst.setMinimumContentsLength(6)
+		self.fst.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
+		bar_ft.addWidget(self.fst)
+		bar_ft.addStretch()
 		self.btn_reload = QPushButton(i18n.t('btn.refresh'))
 		self.btn_reload.setToolTip('Ctrl+R de lam moi')
 		self.btn_reload.clicked.connect(self.refresh)
-		bar.addWidget(self.btn_reload)
-		bar.addStretch()
-		self.count = QLabel('')
-		bar.addWidget(self.count)
-		body.addLayout(bar)
+		bar_ft.addWidget(self.btn_reload)
+		body.addLayout(bar_ft)
 		bar2 = QHBoxLayout()
+		bar2.setSpacing(6)
 		bar2.addWidget(QLabel('Đã chọn:'))
 		self.selcount = QLabel('0')
 		self.selcount.setStyleSheet('font-weight:700;color:#0A84FF')
 		bar2.addWidget(self.selcount)
-		bar2.addSpacing(12)
+		bar2.addStretch()
 		self.btn_selall = QPushButton('Chọn tất cả')
 		self.btn_selall.clicked.connect(self.sel_all)
 		bar2.addWidget(self.btn_selall)
-		self.btn_clear = QPushButton('Bỏ chọn')
+		self.btn_clear = QPushButton('Bỏ tick')
 		self.btn_clear.clicked.connect(self.sel_clear)
 		bar2.addWidget(self.btn_clear)
-		bar2.addSpacing(20)
-		self.btn_bulkpub = QPushButton('Đăng tất cả chọn')
+		body.addLayout(bar2)
+		bar3a = QHBoxLayout()
+		bar3a.setSpacing(6)
+		self.btn_bulkpub = QPushButton('Đăng chọn')
 		self.btn_bulkpub.setObjectName('Primary')
 		self.btn_bulkpub.clicked.connect(self.bulk_publish)
-		bar2.addWidget(self.btn_bulkpub)
-		self.btn_bulksch = QPushButton('Lên lịch tất cả chọn')
+		bar3a.addWidget(self.btn_bulkpub, 1)
+		self.btn_bulksch = QPushButton('Lên lịch')
 		self.btn_bulksch.clicked.connect(self.bulk_schedule)
-		bar2.addWidget(self.btn_bulksch)
-		self.btn_bulkrej = QPushButton('Bỏ tất cả chọn')
+		bar3a.addWidget(self.btn_bulksch, 1)
+		body.addLayout(bar3a)
+		bar3b = QHBoxLayout()
+		bar3b.setSpacing(6)
+		self.btn_autosch = QPushButton('Tối ưu lịch')
+		self.btn_autosch.setObjectName('Primary')
+		self.btn_autosch.setToolTip('Tự chọn khung giờ vàng + số lượng tối ưu cho từng kênh, không cần thao tác thêm')
+		self.btn_autosch.clicked.connect(self.auto_schedule)
+		bar3b.addWidget(self.btn_autosch, 1)
+		self.btn_bulkrej = QPushButton('Loại bỏ')
 		self.btn_bulkrej.setObjectName('Danger')
 		self.btn_bulkrej.clicked.connect(self.bulk_reject)
-		bar2.addWidget(self.btn_bulkrej)
-		bar2.addStretch()
-		body.addLayout(bar2)
+		bar3b.addWidget(self.btn_bulkrej, 1)
+		body.addLayout(bar3b)
 		self.scroll = QScrollArea()
 		self.scroll.setWidgetResizable(True)
 		self.container = QWidget()
@@ -320,8 +340,20 @@ class Queue(QWidget):
 			if w:
 				w.deleteLater()
 
+	def _selected_ids(self):
+		ids = []
+		for i in range(self.grid.count()):
+			w = self.grid.itemAt(i).widget()
+			if w and hasattr(w, 'cb') and w.cb.isChecked() and hasattr(w, 'pub'):
+				pid = w.pub.get('id')
+				if pid is not None:
+					ids.append(pid)
+		return ids
+
 	def _updatesel(self):
-		self.selcount.setText(str(len(self.selected)))
+		ids = self._selected_ids()
+		self.selected = set(ids)
+		self.selcount.setText(str(len(ids)))
 
 	def sel_all(self):
 		for i in range(self.grid.count()):
@@ -359,7 +391,7 @@ class Queue(QWidget):
 		self.count.setText(str(len(items)) + ' video')
 		for i, pub in enumerate(items):
 			card = QueueCard(pub, self._oncheck, self._view, self._publish, self._schedule, self._unschedule, self._reject, self._edit, self._ai)
-			self.grid.addWidget(card, i // 5, i % 5)
+			self.grid.addWidget(card, i // 2, i % 2)
 		if not items:
 			self.grid.addWidget(QLabel('Không có video trong hàng đợi'), 0, 0)
 
@@ -386,7 +418,7 @@ class Queue(QWidget):
 		self.refresh()
 
 	def bulk_publish(self):
-		ids = list(self.selected)
+		ids = self._selected_ids()
 		if not ids:
 			QMessageBox.information(self, 'Chon', 'Chưa chọn video nào'); return
 		if QMessageBox.question(self, 'Dang', 'Dang ' + str(len(ids)) + ' video?') != QMessageBox.Yes: return
@@ -401,8 +433,35 @@ class Queue(QWidget):
 			QMessageBox.warning(self, 'Đăng thất bại', 'Không đăng được video nào. Kiểm tra token/chất lượng/mạng.')
 		self.refresh()
 
+	def auto_schedule(self):
+		ids = self._selected_ids()
+		ch = self.fch.currentData()
+		if ids:
+			msg = 'Tu dong len lich toi uu cho ' + str(len(ids)) + ' video da chon?'
+		else:
+			msg = 'Tu dong len lich toi uu cho TAT CA video chua dang'
+			msg += (' cua kenh ' + str(ch)) if ch else ' (tat ca kenh)'
+			msg += '?'
+		msg += chr(10) + chr(10) + 'Khung gio vang: 19:00, 20:30, 12:30, 21:30, 09:00, 07:30 (Asia/Saigon).'
+		msg += chr(10) + 'Toi da 2 video/kenh/ngay. Sau khi len lich, he thong tu dang dung gio, khong can thao tac.'
+		if QMessageBox.question(self, 'Dang theo lich toi uu', msg) != QMessageBox.Yes:
+			return
+		r = busy_wrap(self, lambda: api.auto_schedule(ids if ids else None, ch, 2), 'Dang len lich toi uu...')
+		if not isinstance(r, dict):
+			QMessageBox.warning(self, 'Loi', str(r)[:300]); return
+		if not r.get('ok'):
+			QMessageBox.warning(self, 'Loi', str(r.get('error') or r)[:400]); return
+		cnt = int(r.get('count', 0)); tot = int(r.get('total', 0))
+		if cnt and cnt == tot:
+			QMessageBox.information(self, 'Da len lich', 'Da len lich ' + str(cnt) + '/' + str(tot) + ' video.' + chr(10) + 'He thong se tu dang dung gio.')
+		elif cnt > 0:
+			QMessageBox.warning(self, 'Mot phan', 'Da len lich ' + str(cnt) + '/' + str(tot) + ' video. ' + str(tot - cnt) + ' video khong con slot.')
+		else:
+			QMessageBox.warning(self, 'Khong len lich duoc', 'Khong len lich duoc video nao. Kiem tra trang thai video.')
+		self.refresh()
+
 	def bulk_reject(self):
-		ids = list(self.selected)
+		ids = self._selected_ids()
 		if not ids:
 			QMessageBox.information(self, 'Chon', 'Chua chon video nao'); return
 		if QMessageBox.question(self, 'Bo', 'Bo ' + str(len(ids)) + ' video?') != QMessageBox.Yes:
@@ -418,7 +477,7 @@ class Queue(QWidget):
 		self.refresh()
 
 	def bulk_schedule(self):
-		ids = list(self.selected)
+		ids = self._selected_ids()
 		if not ids:
 			QMessageBox.information(self, 'Chon', 'Chưa chọn video nào'); return
 		dlg = QDialog(self); dlg.setWindowTitle('Lên lịch ' + str(len(ids)) + ' video')
