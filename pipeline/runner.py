@@ -96,8 +96,21 @@ def run_job(job, dry_run=False, item_id=None):
 	errors = []
 	try:
 		for kind in kinds:
-			items = ch.load_content(job.channel_id, kind)
-			fresh = [it for it in items if not cf.is_published(cf.signature(it, kind))]
+			# UU TIEN: neu job.topic co gia tri -> generate tu seed truoc (tranh drift)
+			_seed = (job.topic or '').strip() or None
+			fresh = []
+			if _seed:
+				try:
+					from ops import ai_content as _ac_seed
+					_gen_seed = _ac_seed.generate(job.channel_id, kind, limit=1, seed_topic=_seed)
+					if _gen_seed:
+						fresh = _gen_seed
+						log('seed-first gen: ' + _seed[:60] + ' -> ' + str(fresh[0].get('id', ''))[:30])
+				except Exception as _sge:
+					log('seed gen err: ' + str(_sge)[:120])
+			if not fresh:
+				items = ch.load_content(job.channel_id, kind)
+				fresh = [it for it in items if not cf.is_published(cf.signature(it, kind))]
 			if not fresh:
 				# Fallback: sinh noi dung moi khi het sach (tranh job fail "khong render duoc")
 				try:

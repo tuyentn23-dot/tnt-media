@@ -1,7 +1,7 @@
 # -- coding: utf-8 --
 # desktop_app/views/pipeline.py - Redesign v2 (topic + config grid + timeline + log + run)
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
-	QLineEdit, QComboBox, QDateTimeEdit, QPlainTextEdit, QMessageBox, QSizePolicy, QScrollArea, QFrame, QDialog, QDialogButtonBox)
+	QLineEdit, QComboBox, QDateTimeEdit, QPlainTextEdit, QMessageBox, QSizePolicy, QScrollArea, QFrame, QDialog, QDialogButtonBox, QCheckBox)
 from PySide6.QtCore import Qt, QTimer, QDateTime
 import i18n, api
 from widgets_v2 import (Card, FieldGrid, FieldRow, CheckboxRow, Timeline, TimelineStep,
@@ -476,7 +476,7 @@ class Pipeline(QWidget):
 			kid = self.kind.currentData()
 			if kid:
 				url += '&kind=' + str(kid)
-			d = api.get(url)
+			d = api.get(url, timeout=90)
 			adv = (d or {}).get('advisor') or {}
 			ideas = adv.get('next_ideas') or []
 			suggestions = []
