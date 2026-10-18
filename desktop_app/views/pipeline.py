@@ -1,7 +1,7 @@
 # -- coding: utf-8 --
 # desktop_app/views/pipeline.py - Redesign v2 (topic + config grid + timeline + log + run)
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
-	QLineEdit, QComboBox, QDateTimeEdit, QPlainTextEdit, QMessageBox, QSizePolicy)
+	QLineEdit, QComboBox, QDateTimeEdit, QPlainTextEdit, QMessageBox, QSizePolicy, QScrollArea, QFrame)
 from PySide6.QtCore import Qt, QTimer, QDateTime
 import i18n, api
 from widgets_v2 import (Card, FieldGrid, CheckboxRow, Timeline, TimelineStep,
@@ -26,11 +26,24 @@ class Pipeline(QWidget):
 		self._lastn = -1
 		self._lastchange = None
 		self._build()
+		try:
+			self.sched_row.setVisible(False)
+		except Exception:
+			pass
 		self._load_all()
 
 	def _build(self):
-		root = QVBoxLayout(self)
-		root.setContentsMargins(0, 0, 0, 0)
+		outer = QVBoxLayout(self)
+		outer.setContentsMargins(0, 0, 0, 0)
+		outer.setSpacing(0)
+
+		scroll = QScrollArea()
+		scroll.setWidgetResizable(True)
+		scroll.setFrameShape(QFrame.NoFrame)
+		scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+		scroll_content = QWidget()
+		root = QVBoxLayout(scroll_content)
+		root.setContentsMargins(20, 16, 12, 16)
 		root.setSpacing(12)
 
 		# === TOPIC CARD ===
@@ -74,13 +87,14 @@ class Pipeline(QWidget):
 		self.sched.setDateTime(QDateTime.currentDateTime().addSecs(3600))
 		self.sched.setDisplayFormat('yyyy-MM-dd HH:mm')
 		self.sched.setVisible(False)
+		self._sched_hidden = True
 
 		self.grid.add('Kenh', self.ch)
 		self.grid.add('Loai noi dung', self.kind)
 		self.grid.add('Do dai', self.length)
 		self.grid.add('Che do', self.mode)
 		self.grid.add('Khi nao', self.when)
-		self.grid.add('Hen lich', self.sched)
+		self.sched_row = self.grid.add('Hen lich', self.sched)
 		self.grid.add('Giong doc', self.voice)
 		self.grid.add('Sac thai', self.preset)
 		self.grid.add('Batch', self.batch_count)
@@ -103,7 +117,7 @@ class Pipeline(QWidget):
 		self.modules = []
 		for s in STEPS:
 			cb = QComboBox()
-			cb.setMinimumContentsLength(4)
+			cb.setMinimumContentsLength(10)
 			cb.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
 			mods_row.addWidget(cb, 1)
 			self.modules.append(cb)
@@ -120,8 +134,15 @@ class Pipeline(QWidget):
 
 		root.addStretch()
 
-		# === RUN BAR ===
-		run_bar = QHBoxLayout()
+		scroll.setWidget(scroll_content)
+		outer.addWidget(scroll, 1)
+
+		# === RUN BAR (sticky bottom) ===
+		run_wrap = QFrame()
+		run_wrap.setObjectName('RunBar')
+		run_wrap.setStyleSheet('#RunBar{background:#FFFFFF;border-top:1px solid #E5E5EA}')
+		run_bar = QHBoxLayout(run_wrap)
+		run_bar.setContentsMargins(20, 10, 20, 10)
 		run_bar.setSpacing(10)
 		run_bar.addStretch()
 		self.lbl_status = QLabel('San sang')
@@ -130,7 +151,7 @@ class Pipeline(QWidget):
 		self.btn_run = RunButton('Chay 2 video')
 		self.btn_run.setMinimumWidth(180)
 		run_bar.addWidget(self.btn_run)
-		root.addLayout(run_bar)
+		outer.addWidget(run_wrap)
 
 		# === SIGNALS ===
 		self.ch.currentIndexChanged.connect(self.load_kinds)
@@ -143,7 +164,12 @@ class Pipeline(QWidget):
 		self.btn_run.clicked.connect(self.do_run)
 
 	def _on_when_changed(self, idx):
-		self.sched.setVisible(idx == 1)
+		show = (idx == 1)
+		self.sched.setVisible(show)
+		try:
+			self.sched_row.setVisible(show)
+		except Exception:
+			pass
 
 	def _update_run_label(self):
 		n = int(self.batch_count.currentData() or 1)

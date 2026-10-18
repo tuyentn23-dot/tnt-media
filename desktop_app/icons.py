@@ -21,6 +21,8 @@ _PATHS = {
 	'sparkle': 'M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2 2-5z',
 	'trend': 'M3 17l6-6 4 4 8-8M15 7h6v6',
 	'clock': 'M12 3a9 9 0 100 18 9 9 0 000-18zM12 7v5l3 3',
+	'studio': 'M3 12l9-9 9 9M5 10v10h14V10',
+	'library': 'M4 6h4v14H4zM10 6h4v14h-4zM16 6h4v14h-4z',
 }
 
 def svg(path_d, color='#1D1D1F', width=1.8):

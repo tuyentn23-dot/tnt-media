@@ -20,6 +20,13 @@ def build(theme='light'):
 	a('#Sidebar QPushButton:hover{background:%s}' % p['ctrl_hover'])
 	a('#Sidebar QPushButton:checked{background:%s;color:%s;font-weight:600}' % (p['sidebar_sel'], p['accent']))
 
+	# TopBarNav (top navigation bar)
+	a('#TopBarNav{background:%s;border-bottom:1px solid %s}' % (p['surface'], p['sep']))
+	a('#TopBarNav QPushButton{background:transparent;border:none;border-bottom:2px solid transparent;color:%s;font-size:13px;font-weight:500;padding:0 14px;min-height:54px}' % p['label3'])
+	a('#TopBarNav QPushButton:hover{color:%s}' % p['label2'])
+	a('#TopBarNav QPushButton:checked{color:%s;border-bottom-color:%s;font-weight:600}' % (p['accent'], p['accent']))
+	a('#TopBarNav QLabel{background:transparent}')
+
 	# TopBar
 	a('#TopBar{background:%s;border-bottom:1px solid %s}' % (p['surface'], p['sep']))
 
@@ -56,14 +63,17 @@ def build(theme='light'):
 	a('QPushButton#Ghost{background:transparent;border:none;color:%s;padding:6px 10px}' % p['accent_text'])
 	a('QPushButton#Ghost:hover{background:%s}' % p['accent_soft'])
 	a('QPushButton#SmallButton{min-height:28px;padding:0 10px;font-size:11px}')
+	a('QPushButton#SmallButtonPrimary{min-height:28px;padding:0 10px;font-size:11px;background:%s;color:#FFFFFF;border:1px solid %s;font-weight:600}' % (p['accent'], p['accent']))
+	a('QPushButton#SmallButtonPrimary:hover{background:%s;border-color:%s}' % (p['accent_hover'], p['accent_hover']))
+	a('QPushButton#SmallButtonDanger{min-height:28px;padding:0 10px;font-size:11px;background:%s;color:#FFFFFF;border:1px solid %s;font-weight:600}' % (p['red'], p['red']))
 	a('QPushButton#RunButton{min-height:40px;font-size:14px;font-weight:600;padding:0 24px}')
 
 	# Combo/Input
-	a('QComboBox,QLineEdit,QSpinBox,QDoubleSpinBox,QDateTimeEdit{background:%s;border:1px solid %s;border-radius:6px;padding:0 10px;color:%s;min-height:30px;font-size:12px}' % (p['ctrl_bg'], p['ctrl_border'], p['label']))
+	a('QComboBox,QLineEdit,QSpinBox,QDoubleSpinBox,QDateTimeEdit{background:%s;border:1px solid %s;border-radius:6px;padding:4px 10px 4px 10px;color:%s;min-height:24px;font-size:12px}' % (p['ctrl_bg'], p['ctrl_border'], p['label']))
 	a('QComboBox:hover,QLineEdit:hover,QSpinBox:hover,QDateTimeEdit:hover{border:1px solid %s}' % p['sep_strong'])
 	a('QComboBox:focus,QLineEdit:focus,QSpinBox:focus,QDateTimeEdit:focus{border:1px solid %s}' % p['accent'])
 	a('QComboBox::drop-down{border:none;width:20px}')
-	a('QComboBox::down-arrow{image:none;border-left:3px solid transparent;border-right:3px solid transparent;border-top:4px solid %s;margin-right:6px}' % p['label3'])
+	a('QComboBox::down-arrow{image:none;width:0;height:0}')
 	a('QComboBox QAbstractItemView{background:%s;border:1px solid %s;border-radius:8px;padding:4px;selection-background-color:%s;selection-color:%s;outline:none}' % (p['surface'], p['sep'], p['sel_bg'], p['sel_fg']))
 
 	# Checkbox

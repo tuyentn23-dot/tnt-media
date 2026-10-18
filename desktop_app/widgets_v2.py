@@ -57,16 +57,24 @@ class Card(QFrame):
 class FieldRow(QWidget):
 	def __init__(self, label, control, parent=None):
 		super().__init__(parent)
+		self.control = control
 		v = QVBoxLayout(self)
 		v.setContentsMargins(0, 0, 0, 0)
 		v.setSpacing(4)
-		lbl = QLabel(label)
-		lbl.setObjectName('FieldLabel')
-		v.addWidget(lbl)
+		self.lbl = QLabel(label)
+		self.lbl.setObjectName('FieldLabel')
+		v.addWidget(self.lbl)
 		if isinstance(control, QWidget):
 			v.addWidget(control)
 		else:
 			v.addLayout(control)
+
+	def setVisible(self, vis):
+		super().setVisible(vis)
+		try:
+			self.lbl.setVisible(vis)
+		except Exception:
+			pass
 
 
 class FieldGrid(QWidget):
@@ -215,14 +223,15 @@ class Timeline(QWidget):
 		for i, (num, label) in enumerate(steps):
 			st = TimelineStep(num, label)
 			self.steps.append(st)
-			h.addWidget(st, 1)
+			h.addWidget(st, 0)
 			if i < len(steps) - 1:
 				line = QFrame()
 				line.setFixedHeight(2)
-				line.setStyleSheet('background:#E5E5EA')
+				line.setMinimumWidth(30)
+				line.setStyleSheet('background:#E5E5EA;border:none')
 				line.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 				self.lines.append(line)
-				h.addWidget(line, 0)
+				h.addWidget(line, 1)
 
 	def set_state(self, idx, state):
 		for i, st in enumerate(self.steps):
