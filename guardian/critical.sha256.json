@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-10-18T11:43:41.969094",
+  "generated": "2026-10-18T11:45:45.401659",
   "files": {
     "ops/vids_agent.py": "6a0ee08287d7d6c2522acae18664b533cfbf5b05901dd4bcea4b5374d781fc43",
     "ops/vids_edit.py": "7c1fcccb442a46508879df24018679e24e103ba9d8906b260aed4716bc6c1e5c",
@@ -30,7 +30,7 @@
     "desktop_app/views/pipeline.py": "02267b940201c268cce68196af3af1308b5cd23fcea16b2cb88d11b3c80bd145",
     "desktop_app/strings_vi.json": "5f6e4c6b12e66ecf90d44ea7bb80d80e769404bef005af4772908b8331998e24",
     "desktop_app/strings_en.json": "de7f78c6665374de8eae6e0a7f7d3e73f636ee3ffe2871a4498e419a1139e4c2",
-    "desktop_app/views/channels.py": "bc6198a0522eedce35ab10490aa04078f74e67ef6eb2aaee4e5863496ca66d6e",
+    "desktop_app/views/channels.py": "0438635fead6397b8febc7c7dc2b13ccd68040584bb120828e5480a53c3d8a0e",
     "ops/trend_analyzer.py": "90908bcdbf65ccb597f1a69306d25911ead355a9f24a923c8deecc2064307ad8",
     "ops/yt_metrics.py": "ca16e9d5c005c626f1a4a4144aff1f475629128bfa1b4264c9c88c060298b3cb",
     "ops/oauth_setup.py": "b52ef357fd7c3ba17d7ff5f40e6880e6db3f27ca597a7512c2824d5e28ca4bac",
