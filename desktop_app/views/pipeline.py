@@ -9,11 +9,11 @@ from widgets_v2 import (Card, FieldGrid, CheckboxRow, Timeline, TimelineStep,
 
 
 STEPS = [
-	{'num': '1', 'label': 'Phan tich', 'cat': 'analyze'},
-	{'num': '2', 'label': 'Noi dung', 'cat': 'content'},
-	{'num': '3', 'label': 'Dung video', 'cat': 'render'},
-	{'num': '4', 'label': 'Giong noi', 'cat': 'voice'},
-	{'num': '5', 'label': 'Dang bai', 'cat': 'publish'},
+	{'num': '1', 'label': 'Phân tích', 'cat': 'analyze'},
+	{'num': '2', 'label': 'Nội dung', 'cat': 'content'},
+	{'num': '3', 'label': 'Dựng video', 'cat': 'render'},
+	{'num': '4', 'label': 'Giọng nói', 'cat': 'voice'},
+	{'num': '5', 'label': 'Đăng bài', 'cat': 'publish'},
 ]
 
 
@@ -33,51 +33,83 @@ class Pipeline(QWidget):
 		self._load_all()
 
 	def _build(self):
-		outer = QVBoxLayout(self)
-		outer.setContentsMargins(0, 0, 0, 0)
-		outer.setSpacing(0)
-
-		scroll = QScrollArea()
-		scroll.setWidgetResizable(True)
-		scroll.setFrameShape(QFrame.NoFrame)
-		scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-		scroll_content = QWidget()
-		root = QVBoxLayout(scroll_content)
+		root = QVBoxLayout(self)
 		root.setContentsMargins(20, 16, 12, 16)
-		root.setSpacing(12)
+		root.setSpacing(10)
 
-		# === TOPIC CARD ===
-		topic_card = Card('Chu de video')
+		# === PIPELINE (TOP, header has inline run button) ===
+		pipe_card = QFrame()
+		pipe_card.setObjectName('Card')
+		pipe_card.setStyleSheet("#Card{background:#FFFFFF;border:1px solid #E5E5EA;border-radius:12px}")
+		pc_lay = QVBoxLayout(pipe_card)
+		pc_lay.setContentsMargins(14, 10, 14, 10)
+		pc_lay.setSpacing(8)
+		# Header row: title + status + run button
+		pc_hdr = QHBoxLayout()
+		pc_hdr.setSpacing(8)
+		pc_title = QLabel('PIPELINE · 5 BƯỚC')
+		pc_title.setStyleSheet('font-size:10px;font-weight:700;color:#8E8E93;letter-spacing:0.8px')
+		pc_hdr.addWidget(pc_title)
+		pc_hdr.addStretch()
+		self.lbl_status = QLabel('Sẵn sàng')
+		self.lbl_status.setStyleSheet('font-size:11px;color:#8E8E93')
+		pc_hdr.addWidget(self.lbl_status)
+		self.btn_run = RunButton('▶ Chạy 2 video')
+		self.btn_run.setMinimumHeight(30)
+		self.btn_run.setMaximumHeight(30)
+		self.btn_run.setMinimumWidth(140)
+		self.btn_run.setMaximumWidth(180)
+		self.btn_run.setStyleSheet('QPushButton{background:#0A84FF;color:white;border:none;border-radius:7px;padding:0 16px;font-size:12px;font-weight:600} QPushButton:hover{background:#0066CC} QPushButton:disabled{background:#B0D4FF}')
+		pc_hdr.addWidget(self.btn_run)
+		pc_lay.addLayout(pc_hdr)
+		self.timeline = Timeline([(s['num'], s['label']) for s in STEPS])
+		pc_lay.addWidget(self.timeline)
+		mods_row = QHBoxLayout()
+		mods_row.setSpacing(6)
+		self.modules = []
+		for s in STEPS:
+			cb = QComboBox()
+			cb.setMinimumContentsLength(6)
+			cb.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
+			mods_row.addWidget(cb, 1)
+			self.modules.append(cb)
+		pc_lay.addLayout(mods_row)
+		pipe_card.setMinimumHeight(175)
+		root.addWidget(pipe_card)
+
+		# === TOPIC ===
+		topic_card = Card('Chủ đề video')
 		topic_row = QHBoxLayout()
 		topic_row.setSpacing(8)
 		self.topic = QLineEdit()
-		self.topic.setPlaceholderText('Nhap chu de hoac de trong dung AI goi y...')
+		self.topic.setPlaceholderText('Nhập chủ đề hoặc để trống dùng AI gợi ý...')
 		topic_row.addWidget(self.topic, 1)
 		self.btn_trend = SecondaryButton('Trend')
 		topic_row.addWidget(self.btn_trend)
 		self.btn_viral = SecondaryButton('Viral')
 		topic_row.addWidget(self.btn_viral)
-		self.btn_adv = PrimaryButton('Goi y')
+		self.btn_adv = PrimaryButton('Gợi ý')
 		topic_row.addWidget(self.btn_adv)
 		topic_card.add(topic_row)
+		topic_card.setMinimumHeight(75)
 		root.addWidget(topic_card)
 
-		# === CONFIG CARD ===
-		cfg_card = Card('Cau hinh')
-		self.grid = FieldGrid(cols=3)
+		# === CONFIG ===
+		cfg_card = Card('Cấu hình')
+		self.grid = FieldGrid(cols=4, vgap=6, hgap=8)
 		self.ch = QComboBox()
 		self.kind = QComboBox()
 		self.length = QComboBox()
-		self.length.addItem('Ngan', None)
-		self.length.addItem('Dai', 90)
+		self.length.addItem('Ngắn', None)
+		self.length.addItem('Dài', 90)
 		self.mode = QComboBox()
-		self.mode.addItems(['Tu dong', 'Duyet truoc'])
+		self.mode.addItems(['Tự động', 'Duyệt trước'])
 		self.when = QComboBox()
-		self.when.addItems(['Dang ngay', 'Hen lich'])
+		self.when.addItems(['Đăng ngay', 'Hẹn lịch'])
 		self.voice = QComboBox()
 		self.preset = QComboBox()
 		self.advisor_ideas = QComboBox()
-		self.advisor_ideas.addItem('-- Chon y tuong --', None)
+		self.advisor_ideas.addItem('-- Chọn ý tưởng --', None)
 		self.batch_count = QComboBox()
 		for lbl, n in [('1 video', 1), ('2 video', 2), ('3 video', 3), ('5 video', 5), ('7 video', 7), ('10 video', 10)]:
 			self.batch_count.addItem(lbl, n)
@@ -89,69 +121,49 @@ class Pipeline(QWidget):
 		self.sched.setVisible(False)
 		self._sched_hidden = True
 
-		self.grid.add('Kenh', self.ch)
-		self.grid.add('Loai noi dung', self.kind)
-		self.grid.add('Do dai', self.length)
-		self.grid.add('Che do', self.mode)
-		self.grid.add('Khi nao', self.when)
-		self.sched_row = self.grid.add('Hen lich', self.sched)
-		self.grid.add('Giong doc', self.voice)
-		self.grid.add('Sac thai', self.preset)
-		self.grid.add('Batch', self.batch_count)
-		self.grid.add_span(self.advisor_ideas)
+		self.grid.add('Kênh', self.ch)
+		self.grid.add('Loại nội dung', self.kind)
+		self.grid.add('Độ dài', self.length)
+		self.grid.add('Chế độ', self.mode)
+		self.grid.add('Khi nào', self.when)
+		self.sched_row = self.grid.add('Hẹn lịch', self.sched)
+		self.grid.add('Giọng đọc', self.voice)
+		self.grid.add('Sắc thái', self.preset)
+		self.grid.add('Số lượng', self.batch_count)
+		# Row 3: advisor (span 2) + checkbox row (span 2)
+		adv_box = QWidget()
+		adv_lay = QVBoxLayout(adv_box)
+		adv_lay.setContentsMargins(0, 0, 0, 0)
+		adv_lay.setSpacing(4)
+		adv_lbl = QLabel('Ý tưởng (Advisor)')
+		adv_lbl.setObjectName('FieldLabel')
+		adv_lay.addWidget(adv_lbl)
+		adv_lay.addWidget(self.advisor_ideas)
+		self.grid.g.addWidget(adv_box, 2, 0, 1, 2)
 		cfg_card.add(self.grid)
 
+		chk_box = QWidget()
+		chk_lay = QVBoxLayout(chk_box)
+		chk_lay.setContentsMargins(0, 0, 0, 0)
+		chk_lay.setSpacing(4)
+		chk_lbl = QLabel('Tùy chọn')
+		chk_lbl.setObjectName('FieldLabel')
+		chk_lay.addWidget(chk_lbl)
 		self.chk_row = CheckboxRow([
-			('caption', 'Hien caption', True),
-			('music', 'Chi long nhac', False),
+			('caption', 'Hiện caption', True),
+			('music', 'Chỉ lồng nhạc', False),
 		])
-		cfg_card.add(self.chk_row)
+		chk_lay.addWidget(self.chk_row)
+		self.grid.g.addWidget(chk_box, 2, 2, 1, 2)
+		
 		root.addWidget(cfg_card)
 
-		# === PIPELINE CARD ===
-		pipe_card = Card('Pipeline · 5 buoc')
-		self.timeline = Timeline([(s['num'], s['label']) for s in STEPS])
-		pipe_card.add(self.timeline)
-		mods_row = QHBoxLayout()
-		mods_row.setSpacing(6)
-		self.modules = []
-		for s in STEPS:
-			cb = QComboBox()
-			cb.setMinimumContentsLength(10)
-			cb.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
-			mods_row.addWidget(cb, 1)
-			self.modules.append(cb)
-		pipe_card.add(mods_row)
-		root.addWidget(pipe_card)
-
-		# === LOG ===
+		# === LOG (expands) ===
 		self.log = QPlainTextEdit()
 		self.log.setReadOnly(True)
-		self.log.setPlaceholderText('Nhat ky chay se hien o day...')
-		self.log.setMinimumHeight(70)
-		self.log.setMaximumHeight(110)
-		root.addWidget(self.log)
-
-		root.addStretch()
-
-		scroll.setWidget(scroll_content)
-		outer.addWidget(scroll, 1)
-
-		# === RUN BAR (sticky bottom) ===
-		run_wrap = QFrame()
-		run_wrap.setObjectName('RunBar')
-		run_wrap.setStyleSheet('#RunBar{background:#FFFFFF;border-top:1px solid #E5E5EA}')
-		run_bar = QHBoxLayout(run_wrap)
-		run_bar.setContentsMargins(20, 10, 20, 10)
-		run_bar.setSpacing(10)
-		run_bar.addStretch()
-		self.lbl_status = QLabel('San sang')
-		self.lbl_status.setStyleSheet('font-size:11px;color:#8E8E93')
-		run_bar.addWidget(self.lbl_status)
-		self.btn_run = RunButton('Chay 2 video')
-		self.btn_run.setMinimumWidth(180)
-		run_bar.addWidget(self.btn_run)
-		outer.addWidget(run_wrap)
+		self.log.setPlaceholderText('Nhật ký chạy sẽ hiện ở đây...')
+		self.log.setMinimumHeight(50)
+		root.addWidget(self.log, 1)
 
 		# === SIGNALS ===
 		self.ch.currentIndexChanged.connect(self.load_kinds)
@@ -173,7 +185,7 @@ class Pipeline(QWidget):
 
 	def _update_run_label(self):
 		n = int(self.batch_count.currentData() or 1)
-		self.btn_run.setText('Chay ' + str(n) + ' video')
+		self.btn_run.setText('Chạy ' + str(n) + ' video')
 
 	def _load_all(self):
 		try:
@@ -278,7 +290,7 @@ class Pipeline(QWidget):
 			self.preset.addItem('default', 'default')
 
 	def do_trend(self):
-		self.logline('> Dang thu thap xu huong...')
+		self.logline('> Đang thu thập xu hướng...')
 		try:
 			niche = (self.kind.currentData() or self.kind.currentText() or '').strip().lower()
 			rc = api.post('/api/trends/collect', {'niche': niche, 'limit': 30})
@@ -287,7 +299,7 @@ class Pipeline(QWidget):
 			self.logline(' Loi: ' + str(e)[:120])
 
 	def do_viral(self):
-		self.logline('> Dang phan tich viral...')
+		self.logline('> Đang phân tích viral...')
 		kw = self.topic.text().strip() or (self.kind.currentText() if self.kind.count() else 'meo con')
 		try:
 			r = api.post('/api/viral/search', {'query': kw, 'max_results': 15})
@@ -300,7 +312,7 @@ class Pipeline(QWidget):
 			self.logline(' Loi: ' + str(e)[:120])
 
 	def load_advisor(self):
-		self.logline('> Lay goi y tu Advisor...')
+		self.logline('> Lấy gợi ý từ Advisor...')
 		try:
 			url = '/api/studio/advice?force=0'
 			cid = self.ch.currentData()
@@ -313,7 +325,7 @@ class Pipeline(QWidget):
 			adv = (d or {}).get('advisor') or {}
 			self.advisor_ideas.blockSignals(True)
 			self.advisor_ideas.clear()
-			self.advisor_ideas.addItem('-- Chon y tuong --', None)
+			self.advisor_ideas.addItem('-- Chọn ý tưởng --', None)
 			for idea in (adv.get('next_ideas') or []):
 				ttl = (idea.get('title') or '')[:80]
 				if ttl:
@@ -327,11 +339,11 @@ class Pipeline(QWidget):
 		t = self.advisor_ideas.currentData()
 		if t:
 			self.topic.setText(t)
-			self.logline('> Ap dung: ' + t[:60])
+			self.logline('> Áp dụng: ' + t[:60])
 	def do_run(self):
 		cid = self.ch.currentData()
 		if cid is None:
-			self.logline('! Chua chon kenh')
+			self.logline('! Chưa chọn kênh')
 			return
 		n = int(self.batch_count.currentData() or 1)
 		body = {
@@ -361,17 +373,17 @@ class Pipeline(QWidget):
 		try:
 			r = api.create_job(body)
 		except Exception as e:
-			self.logline('! Loi API: ' + str(e)[:150])
+			self.logline('! Lỗi API: ' + str(e)[:150])
 			return
 		jid = r.get('job_id', r.get('id'))
 		if not jid:
-			self.logline('! Khong tao duoc job: ' + str(r)[:150])
+			self.logline('! Không tạo được job: ' + str(r)[:150])
 			return
 		self.logline('> Dang chay: ' + str(jid))
 		try:
 			rr = api.run_job(jid)
 		except Exception as e:
-			self.logline('! Loi chay: ' + str(e)[:150])
+			self.logline('! Lỗi chạy: ' + str(e)[:150])
 			return
 		if rr.get('ok') is False:
 			self.logline('! Run loi: ' + str(rr)[:150])
@@ -383,7 +395,7 @@ class Pipeline(QWidget):
 		self._lastn = -1
 		self._lastchange = _tm.time()
 		self.btn_run.setEnabled(False)
-		self.lbl_status.setText('Dang chay ' + str(n) + ' video...')
+		self.lbl_status.setText('Đang chạy ' + str(n) + ' video...')
 		self.timeline.set_state(0, TimelineStep.STATE_RUNNING)
 		if not hasattr(self, "timer"):
 			self.timer = QTimer(self)
@@ -433,7 +445,7 @@ class Pipeline(QWidget):
 		if st in ('done', 'completed', 'success'):
 			self.timer.stop()
 			self.timeline.set_state(5, TimelineStep.STATE_DONE)
-			self.lbl_status.setText('Hoan tat ' + str(n) + ' video / ' + tstr)
+			self.lbl_status.setText('Hoàn tất ' + str(n) + ' video / ' + tstr)
 			self.btn_run.setEnabled(True)
 			self.logline('> Xong ' + str(n) + ' video sau ' + tstr)
 		elif st in ('error', 'failed'):
@@ -442,5 +454,5 @@ class Pipeline(QWidget):
 		elif running or st in ("running", "pending", "queued"):
 			step = min(4, n)
 			self.timeline.set_state(step, TimelineStep.STATE_RUNNING)
-			msg = 'Chay ' + tstr + ' - ' + str(n) + '/' + str(total)
+			msg = 'Chạy ' + tstr + ' - ' + str(n) + '/' + str(total)
 			self.lbl_status.setText(msg)

@@ -16,7 +16,12 @@ def _req(method, path, body=None, timeout=3):
 			raw = r.read().decode('utf-8')
 			return json.loads(raw) if raw else {}
 	except urllib.error.HTTPError as e:
-		return {'ok': False, 'err': 'HTTP ' + str(e.code)}
+		try:
+			body = e.read().decode('utf-8', errors='replace')[:500]
+		except Exception:
+			body = ''
+		print('[api] HTTP', e.code, path, '->', body)
+		return {'ok': False, 'err': 'HTTP ' + str(e.code), 'body': body}
 	except Exception as e:
 		return {'ok': False, 'err': str(e)}
 
@@ -136,3 +141,25 @@ def ai_feedback(channel_id=None):
 	if channel_id:
 		q = '?channel_id=' + str(channel_id)
 	return get('/api/ai/feedback' + q)
+
+def auto_schedule(ids=None, channel_id=None, per_day=None):
+	body = {}
+	if ids:
+		body['ids'] = list(ids)
+	if channel_id:
+		body['channel_id'] = channel_id
+	if per_day:
+		body['per_day'] = int(per_day)
+	body['upload_now'] = False
+	return post('/api/publications/auto_schedule', body, timeout=30)
+
+def weekly_status():
+	return get('/api/weekly/status', timeout=10)
+
+
+def weekly_start(payload):
+	return post('/api/weekly/start', payload, timeout=30)
+
+
+def weekly_stop():
+	return post('/api/weekly/stop', None, timeout=20)

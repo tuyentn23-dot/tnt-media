@@ -20,21 +20,7 @@ class Studio(QWidget):
 		root.setContentsMargins(0, 0, 0, 0)
 		root.setSpacing(0)
 
-		# Page header
-		page_hdr = QWidget()
-		page_hdr.setObjectName("PageHeaderBar")
-		page_hdr.setStyleSheet('#PageHeaderBar{background:#FFFFFF;border-bottom:1px solid #E5E5EA}')
-		ph = QVBoxLayout(page_hdr)
-		ph.setContentsMargins(24, 14, 24, 14)
-		ph.setSpacing(2)
-		title = QLabel('Studio')
-		title.setStyleSheet('font-size:22px;font-weight:700;color:#1C1C1E')
-		ph.addWidget(title)
-		sub = QLabel('Xuong san xuat - Tao video, hang doi, dang bai')
-		sub.setStyleSheet('font-size:12px;color:#8E8E93')
-		ph.addWidget(sub)
-		root.addWidget(page_hdr)
-
+		
 		# Top status strip
 		self.status_strip = StatusStrip()
 		self.status_strip.refresh_btn.clicked.connect(self.refresh)

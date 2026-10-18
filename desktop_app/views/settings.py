@@ -28,10 +28,10 @@ class Settings(QWidget):
 		body.setAlignment(Qt.AlignTop)
 
 		# Header
-		hdr = QLabel('Cai dat')
+		hdr = QLabel('Cài đặt')
 		hdr.setStyleSheet('font-size:22px;font-weight:700')
 		body.addWidget(hdr)
-		sub = QLabel('Cau hinh he thong TNT Media Studio')
+		sub = QLabel('Cấu hình hệ thống TNT Media Studio')
 		sub.setStyleSheet('font-size:12px;color:#8E8E93;margin-bottom:4px')
 		body.addWidget(sub)
 
@@ -42,12 +42,12 @@ class Settings(QWidget):
 		self.lang.setCurrentIndex(0 if i18n.get_lang() == 'vi' else 1)
 		self.lang.currentIndexChanged.connect(self.on_lang)
 		self.theme = QComboBox()
-		self.theme.addItems(['Sang', 'Toi', 'He thong'])
+		self.theme.addItems(['Sáng', 'Tối', 'Hệ thống'])
 		self.theme.currentIndexChanged.connect(self.on_theme)
 		self.url = QLabel('http://127.0.0.1:7777')
 		self.url.setStyleSheet('color:#0A84FF;font-weight:600;font-size:12px')
-		row1 = self._row('Ngon ngu', self.lang)
-		row2 = self._row('Chu de', self.theme)
+		row1 = self._row('Ngôn ngữ', self.lang)
+		row2 = self._row('Chủ đề', self.theme)
 		row3 = self._row('API URL', self.url)
 		c1.add(row1)
 		c1.add(row2)
@@ -55,15 +55,15 @@ class Settings(QWidget):
 		body.addWidget(c1)
 
 		# Card 2: Credentials
-		c2 = Card('Credentials (trang thai)')
-		self.cred = QLabel('Dang kiem tra...')
+		c2 = Card('Credentials (trạng thái)')
+		self.cred = QLabel('Đang kiểm tra...')
 		self.cred.setStyleSheet('font-family:Consolas;font-size:12px;color:#3A3A3C')
 		self.cred.setWordWrap(True)
 		c2.add(self.cred)
 		body.addWidget(c2)
 
 		# Card 3: Backup
-		c3 = Card('Backup DB')
+		c3 = Card('Sao lưu DB')
 		r3 = QHBoxLayout()
 		r3.setSpacing(6)
 		b1 = PrimaryButton(i18n.t('set.backup'))
@@ -80,13 +80,13 @@ class Settings(QWidget):
 		body.addWidget(c3)
 
 		# Card 4: Advanced
-		c4 = Card('Nang cao')
+		c4 = Card('Nâng cao')
 		r4 = QHBoxLayout()
 		r4.setSpacing(6)
-		b3 = SmallButton('Clear thumbnail cache')
+		b3 = SmallButton('Xóa cache thumbnail')
 		b3.clicked.connect(self.do_clear_thumb)
 		r4.addWidget(b3)
-		b4 = SmallButton('Reload status')
+		b4 = SmallButton('Tải lại trạng thái')
 		b4.clicked.connect(self.refresh_creds)
 		r4.addWidget(b4)
 		r4.addStretch()
@@ -101,12 +101,12 @@ class Settings(QWidget):
 		self.log_file.setMinimumWidth(200)
 		r5.addWidget(self.log_file)
 		self.log_level = QComboBox()
-		self.log_level.addItems(['Tat ca', 'INFO', 'WARN', 'ERROR'])
+		self.log_level.addItems(['Tất cả', 'INFO', 'WARN', 'ERROR'])
 		r5.addWidget(self.log_level)
-		b5 = SmallButton('Load')
+		b5 = SmallButton('Tải')
 		b5.clicked.connect(self.do_load_log)
 		r5.addWidget(b5)
-		b6 = SmallButton('Refresh list')
+		b6 = SmallButton('Làm mới danh sách')
 		b6.clicked.connect(self.refresh_log_list)
 		r5.addWidget(b6)
 		r5.addStretch()
@@ -217,7 +217,7 @@ class Settings(QWidget):
 		except Exception as e:
 			lines = []
 			self.out.append(str(e)[:80])
-		if lv != 'Tat ca':
+		if lv != 'Tất cả':
 			lines = [x for x in lines if lv in x]
 		self.log_view.setPlainText(chr(10).join(lines[-300:]))
 

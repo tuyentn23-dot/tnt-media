@@ -103,6 +103,14 @@ class FieldGrid(QWidget):
 		self._i = row * self.cols + self.cols
 		return widget
 
+	def add_span_here(self, widget):
+		row = self._i // self.cols
+		col = self._i % self.cols
+		span = self.cols - col
+		self.g.addWidget(widget, row, col, 1, span)
+		self._i = (row + 1) * self.cols
+		return widget
+
 
 class StatusBadge(QLabel):
 	STYLES = {
@@ -276,6 +284,9 @@ class QueueRow(QFrame):
 		title = QLabel(title_txt)
 		title.setStyleSheet('font-size:13px;font-weight:600')
 		title.setWordWrap(False)
+		from PySide6.QtWidgets import QSizePolicy as _QSP
+		title.setSizePolicy(_QSP.Ignored, _QSP.Preferred)
+		title.setMinimumWidth(0)
 		info.addWidget(title)
 		meta = QHBoxLayout()
 		meta.setSpacing(6)
@@ -284,13 +295,13 @@ class QueueRow(QFrame):
 		meta.addWidget(ch)
 		st = str(pub.get('status') or '')
 		if st == 'published' and pub.get('yt_verified_at'):
-			b = StatusBadge('Da dang', 'success')
+			b = StatusBadge('Đã đăng', 'success')
 		elif st == 'verify_failed':
-			b = StatusBadge('Da go', 'danger')
+			b = StatusBadge('Đã gỡ', 'danger')
 		elif st == 'scheduled':
-			b = StatusBadge('Hen lich', 'warn')
+			b = StatusBadge('Hẹn lịch', 'warn')
 		elif st in ('rendered', 'approved'):
-			b = StatusBadge('Cho duyet', 'info')
+			b = StatusBadge('Chờ duyệt', 'info')
 		else:
 			b = StatusBadge(st or '?', 'neutral')
 		meta.addWidget(b)
@@ -304,6 +315,18 @@ class QueueRow(QFrame):
 		h.addWidget(menu)
 
 	def mousePressEvent(self, e):
+		from PySide6.QtWidgets import QApplication
+		w = self.childAt(e.pos())
+		if w is not None and (isinstance(w, QCheckBox) or w is self.cb):
+			super().mousePressEvent(e)
+			return
+		# Skip if clicked on menu label (⋯)
+		try:
+			if hasattr(w, "text") and w.text() == chr(8943):
+				super().mousePressEvent(e)
+				return
+		except Exception:
+			pass
 		self.clicked.emit(self.pub)
 		super().mousePressEvent(e)
 
@@ -336,7 +359,7 @@ class StatusStrip(QFrame):
 			w.setStyleSheet('font-size:12px;font-weight:600')
 			h.addWidget(w)
 		h.addStretch()
-		self.refresh_btn = SmallButton('Lam moi')
+		self.refresh_btn = SmallButton('Làm mới')
 		h.addWidget(self.refresh_btn)
 
 	def update_health(self, h):

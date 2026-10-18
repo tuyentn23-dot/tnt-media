@@ -98,7 +98,7 @@ class _Table(QWidget):
 
 
 class Jobs(_Table):
-	HEADERS = ['ID', 'Kenh', 'Kind', 'Trang thai', 'Tien do', 'Thoi gian (s)', 'Log cuoi', 'Tao luc']
+	HEADERS = ['ID', 'Kênh', 'Kind', 'Trạng thái', 'Tien do', 'Thoi gian (s)', 'Log cuoi', 'Tao luc']
 	NAVKEY = 'nav.jobs'
 	KEYS = ['id', 'channel_id', 'kind', 'status', 'elapsed_sec', 'log_tail', 'created_at']
 	def fetch(self):
@@ -166,7 +166,7 @@ class Jobs(_Table):
 
 
 class Pubs(_Table):
-	HEADERS = ['ID', 'Kenh', 'Tieu de', 'Kind', 'Trang thai', 'Views', 'Likes', 'YouTube', 'Dang luc']
+	HEADERS = ['ID', 'Kênh', 'Tieu de', 'Kind', 'Trạng thái', 'Views', 'Likes', 'YouTube', 'Dang luc']
 	NAVKEY = 'nav.pubs'
 	KEYS = ['id', 'channel_id', 'title', 'kind', 'status', 'view_count', 'like_count', 'youtube_id', 'published_at']
 	def fetch(self):
@@ -215,7 +215,7 @@ class Pubs(_Table):
 
 
 class Modules(_Table):
-	HEADERS = ['Ten', 'Loai', 'Phien ban', 'Hop le']
+	HEADERS = ['Ten', 'Loại bỏ', 'Phien ban', 'Hop le']
 	NAVKEY = 'nav.modules'
 	KEYS = ['name', 'category', 'version', 'valid']
 	def fetch(self):

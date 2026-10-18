@@ -103,9 +103,9 @@ class ChannelCard(QFrame):
 		en = data.get('enabled', 1)
 		tok = bool(data.get('token'))
 		stat_pairs = [
-			('Trang thai', 'Hoat dong' if en else 'Tam dung'),
+			('Trạng thái', 'Hoạt động' if en else 'Tạm dừng'),
 			('Token', 'OK' if tok else 'Thieu'),
-			('Kind', str(data.get('kinds') or '')),
+			('Loại', str(data.get('kinds') or '')),
 		]
 		for k, val in stat_pairs:
 			col = QVBoxLayout()
@@ -123,13 +123,13 @@ class ChannelCard(QFrame):
 
 		acts = QHBoxLayout()
 		acts.setSpacing(6)
-		b1 = SmallButton('Sua')
+		b1 = SmallButton('Sửa')
 		b1.clicked.connect(lambda: on_edit(self.data))
 		acts.addWidget(b1, 1)
 		b2 = SmallButton('Token')
 		b2.clicked.connect(lambda: on_edit(self.data))
 		acts.addWidget(b2, 1)
-		b3 = DangerButton('Xoa')
+		b3 = DangerButton('Xóa')
 		b3.setObjectName('SmallButton')
 		b3.setStyleSheet('QPushButton{background:#FF453A;color:white;border:1px solid #FF453A;border-radius:8px;padding:0 10px;font-size:11px;min-height:28px;font-weight:600} QPushButton:hover{background:#C41E1E;border-color:#C41E1E}')
 		b3.clicked.connect(lambda: on_del(self.data))
@@ -145,14 +145,14 @@ class Channels(QWidget):
 		root.setSpacing(12)
 
 		hdr = QHBoxLayout()
-		title = QLabel('Kenh da ket noi')
+		title = QLabel('Kênh đã kết nối')
 		title.setStyleSheet('font-size:22px;font-weight:700')
 		hdr.addWidget(title)
 		hdr.addStretch()
-		self.btn_add = PrimaryButton('+ Them kenh')
+		self.btn_add = PrimaryButton('+ Thêm kênh')
 		self.btn_add.clicked.connect(self.onadd)
 		hdr.addWidget(self.btn_add)
-		self.btn_ref = SmallButton('Lam moi')
+		self.btn_ref = SmallButton('Làm mới')
 		self.btn_ref.clicked.connect(self.refresh)
 		hdr.addWidget(self.btn_ref)
 		root.addLayout(hdr)
@@ -185,7 +185,7 @@ class Channels(QWidget):
 			if isinstance(it, dict):
 				cards.append(it)
 		if not cards:
-			empty = QLabel('Chua co kenh nao. Bam "+ Them kenh" de bat dau.')
+			empty = QLabel('Chưa có kênh nào. Bấm "+ Thêm kênh" để bắt đầu.')
 			empty.setStyleSheet('font-size:13px;color:#8E8E93;padding:40px')
 			empty.setAlignment(Qt.AlignCenter)
 			self.grid.addWidget(empty, 0, 0, 1, 3)
