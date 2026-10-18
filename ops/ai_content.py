@@ -177,18 +177,23 @@ def _gen_scenes(hook, body, kind):
 		return []
 	return [_clean_scene(s) for s in sc if s][:6]
 
-def generate_item(channel, kind, attempt=0):
+def generate_item(channel, kind, attempt=0, seed_topic=None):
 	subj = KIND_PROMPT.get(kind, 'noi dung thu vi')
 	hint = KIND_HINT.get(kind, '')
 	subj = subj + ((chr(10) + 'Goi y: ' + hint) if hint else '')
-	try:
-		_tpick = _tp.pick(kind) if _tp else None
-	except Exception:
-		_tpick = None
-	if _tpick:
-		subj = _tpick
-		hint_extra = 'Chu de CU THE nay: ' + _tpick
+	if seed_topic:
+		subj = seed_topic
+		hint_extra = 'BAT BUOC: video PHAI xoay quanh dung chu de nay - ' + seed_topic
 		hint = (hint + '. ' + hint_extra) if hint else hint_extra
+	else:
+		try:
+			_tpick = _tp.pick(kind) if _tp else None
+		except Exception:
+			_tpick = None
+		if _tpick:
+			subj = _tpick
+			hint_extra = 'Chu de CU THE nay: ' + _tpick
+			hint = (hint + '. ' + hint_extra) if hint else hint_extra
 	is_kids = channel == 'Mialinhcute'
 	# Viral research hint (pattern hoc tu video viral)
 	viral_hint = ''
