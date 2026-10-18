@@ -349,9 +349,15 @@ def tick():
 		if _t2.time() - _vlast > 900:
 			from pipeline import verify_pubs as _vp
 			_vr = _vp.verify_pending(limit=100)
+			try:
+				from pipeline import reverify as _rv
+				_rr = _rv.reverify(max_age_hours=24, limit=100)
+			except Exception:
+				_rr = {}
 			open(_vstamp, 'w').write(str(_t2.time()))
-			if _vr.get('dead', 0) > 0:
-				_note_error('verify: ' + str(_vr.get('dead')) + ' video khong con tren YouTube')
+			_dead = int(_vr.get('dead', 0)) + int(_rr.get('dead', 0))
+			if _dead > 0:
+				_note_error('verify: ' + str(_dead) + ' video khong con tren YouTube')
 	except Exception:
 		pass
 	drained = drain_pending()
