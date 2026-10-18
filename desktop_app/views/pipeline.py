@@ -1,10 +1,10 @@
 # -- coding: utf-8 --
 # desktop_app/views/pipeline.py - Redesign v2 (topic + config grid + timeline + log + run)
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
-	QLineEdit, QComboBox, QDateTimeEdit, QPlainTextEdit, QMessageBox, QSizePolicy, QScrollArea, QFrame)
+	QLineEdit, QComboBox, QDateTimeEdit, QPlainTextEdit, QMessageBox, QSizePolicy, QScrollArea, QFrame, QDialog, QDialogButtonBox)
 from PySide6.QtCore import Qt, QTimer, QDateTime
 import i18n, api
-from widgets_v2 import (Card, FieldGrid, CheckboxRow, Timeline, TimelineStep,
+from widgets_v2 import (Card, FieldGrid, FieldRow, CheckboxRow, Timeline, TimelineStep,
 	PrimaryButton, SmallButton, RunButton, SecondaryButton)
 
 
@@ -17,6 +17,102 @@ STEPS = [
 ]
 
 
+class SuggestDialog(QDialog):
+	def __init__(self, title, items, on_pick, parent=None, on_multi=None):
+		super().__init__(parent)
+		self.setWindowTitle(title)
+		self.resize(700, 540)
+		self._items = items
+		self._on_pick = on_pick
+		self._on_multi = on_multi
+		self._checkboxes = []
+		lay = QVBoxLayout(self)
+		lay.setContentsMargins(16, 14, 16, 14)
+		lay.setSpacing(8)
+		hdr = QLabel(title)
+		hdr.setStyleSheet('font-size:14px;font-weight:700')
+		lay.addWidget(hdr)
+		if on_multi:
+			hint_txt = 'Tick nhiều ý tưởng để tạo nhiều video riêng, hoặc bấm "Dùng" để chọn 1'
+		else:
+			hint_txt = 'Chọn một mục để điền vào ô chủ đề'
+		hint = QLabel(hint_txt)
+		hint.setStyleSheet('font-size:11px;color:#8E8E93')
+		lay.addWidget(hint)
+		if not items:
+			empty = QLabel('Không có kết quả')
+			empty.setStyleSheet('color:#8E8E93;padding:40px')
+			empty.setAlignment(Qt.AlignCenter)
+			lay.addWidget(empty)
+		else:
+			scroll = QScrollArea()
+			scroll.setWidgetResizable(True)
+			scroll.setFrameShape(QFrame.NoFrame)
+			box = QWidget()
+			bl = QVBoxLayout(box)
+			bl.setContentsMargins(0, 0, 0, 0)
+			bl.setSpacing(6)
+			for idx, it in enumerate(items):
+				row = QFrame()
+				row.setObjectName('Card')
+				row.setStyleSheet('#Card{background:#FFFFFF;border:1px solid #E5E5EA;border-radius:8px}')
+				rh = QHBoxLayout(row)
+				rh.setContentsMargins(10, 8, 10, 8)
+				rh.setSpacing(8)
+				if on_multi:
+					cb = QCheckBox()
+					self._checkboxes.append(cb)
+					rh.addWidget(cb)
+				col = QVBoxLayout()
+				col.setSpacing(2)
+				ttl = QLabel(str(it.get('title') or '')[:120])
+				ttl.setStyleSheet('font-size:12px;font-weight:600')
+				ttl.setWordWrap(True)
+				col.addWidget(ttl)
+				sub = it.get('subtitle') or ''
+				if sub:
+					sub_lbl = QLabel(str(sub)[:120])
+					sub_lbl.setStyleSheet('font-size:10px;color:#8E8E93')
+					col.addWidget(sub_lbl)
+				rh.addLayout(col, 1)
+				btn = PrimaryButton('Dùng')
+				btn.setMinimumWidth(70)
+				btn.clicked.connect(lambda _=False, x=idx: self._pick(x))
+				rh.addWidget(btn)
+				bl.addWidget(row)
+			bl.addStretch()
+			scroll.setWidget(box)
+			lay.addWidget(scroll, 1)
+		if on_multi:
+			rowb = QHBoxLayout()
+			rowb.addStretch()
+			self.btn_multi = PrimaryButton('Áp dụng đã tick')
+			self.btn_multi.setMinimumWidth(160)
+			self.btn_multi.clicked.connect(self._apply_multi)
+			rowb.addWidget(self.btn_multi)
+			lay.addLayout(rowb)
+		bb = QDialogButtonBox(QDialogButtonBox.Close)
+		bb.rejected.connect(self.reject)
+		lay.addWidget(bb)
+
+	def _pick(self, idx):
+		try:
+			it = self._items[idx]
+		except Exception:
+			return
+		if self._on_pick:
+			self._on_pick(it)
+		self.accept()
+
+	def _apply_multi(self):
+		picked = [self._items[i] for i, cb in enumerate(self._checkboxes) if cb.isChecked()]
+		if not picked:
+			return
+		if self._on_multi:
+			self._on_multi(picked)
+		self.accept()
+
+
 class Pipeline(QWidget):
 	def __init__(self, parent=None):
 		super().__init__(parent)
@@ -25,6 +121,9 @@ class Pipeline(QWidget):
 		self._started = None
 		self._lastn = -1
 		self._lastchange = None
+		self.multi_topics = []
+		self.multi_topic_box = None
+		self.multi_topic_lay = None
 		self._build()
 		try:
 			self.sched_row.setVisible(False)
@@ -91,12 +190,18 @@ class Pipeline(QWidget):
 		self.btn_adv = PrimaryButton('Gợi ý')
 		topic_row.addWidget(self.btn_adv)
 		topic_card.add(topic_row)
+		self.multi_topic_box = QWidget()
+		self.multi_topic_lay = QVBoxLayout(self.multi_topic_box)
+		self.multi_topic_lay.setContentsMargins(0, 6, 0, 0)
+		self.multi_topic_lay.setSpacing(3)
+		self.multi_topic_box.setVisible(False)
+		topic_card.add(self.multi_topic_box)
 		topic_card.setMinimumHeight(75)
 		root.addWidget(topic_card)
 
 		# === CONFIG ===
 		cfg_card = Card('Cấu hình')
-		self.grid = FieldGrid(cols=4, vgap=6, hgap=8)
+		self.grid = FieldGrid(cols=4, vgap=6, hgap=10)
 		self.ch = QComboBox()
 		self.kind = QComboBox()
 		self.length = QComboBox()
@@ -126,10 +231,12 @@ class Pipeline(QWidget):
 		self.grid.add('Độ dài', self.length)
 		self.grid.add('Chế độ', self.mode)
 		self.grid.add('Khi nào', self.when)
-		self.sched_row = self.grid.add('Hẹn lịch', self.sched)
 		self.grid.add('Giọng đọc', self.voice)
 		self.grid.add('Sắc thái', self.preset)
 		self.grid.add('Số lượng', self.batch_count)
+		self.sched_row = FieldRow('Hẹn lịch', self.sched)
+		self.sched_row.setVisible(False)
+		cfg_card.add(self.sched_row)
 		# Row 3: advisor (span 2) + checkbox row (span 2)
 		adv_box = QWidget()
 		adv_lay = QVBoxLayout(adv_box)
@@ -185,7 +292,7 @@ class Pipeline(QWidget):
 
 	def _update_run_label(self):
 		n = int(self.batch_count.currentData() or 1)
-		self.btn_run.setText('Chạy ' + str(n) + ' video')
+		self.btn_run.setText('▶ Chạy ' + str(n) + ' video')
 
 	def _load_all(self):
 		try:
@@ -291,30 +398,78 @@ class Pipeline(QWidget):
 
 	def do_trend(self):
 		self.logline('> Đang thu thập xu hướng...')
+		self.btn_trend.setEnabled(False)
+		self.btn_trend.setText('Đang tải...')
 		try:
 			niche = (self.kind.currentData() or self.kind.currentText() or '').strip().lower()
 			rc = api.post('/api/trends/collect', {'niche': niche, 'limit': 30})
-			self.logline(' Thu thap: ' + str(rc.get('collected', 0)) + ' / luu: ' + str(rc.get('saved', 0)))
+			self.logline(' Thu thập: ' + str(rc.get('collected', 0)) + ' / lưu: ' + str(rc.get('saved', 0)))
+			items = rc.get('items', [])
+			if not items:
+				self.logline(' Không có xu hướng mới')
+			else:
+				suggestions = []
+				for it in items:
+					ttl = str(it.get('title') or '')
+					if not ttl:
+						continue
+					views = it.get('views', 0)
+					src = str(it.get('source') or '')
+					sub = f'{views:,} views - {src}' if views else src
+					suggestions.append({'title': ttl, 'subtitle': sub})
+				self._show_suggestions(
+					'Xu hướng: ' + str(len(suggestions)) + ' từ YouTube',
+					suggestions)
 		except Exception as e:
-			self.logline(' Loi: ' + str(e)[:120])
+			self.logline(' Lỗi: ' + str(e)[:120])
+		finally:
+			self.btn_trend.setEnabled(True)
+			self.btn_trend.setText('Trend')
 
 	def do_viral(self):
 		self.logline('> Đang phân tích viral...')
-		kw = self.topic.text().strip() or (self.kind.currentText() if self.kind.count() else 'meo con')
+		self.btn_viral.setEnabled(False)
+		self.btn_viral.setText('Đang tải...')
+		kw = self.topic.text().strip() or (self.kind.currentText() if self.kind.count() else '')
+		if not kw:
+			self.logline('! Nhập chủ đề hoặc chọn loại nội dung trước')
+			self.btn_viral.setEnabled(True)
+			self.btn_viral.setText('Viral')
+			return
 		try:
 			r = api.post('/api/viral/search', {'query': kw, 'max_results': 15})
 			if not r.get('ok'):
-				self.logline(' Loi: ' + str(r.get('error'))[:120])
+				self.logline(' Lỗi: ' + str(r.get('error'))[:120])
 				return
 			items = r.get('items', [])
-			self.logline(' Tim thay: ' + str(len(items)) + ' video')
+			self.logline(' Tìm thấy: ' + str(len(items)) + ' video viral')
+			suggestions = []
+			for it in items:
+				ttl = str(it.get('title') or '')
+				if not ttl:
+					continue
+				views = it.get('views', 0)
+				ch = str(it.get('channel') or '')
+				dur = it.get('duration_s', 0)
+				parts = [ch]
+				if views: parts.append(f'{views:,} views')
+				if dur: parts.append(f'{dur}s')
+				suggestions.append({'title': ttl, 'subtitle': ' - '.join(parts)})
+			self._show_suggestions(
+				f'Viral: {len(suggestions)} video từ khóa "{kw}"',
+				suggestions)
 		except Exception as e:
-			self.logline(' Loi: ' + str(e)[:120])
+			self.logline(' Lỗi: ' + str(e)[:120])
+		finally:
+			self.btn_viral.setEnabled(True)
+			self.btn_viral.setText('Viral')
 
 	def load_advisor(self):
-		self.logline('> Lấy gợi ý từ Advisor...')
+		self.logline('> Lấy gợi ý từ Advisor (có thể mất 20-30s)...')
+		self.btn_adv.setEnabled(False)
+		self.btn_adv.setText('Đang phân tích...')
 		try:
-			url = '/api/studio/advice?force=0'
+			url = '/api/studio/advice?force=1'
 			cid = self.ch.currentData()
 			if cid:
 				url += '&channel_id=' + str(cid)
@@ -323,81 +478,205 @@ class Pipeline(QWidget):
 				url += '&kind=' + str(kid)
 			d = api.get(url)
 			adv = (d or {}).get('advisor') or {}
+			ideas = adv.get('next_ideas') or []
+			suggestions = []
+			for idea in ideas:
+				ttl = str(idea.get('title') or '')[:100]
+				if not ttl:
+					continue
+				reason = str(idea.get('reason') or idea.get('why') or '')[:100]
+				suggestions.append({'title': ttl, 'subtitle': reason})
+			# also fill dropdown
 			self.advisor_ideas.blockSignals(True)
 			self.advisor_ideas.clear()
 			self.advisor_ideas.addItem('-- Chọn ý tưởng --', None)
-			for idea in (adv.get('next_ideas') or []):
-				ttl = (idea.get('title') or '')[:80]
-				if ttl:
-					self.advisor_ideas.addItem(ttl, ttl)
+			for s in suggestions:
+				self.advisor_ideas.addItem(s['title'][:80], s['title'])
 			self.advisor_ideas.blockSignals(False)
-			self.logline(' Advisor OK: ' + str(len(adv.get('next_ideas') or [])) + ' y tuong')
+			self.logline(' Advisor: ' + str(len(suggestions)) + ' ý tưởng')
+			if suggestions:
+				self._show_suggestions(
+					f'Advisor: {len(suggestions)} ý tưởng gợi ý',
+					suggestions)
+			else:
+				self.logline('! Advisor không trả về ý tưởng nào')
 		except Exception as e:
-			self.logline('! Advisor loi: ' + str(e)[:120])
+			self.logline('! Lỗi Advisor: ' + str(e)[:120])
+		finally:
+			self.btn_adv.setEnabled(True)
+			self.btn_adv.setText('Gợi ý')
+
+	def _render_multi_topics(self):
+		if self.multi_topic_lay is None:
+			return
+		while self.multi_topic_lay.count():
+			w = self.multi_topic_lay.takeAt(0).widget()
+			if w:
+				w.deleteLater()
+		if not self.multi_topics:
+			self.multi_topic_box.setVisible(False)
+			return
+		self.multi_topic_box.setVisible(True)
+		n = int(self.batch_count.currentData() or 1)
+		hdr = QLabel(f'Đã chọn {len(self.multi_topics)} ý tưởng — sẽ dùng {min(len(self.multi_topics), n)} cho lần chạy này')
+		hdr.setStyleSheet('font-size:11px;color:#0A84FF;font-weight:600')
+		self.multi_topic_lay.addWidget(hdr)
+		for i, t in enumerate(self.multi_topics):
+			row = QWidget()
+			rh = QHBoxLayout(row)
+			rh.setContentsMargins(0, 0, 0, 0)
+			rh.setSpacing(6)
+			lbl = QLabel(f"{i+1}. {t[:100]}")
+			lbl.setStyleSheet('font-size:11px;color:#3A3A3C')
+			lbl.setWordWrap(False)
+			lbl.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Preferred)
+			rh.addWidget(lbl, 1)
+			rm = QPushButton("X")
+			rm.setFixedSize(22, 22)
+			rm.setStyleSheet('QPushButton{background:transparent;border:1px solid #E5E5EA;border-radius:4px;color:#8E8E93;font-weight:700;font-size:11px} QPushButton:hover{background:#FF453A;color:white;border-color:#FF453A}')
+			rm.clicked.connect(lambda _=False, idx=i: self._remove_multi(idx))
+			rh.addWidget(rm)
+			self.multi_topic_lay.addWidget(row)
+
+	def _remove_multi(self, idx):
+		if 0 <= idx < len(self.multi_topics):
+			self.multi_topics.pop(idx)
+			self._render_multi_topics()
 
 	def _apply_idea(self, idx):
 		t = self.advisor_ideas.currentData()
 		if t:
 			self.topic.setText(t)
 			self.logline('> Áp dụng: ' + t[:60])
+
+	def _show_suggestions(self, title, suggestions):
+		if not suggestions:
+			return
+		def _pick(it):
+			ttl = str(it.get('title') or '')
+			if ttl:
+				self.topic.setText(ttl)
+				self.logline('> Đã chọn: ' + ttl[:70])
+		def _pick_multi(items):
+			added = 0
+			for it in items:
+				ttl = str(it.get('title') or '').strip()
+				if ttl and ttl not in self.multi_topics:
+					self.multi_topics.append(ttl)
+					added += 1
+			self._render_multi_topics()
+			self.logline(f'> Đã thêm {added} ý tưởng (tổng {len(self.multi_topics)})')
+		dlg = SuggestDialog(title, suggestions, _pick, self, on_multi=_pick_multi)
+		dlg.exec()
 	def do_run(self):
 		cid = self.ch.currentData()
 		if cid is None:
 			self.logline('! Chưa chọn kênh')
 			return
 		n = int(self.batch_count.currentData() or 1)
-		body = {
+		base = {
 			'channel_id': cid,
-			'count': n,
-			'topic': self.topic.text(),
 			'require_approval': (self.mode.currentIndex() == 1),
 			'voice_override': self.voice.currentData(),
 			'voice_preset': self.preset.currentData(),
-			}
+		}
 		k = self.kind.currentData()
 		if k:
-			body['kind'] = k
+			base['kind'] = k
 		lo = self.length.currentData()
 		if lo:
-			body['length_override'] = lo
+			base['length_override'] = lo
 		mods = {}
 		for i, cb in enumerate(self.modules):
 			cur = cb.currentData()
 			if cur:
 				mods[STEPS[i]['cat']] = cur
 		mods['_opts'] = {'caption': self.chk_row.is_checked('caption'), 'music_only': self.chk_row.is_checked('music')}
-		body['modules'] = mods
+		base['modules'] = mods
 		if self.when.currentIndex() == 1:
-			body['run_at'] = self.sched.dateTime().toString('yyyy-MM-dd HH:mm:ss')
-		self.logline('> Tao job: kenh=' + str(cid) + ', so luong=' + str(n))
-		try:
-			r = api.create_job(body)
-		except Exception as e:
-			self.logline('! Lỗi API: ' + str(e)[:150])
-			return
-		jid = r.get('job_id', r.get('id'))
-		if not jid:
-			self.logline('! Không tạo được job: ' + str(r)[:150])
-			return
-		self.logline('> Dang chay: ' + str(jid))
-		try:
-			rr = api.run_job(jid)
-		except Exception as e:
-			self.logline('! Lỗi chạy: ' + str(e)[:150])
-			return
-		if rr.get('ok') is False:
-			self.logline('! Run loi: ' + str(rr)[:150])
+			base['run_at'] = self.sched.dateTime().toString('yyyy-MM-dd HH:mm:ss')
+
+		jids = []
+		if self.multi_topics:
+			use = self.multi_topics[:n]
+			self.logline(f'> Tạo {len(use)} job, mỗi job 1 ý tưởng đã chọn')
+			for idx, t in enumerate(use):
+				b = dict(base)
+				b['topic'] = t
+				b['count'] = 1
+				try:
+					r = api.create_job(b)
+				except Exception as e:
+					self.logline(f'! Job {idx+1} API lỗi: ' + str(e)[:100])
+					continue
+				jid = r.get('job_id', r.get('id'))
+				if not jid:
+					self.logline(f'! Job {idx+1} không tạo được: ' + str(r)[:100])
+					continue
+				try:
+					rr = api.run_job(jid)
+				except Exception as e:
+					self.logline(f'! Run job {idx+1} lỗi: ' + str(e)[:100])
+					continue
+				if rr.get('ok') is False:
+					self.logline(f'! Run job {idx+1} fail: ' + str(rr)[:100])
+					continue
+				jids.append(jid)
+				self.logline(f' > Job {idx+1}/{len(use)}: {jid} — {t[:60]}')
+			remaining = n - len(use)
+			if remaining > 0:
+				self.logline(f'> Còn {remaining} video thiếu topic, tạo 1 job AI tự sinh')
+				b = dict(base)
+				b['topic'] = self.topic.text() or ''
+				b['count'] = remaining
+				try:
+					r = api.create_job(b)
+					jid = r.get('job_id', r.get('id'))
+					if jid:
+						rr = api.run_job(jid)
+						if rr.get('ok') is not False:
+							jids.append(jid)
+				except Exception:
+					pass
+		else:
+			body = dict(base)
+			body['count'] = n
+			body['topic'] = self.topic.text()
+			self.logline('> Tạo job: kênh=' + str(cid) + ', số lượng=' + str(n))
+			try:
+				r = api.create_job(body)
+			except Exception as e:
+				self.logline('! Lỗi API: ' + str(e)[:150])
+				return
+			jid = r.get('job_id', r.get('id'))
+			if not jid:
+				self.logline('! Không tạo được job: ' + str(r)[:150])
+				return
+			try:
+				rr = api.run_job(jid)
+			except Exception as e:
+				self.logline('! Lỗi chạy: ' + str(e)[:150])
+				return
+			if rr.get('ok') is False:
+				self.logline('! Run lỗi: ' + str(rr)[:150])
+				self._set_timeline_error()
+				return
+			jids.append(jid)
+
+		if not jids:
 			self._set_timeline_error()
 			return
-		self._jid = jid
+		self._jid = jids[0]
+		self._jids = jids
+		self._job_status = {}
 		import time as _tm
 		self._started = _tm.time()
 		self._lastn = -1
 		self._lastchange = _tm.time()
 		self.btn_run.setEnabled(False)
-		self.lbl_status.setText('Đang chạy ' + str(n) + ' video...')
+		self.lbl_status.setText(f'Đang chạy {n} video ({len(jids)} job)...')
 		self.timeline.set_state(0, TimelineStep.STATE_RUNNING)
-		if not hasattr(self, "timer"):
+		if not hasattr(self, 'timer'):
 			self.timer = QTimer(self)
 			self.timer.timeout.connect(self.poll_job)
 		self.timer.start(1000)
@@ -408,51 +687,59 @@ class Pipeline(QWidget):
 		self.btn_run.setEnabled(True)
 
 	def poll_job(self):
-		jid = self._jid
-		if not jid:
+		jids = getattr(self, '_jids', None) or ([self._jid] if getattr(self, '_jid', None) else [])
+		if not jids:
 			return
 		import time, sqlite3
 		try:
-			d = api.job_detail(jid)
+			cc = sqlite3.connect("state/pipeline.db")
+			ph = ','.join('?' for _ in jids)
+			n_row = cc.execute(f'SELECT COUNT() FROM publications WHERE job_id IN ({ph})', tuple(jids)).fetchone()
+			n = int(n_row[0]) if n_row else 0
+			jrows = cc.execute(f'SELECT id, status FROM jobs WHERE id IN ({ph})', tuple(jids)).fetchall()
+			cc.close()
 		except Exception:
-			return
-		if not isinstance(d, dict):
-			return
-		tail = d.get('log_tail', [])
+			n = 0
+			jrows = []
+		if not hasattr(self, "_job_status"):
+			self._job_status = {}
+		for r in jrows:
+			self._job_status[r[0]] = r[1]
+		tail = []
+		try:
+			d = api.job_detail(jids[0])
+			if isinstance(d, dict):
+				tail = d.get('log_tail', []) or []
+		except Exception:
+			pass
 		if tail:
 			self.log.setPlainText(chr(10).join(tail))
 			sb = self.log.verticalScrollBar()
 			sb.setValue(sb.maximum())
-		st = str(d.get('status') or '')
-		try:
-			cc = sqlite3.connect("state/pipeline.db")
-			row = cc.execute('SELECT COUNT() FROM publications WHERE job_id=?', (jid,)).fetchone()
-			n = int(row[0]) if row else 0
-			cc.close()
-		except Exception:
-			n = 0
-		total = int(d.get('count') or 1)
-		running = bool(d.get('running'))
+		statuses = list(self._job_status.values())
+		all_done = bool(statuses) and all(s in ('done', 'completed', 'success') for s in statuses)
+		any_running = any(s in ('running', 'pending', 'queued') for s in statuses)
+		any_error = any(s in ('error', 'failed') for s in statuses)
+		total = int(self.batch_count.currentData() or 1)
+		if n != self._lastn:
+			self._lastn = n
+			self._lastchange = time.time()
 		if not self._started:
 			self._started = time.time()
 		el = int(time.time() - self._started)
 		mins = el // 60
 		secs = el % 60
 		tstr = ((str(mins) + 'm ') if mins else '') + str(secs) + 's'
-		if n != self._lastn:
-			self._lastn = n
-			self._lastchange = time.time()
-		if st in ('done', 'completed', 'success'):
+		if all_done:
 			self.timer.stop()
 			self.timeline.set_state(5, TimelineStep.STATE_DONE)
-			self.lbl_status.setText('Hoàn tất ' + str(n) + ' video / ' + tstr)
+			self.lbl_status.setText(f'Hoàn tất {n} video / {tstr}')
 			self.btn_run.setEnabled(True)
-			self.logline('> Xong ' + str(n) + ' video sau ' + tstr)
-		elif st in ('error', 'failed'):
+			self.logline(f'> Xong {n} video sau {tstr}')
+		elif any_error and not any_running:
 			self.timer.stop()
 			self._set_timeline_error()
-		elif running or st in ("running", "pending", "queued"):
+		elif any_running:
 			step = min(4, n)
 			self.timeline.set_state(step, TimelineStep.STATE_RUNNING)
-			msg = 'Chạy ' + tstr + ' - ' + str(n) + '/' + str(total)
-			self.lbl_status.setText(msg)
+			self.lbl_status.setText(f'Chạy {tstr} — {n}/{total} video')

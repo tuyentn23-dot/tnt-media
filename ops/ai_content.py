@@ -303,15 +303,30 @@ def generate_item(channel, kind, attempt=0):
 	}
 
 
-def generate(channel, kind, limit=5):
+def generate(channel, kind, limit=5, seed_topic=None):
 	out = []
+	# Khi có seed_topic: chỉ gen 1 item chính xác, KHÔNG retry để tránh drift
+	if seed_topic:
+		it = generate_item(channel, kind, attempt=0, seed_topic=seed_topic)
+		if it:
+			return [it]
+		# fallback nếu gen fail: tạo item từ seed_topic trực tiếp
+		return [{
+			'id': 'seed_' + str(abs(hash(seed_topic)) % 100000),
+			'topic': seed_topic,
+			'hook': seed_topic,
+			'body': seed_topic,
+			'payoff': '',
+			'search': seed_topic,
+			'scenes': [],
+		}]
 	max_attempts = max(limit * 3, 8)
 	att = 0
 	while len(out) < limit and att < max_attempts:
 		it = generate_item(channel, kind, attempt=att % 3)
+		att += 1
 		if it:
 			out.append(it)
-		att += 1
 	if not out:
 		out.append(_fallback_item(kind))
 	return out
@@ -323,7 +338,7 @@ def _fallback_item(kind):
 		('Bạn có biết trái tim cá voi lớn cỡ nào không?', 'Trái tim cá voi xanh có thể nặng tới 180 kg, lớn như một chiếc xe hơi nhỏ.', 'Thiên nhiên thật kỳ diệu!'),
 		('Bạn có biết loài chim nào bay cao nhất không?', 'Kền kền Rüppell có thể bay cao tới 11.000 mét, cao hơn đỉnh Everest.', 'Khám phá thêm nhiều điều thú vị nhé!'),
 	]
-	i = int(t.time()) % len(pool)
+	i = int(_t.time()) % len(pool)
 	hook, body, payoff = pool[i]
 	topic = hook
 	iid = 'ai_fb' + str(int(_t.time()))

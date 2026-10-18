@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-10-18T13:38:28.317260",
+  "generated": "2026-10-18T14:21:51.742321",
   "files": {
     "ops/vids_agent.py": "6a0ee08287d7d6c2522acae18664b533cfbf5b05901dd4bcea4b5374d781fc43",
     "ops/vids_edit.py": "7c1fcccb442a46508879df24018679e24e103ba9d8906b260aed4716bc6c1e5c",
@@ -27,7 +27,7 @@
     "desktop_app/widgets.py": "79cfc398834fc4a3bb00145d672ab67ce07d0d3ede310a1bb482ab799b442c03",
     "desktop_app/icon.ico": "10c9e9bdb243f7312ff60cb253a9893f838aa189fb5b3aa639594dc72143d4f9",
     "desktop_app/tray.py": "210018231716ba342deb4dff6c05baf54fe397da7bfa0120434ec5f590663607",
-    "desktop_app/views/pipeline.py": "ff27e1b6f3370fa3e3bfe525be17696594bab15ca7aab964ad844ffd5f511989",
+    "desktop_app/views/pipeline.py": "c66701b42ef33f3f1150e607b61dc36dd40b8b07cc1ed42742fa19fa81582657",
     "desktop_app/strings_vi.json": "5f6e4c6b12e66ecf90d44ea7bb80d80e769404bef005af4772908b8331998e24",
     "desktop_app/strings_en.json": "de7f78c6665374de8eae6e0a7f7d3e73f636ee3ffe2871a4498e419a1139e4c2",
     "desktop_app/views/channels.py": "f3d05cb8e927860d5e2dc78ef47fdd5e9c36e998f2f1c13160a561fb91689641",
@@ -50,7 +50,7 @@
     "CHANGELOG.md": "b7253c46d20097bea443d2f9b93bdd3598929d02138f32924485cd945c28ff83",
     "guardian/agent_boot.py": "344864f782086b8084ec920a13e10184198acfc0f97ce635c84cd0edd1d7eb9e",
     "pipeline/__init__.py": "8baa4caa61689b8eb57cc88fe7bab94505ed1f733fd2aa9309fb23d71ae25f7c",
-    "pipeline/runner.py": "89d22fa9dc9d425cf5f5da831c275312cc269f7f8ea9ba9af38200ce035511d6",
+    "pipeline/runner.py": "2845276b27dae1555cad12833c2f357daa8866127bda5b61c097df1d4d49ae16",
     "pipeline/job.py": "4b92e9f2f2e00de46daa288985ef786c638c436977ef4371b598568d33adf90f",
     "pipeline/scheduler.py": "bf6d85d3306e2b8c01938b1b84e39f0648b4449bfb814cf75455f805dc3f1e7f",
     "pipeline/state.py": "ab0407e8ee3db9159d3801cdbc3049fa2ec5f8be45fa6062f0a547bb90863614",

@@ -102,7 +102,8 @@ def run_job(job, dry_run=False, item_id=None):
 				# Fallback: sinh noi dung moi khi het sach (tranh job fail "khong render duoc")
 				try:
 					from ops import ai_content as _ac
-					_gen = _ac.generate(job.channel_id, kind, limit=3)
+					_seed = (job.topic or '').strip() or None
+					_gen = _ac.generate(job.channel_id, kind, limit=3, seed_topic=_seed)
 					_fresh2 = [it for it in (_gen or []) if not cf.is_published(cf.signature(it, kind))]
 					if _fresh2:
 						fresh = _fresh2
