@@ -1,269 +1,181 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QLabel, QPushButton, QComboBox, QFrame, QTextEdit, QLineEdit, QDateTimeEdit, QProgressBar, QScrollArea, QSizePolicy, QCheckBox
-from PySide6.QtCore import Qt
+# -- coding: utf-8 --
+# desktop_app/views/pipeline.py - Redesign v2 (topic + config grid + timeline + log + run)
+from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
+	QLineEdit, QComboBox, QDateTimeEdit, QPlainTextEdit, QMessageBox, QSizePolicy)
+from PySide6.QtCore import Qt, QTimer, QDateTime
 import i18n, api
-from widgets import PageHeader
+from widgets_v2 import (Card, FieldGrid, CheckboxRow, Timeline, TimelineStep,
+	PrimaryButton, SmallButton, RunButton, SecondaryButton)
+
 
 STEPS = [
-	{'key': 'pipe.step.analyze', 'cat': 'analyze', 'color': '#FF375F', 'num': '0'},
-	{'key': 'pipe.step.content', 'cat': 'content', 'color': '#34C759', 'num': '1'},
-	{'key': 'pipe.step.render', 'cat': 'render', 'color': '#0A84FF', 'num': '2'},
-	{'key': 'pipe.step.voice', 'cat': 'voice', 'color': '#AF52DE', 'num': '3'},
-	{'key': 'pipe.step.publish', 'cat': 'publish', 'color': '#FF9500', 'num': '4'},
+	{'num': '1', 'label': 'Phan tich', 'cat': 'analyze'},
+	{'num': '2', 'label': 'Noi dung', 'cat': 'content'},
+	{'num': '3', 'label': 'Dung video', 'cat': 'render'},
+	{'num': '4', 'label': 'Giong noi', 'cat': 'voice'},
+	{'num': '5', 'label': 'Dang bai', 'cat': 'publish'},
 ]
-STATES = {'idle': '#8E8E93', 'queued': '#FF9500', 'running': '#0A84FF', 'done': '#34C759', 'error': '#FF453A'}
 
-class StepCard(QFrame):
-	def __init__(self, info, parent=None):
-		super().__init__(parent)
-		self.setObjectName('Card')
-		self.info = info
-		self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
-		self.setMinimumHeight(56)
-		lay = QVBoxLayout(self)
-		lay.setContentsMargins(8, 8, 8, 8)
-		lay.setSpacing(4)
-		head = QHBoxLayout()
-		head.setSpacing(4)
-		dot = QLabel()
-		dot.setFixedSize(12, 12)
-		dot.setStyleSheet('background:' + info['color'] + ';border-radius:6px')
-		self.dot = dot
-		ttl = QLabel(i18n.t(info['key']))
-		ttl.setStyleSheet('font-weight:700;font-size:11px')
-		head.addWidget(dot)
-		head.addWidget(ttl)
-		head.addStretch()
-		lay.addLayout(head)
-		self.mod = QComboBox()
-		self.mod.setMinimumWidth(0)
-		self.mod.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
-		self.mod.setMinimumContentsLength(2)
-		self.mod.currentIndexChanged.connect(self._on_mod_change)
-		lay.addWidget(self.mod)
-		self.hint = QLabel('')
-		self.hint.setWordWrap(False)
-		self.hint.setStyleSheet('color:#4f8cff;font-size:10px;padding:1px 0')
-		self.hint.setMinimumHeight(0)
-		self.hint.setMaximumHeight(16)
-		self.hint.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Fixed)
-		lay.addWidget(self.hint)
-		self.badge = QLabel(i18n.t('pipe.idle'))
-		self.badge.setStyleSheet('color:#8E8E93;font-size:10px;font-weight:600')
-		lay.addWidget(self.badge)
-		self.bar = QProgressBar()
-		self.bar.setRange(0, 100)
-		self.bar.setValue(0)
-		self.bar.setTextVisible(False)
-		self.bar.setFixedHeight(4)
-		lay.addWidget(self.bar)
-		self._meta = {}
-		self.msg = QLabel('')
-
-	def _on_mod_change(self):
-		d = getattr(self, '_meta', {}) or {}
-		cur = self.mod.currentData()
-		if not cur:
-			self.hint.setText(i18n.t('pipe.hint_empty'))
-			return
-		m = d.get(cur, {}) or {}
-		w = str(m.get('when') or '')[:70]
-		self.hint.setText(w if w else i18n.t('pipe.hint_empty'))
-
-	def set_status(self, state, msg='', pct=None):
-		c = STATES.get(state, '#8E8E93')
-		self.badge.setText(i18n.t('pipe.' + state))
-		self.badge.setStyleSheet('color:' + c + ';font-size:11px;font-weight:700')
-		if state == 'running':
-			if pct is None:
-				self.bar.setRange(0, 0)
-			else:
-				self.bar.setRange(0, 100)
-				self.bar.setValue(int(pct))
-			css = 'QProgressBar::chunk { background: ' + c + '; }'
-			self.bar.setStyleSheet(css)
-		elif state == 'done':
-			self.bar.setRange(0, 100)
-			self.bar.setValue(100)
-			self.bar.setStyleSheet('QProgressBar::chunk { background: ' + c + '; }')
-		elif state == 'error':
-			self.bar.setRange(0, 100)
-			self.bar.setValue(100)
-			self.bar.setStyleSheet('QProgressBar::chunk { background: ' + c + '; }')
-		else:
-			self.bar.setRange(0, 100)
-			self.bar.setValue(0)
-			self.bar.setStyleSheet('')
-		if msg:
-			self.msg.setText(msg)
 
 class Pipeline(QWidget):
 	def __init__(self, parent=None):
 		super().__init__(parent)
+		self._mod_meta = {}
+		self._jid = None
+		self._started = None
+		self._lastn = -1
+		self._lastchange = None
+		self._build()
+		self._load_all()
+
+	def _build(self):
 		root = QVBoxLayout(self)
 		root.setContentsMargins(0, 0, 0, 0)
-		root.setSpacing(0)
-		self.header = PageHeader(i18n.t('nav.pipeline'), i18n.t('pipe.title'))
-		root.addWidget(self.header)
-		body = QVBoxLayout()
-		body.setContentsMargins(14, 8, 14, 8)
-		body.setSpacing(6)
-		body.setAlignment(Qt.AlignTop)
-		# HANG 1a: channel + kind + length
-		row1a = QHBoxLayout()
-		row1a.setSpacing(6)
-		row1a.addWidget(QLabel(i18n.t('pipe.channel') + ':'))
+		root.setSpacing(12)
+
+		# === TOPIC CARD ===
+		topic_card = Card('Chu de video')
+		topic_row = QHBoxLayout()
+		topic_row.setSpacing(8)
+		self.topic = QLineEdit()
+		self.topic.setPlaceholderText('Nhap chu de hoac de trong dung AI goi y...')
+		topic_row.addWidget(self.topic, 1)
+		self.btn_trend = SecondaryButton('Trend')
+		topic_row.addWidget(self.btn_trend)
+		self.btn_viral = SecondaryButton('Viral')
+		topic_row.addWidget(self.btn_viral)
+		self.btn_adv = PrimaryButton('Goi y')
+		topic_row.addWidget(self.btn_adv)
+		topic_card.add(topic_row)
+		root.addWidget(topic_card)
+
+		# === CONFIG CARD ===
+		cfg_card = Card('Cau hinh')
+		self.grid = FieldGrid(cols=3)
 		self.ch = QComboBox()
-		self.ch.setMinimumWidth(110)
-		self.ch.currentIndexChanged.connect(self.load_kinds)
-		row1a.addWidget(self.ch)
-		row1a.addWidget(QLabel('Kind:'))
 		self.kind = QComboBox()
-		self.kind.setMinimumWidth(90)
-		row1a.addWidget(self.kind)
-		row1a.addWidget(QLabel(i18n.t('pipe.length') + ':'))
 		self.length = QComboBox()
-		self.length.addItem(i18n.t('pipe.short'), None)
-		self.length.addItem(i18n.t('pipe.long'), 90)
-		row1a.addWidget(self.length)
-		row1a.addStretch()
-		body.addLayout(row1a)
-		# HANG 1b: mode + when + schedule
-		row1b = QHBoxLayout()
-		row1b.setSpacing(6)
-		row1b.addWidget(QLabel(i18n.t('pipe.mode') + ':'))
+		self.length.addItem('Ngan', None)
+		self.length.addItem('Dai', 90)
 		self.mode = QComboBox()
-		self.mode.addItems([i18n.t('pipe.auto'), i18n.t('pipe.manual')])
-		row1b.addWidget(self.mode)
-		row1b.addWidget(QLabel(i18n.t('pipe.when') + ':'))
+		self.mode.addItems(['Tu dong', 'Duyet truoc'])
 		self.when = QComboBox()
-		self.when.addItems([i18n.t('pipe.now'), i18n.t('pipe.schedule')])
-		row1b.addWidget(self.when)
-		from PySide6.QtCore import QDateTime
+		self.when.addItems(['Dang ngay', 'Hen lich'])
+		self.voice = QComboBox()
+		self.preset = QComboBox()
+		self.advisor_ideas = QComboBox()
+		self.advisor_ideas.addItem('-- Chon y tuong --', None)
+		self.batch_count = QComboBox()
+		for lbl, n in [('1 video', 1), ('2 video', 2), ('3 video', 3), ('5 video', 5), ('7 video', 7), ('10 video', 10)]:
+			self.batch_count.addItem(lbl, n)
+		self.batch_count.setCurrentIndex(1)
 		self.sched = QDateTimeEdit()
 		self.sched.setCalendarPopup(True)
 		self.sched.setDateTime(QDateTime.currentDateTime().addSecs(3600))
 		self.sched.setDisplayFormat('yyyy-MM-dd HH:mm')
 		self.sched.setVisible(False)
-		self.when.currentIndexChanged.connect(self.on_when_changed)
-		row1b.addWidget(self.sched)
-		row1b.addStretch()
-		body.addLayout(row1b)
-		# HANG 2: advisor ideas + voice + preset
-		row2 = QHBoxLayout()
-		row2.setSpacing(6)
-		# HANG RIENG: chu de full width
-		row_topic = QHBoxLayout()
-		row_topic.setSpacing(8)
-		row_topic.addWidget(QLabel(i18n.t('pipe.topic') + ':'))
-		self.topic = QLineEdit()
-		self.topic.setMinimumWidth(200)
-		self.topic.setPlaceholderText(i18n.t('pipe.topic_hint'))
-		row_topic.addWidget(self.topic, 1)
-		body.addLayout(row_topic)
-		row_btns = QHBoxLayout()
-		row_btns.setSpacing(6)
-		self.btn_trend = QPushButton(i18n.t('pipe.trend_btn'))
-		self.btn_trend.clicked.connect(self.do_trend)
-		row_btns.addWidget(self.btn_trend)
-		self.btn_viral = QPushButton('Viral')
-		self.btn_viral.setToolTip('Phan tich video viral tren YouTube de hoc pattern')
-		self.btn_viral.clicked.connect(self.do_viral)
-		row_btns.addWidget(self.btn_viral)
-		self.btn_adv = QPushButton(i18n.t('pipe.advisor.load'))
-		self.btn_adv.clicked.connect(self.load_advisor)
-		row_btns.addWidget(self.btn_adv)
-		row_btns.addStretch()
-		body.addLayout(row_btns)
-		row2 = QHBoxLayout()
-		row2.setSpacing(6)
-		self.advisor_ideas = QComboBox()
-		self.advisor_ideas.setMinimumWidth(140)
-		self.advisor_ideas.addItem(i18n.t('pipe.advisor.pick'), None)
-		self.advisor_ideas.currentIndexChanged.connect(self.apply_idea)
-		row2.addWidget(self.advisor_ideas)
-		row2.addWidget(QLabel(i18n.t('pipe.voice') + ':'))
-		self.voice = QComboBox()
-		self.voice.setMinimumWidth(110)
-		row2.addWidget(self.voice)
-		row2.addWidget(QLabel(i18n.t('pipe.preset') + ':'))
-		self.preset = QComboBox()
-		self.preset.setMinimumWidth(90)
-		row2.addWidget(self.preset)
-		body.addLayout(row2)
-		# HANG 3: options caption + music-only
-		row3 = QHBoxLayout()
-		row3.setSpacing(12)
-		self.chk_caption = QCheckBox('Hien caption')
-		self.chk_caption.setChecked(True)
-		row3.addWidget(self.chk_caption)
-		self.chk_music_only = QCheckBox('Chi long nhac (khong voice)')
-		self.chk_music_only.setChecked(False)
-		row3.addWidget(self.chk_music_only)
-		row3.addStretch()
-		body.addLayout(row3)
-		# 5 step cards xep doc (mobile-first, khong bi squeeze)
-		steps_frame = QFrame()
-		steps_frame.setObjectName('Group')
-		steps_frame.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
-		steps_box = QVBoxLayout(steps_frame)
-		steps_box.setContentsMargins(10, 10, 10, 10)
-		steps_box.setSpacing(6)
-		self.steps = []
-		for i, info in enumerate(STEPS):
-			c = StepCard(info)
-			steps_box.addWidget(c)
-			self.steps.append(c)
-		body.addWidget(steps_frame)
-		# HANG 4: log
-		self.log = QTextEdit()
+
+		self.grid.add('Kenh', self.ch)
+		self.grid.add('Loai noi dung', self.kind)
+		self.grid.add('Do dai', self.length)
+		self.grid.add('Che do', self.mode)
+		self.grid.add('Khi nao', self.when)
+		self.grid.add('Hen lich', self.sched)
+		self.grid.add('Giong doc', self.voice)
+		self.grid.add('Sac thai', self.preset)
+		self.grid.add('Batch', self.batch_count)
+		self.grid.add_span(self.advisor_ideas)
+		cfg_card.add(self.grid)
+
+		self.chk_row = CheckboxRow([
+			('caption', 'Hien caption', True),
+			('music', 'Chi long nhac', False),
+		])
+		cfg_card.add(self.chk_row)
+		root.addWidget(cfg_card)
+
+		# === PIPELINE CARD ===
+		pipe_card = Card('Pipeline · 5 buoc')
+		self.timeline = Timeline([(s['num'], s['label']) for s in STEPS])
+		pipe_card.add(self.timeline)
+		mods_row = QHBoxLayout()
+		mods_row.setSpacing(6)
+		self.modules = []
+		for s in STEPS:
+			cb = QComboBox()
+			cb.setMinimumContentsLength(4)
+			cb.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
+			mods_row.addWidget(cb, 1)
+			self.modules.append(cb)
+		pipe_card.add(mods_row)
+		root.addWidget(pipe_card)
+
+		# === LOG ===
+		self.log = QPlainTextEdit()
 		self.log.setReadOnly(True)
-		self.log.setMinimumHeight(50)
-		self.log.setMaximumHeight(100)
 		self.log.setPlaceholderText('Nhat ky chay se hien o day...')
-		body.addWidget(self.log)
-		# HANG 5: run button
-		bottom = QHBoxLayout()
-		bottom.addStretch()
-		self.run = QPushButton(i18n.t('pipe.run'))
-		self.run.setObjectName('Primary')
-		self.run.setMinimumHeight(32)
-		self.run.setMinimumWidth(160)
-		self.run.clicked.connect(self.do_run)
-		bottom.addWidget(self.run)
-		body.addLayout(bottom)
-		batch_row = QHBoxLayout()
-		batch_row.addStretch()
-		batch_row.addWidget(QLabel('Lam nhieu:'))
-		self.batch_count = QComboBox()
-		self.batch_count.setMinimumWidth(90)
-		for _lbl, _n in (('1 video', 1), ('2 video', 2), ('3 video', 3), ('5 video', 5), ('7 video', 7), ('10 video', 10)):
-			self.batch_count.addItem(_lbl, _n)
-		self.batch_count.setCurrentIndex(1)
-		batch_row.addWidget(self.batch_count)
-		self.btn_batch = QPushButton('Tao loat')
-		self.btn_batch.setObjectName('Primary')
-		self.btn_batch.setMinimumHeight(32)
-		self.btn_batch.setMinimumWidth(110)
-		self.btn_batch.setToolTip('Tao N video cung luc cho kenh dang chon. Video duoc len lich toi uu va tu dang.')
-		self.btn_batch.clicked.connect(self.do_batch)
-		batch_row.addWidget(self.btn_batch)
-		body.addLayout(batch_row)
-		body.addStretch(1)
-		root.addLayout(body)
-		self.load_channels()
-		self.load_kinds()
-		self.load_modules()
-		self.load_voice_presets()
+		self.log.setMinimumHeight(70)
+		self.log.setMaximumHeight(110)
+		root.addWidget(self.log)
+
+		root.addStretch()
+
+		# === RUN BAR ===
+		run_bar = QHBoxLayout()
+		run_bar.setSpacing(10)
+		run_bar.addStretch()
+		self.lbl_status = QLabel('San sang')
+		self.lbl_status.setStyleSheet('font-size:11px;color:#8E8E93')
+		run_bar.addWidget(self.lbl_status)
+		self.btn_run = RunButton('Chay 2 video')
+		self.btn_run.setMinimumWidth(180)
+		run_bar.addWidget(self.btn_run)
+		root.addLayout(run_bar)
+
+		# === SIGNALS ===
+		self.ch.currentIndexChanged.connect(self.load_kinds)
+		self.when.currentIndexChanged.connect(self._on_when_changed)
+		self.batch_count.currentIndexChanged.connect(self._update_run_label)
+		self.btn_trend.clicked.connect(self.do_trend)
+		self.btn_viral.clicked.connect(self.do_viral)
+		self.btn_adv.clicked.connect(self.load_advisor)
+		self.advisor_ideas.currentIndexChanged.connect(self._apply_idea)
+		self.btn_run.clicked.connect(self.do_run)
+
+	def _on_when_changed(self, idx):
+		self.sched.setVisible(idx == 1)
+
+	def _update_run_label(self):
+		n = int(self.batch_count.currentData() or 1)
+		self.btn_run.setText('Chay ' + str(n) + ' video')
+
+	def _load_all(self):
+		try:
+			self.load_channels()
+		except Exception as e:
+			self.logline('! Load channels loi: ' + str(e)[:100])
+		try:
+			self.load_voice_presets()
+		except Exception as e:
+			self.logline('! Load voice loi: ' + str(e)[:100])
+		try:
+			self.load_modules()
+		except Exception as e:
+			self.logline('! Load modules loi: ' + str(e)[:100])
+		self._update_run_label()
 
 	def logline(self, txt):
-		self.log.append(txt)
+		self.log.appendPlainText(str(txt))
+		sb = self.log.verticalScrollBar()
+		sb.setValue(sb.maximum())
 
 	def load_channels(self):
 		d = api.channels()
 		items = d.get('channels', d.get('items', d if isinstance(d, list) else []))
+		self.ch.blockSignals(True)
 		self.ch.clear()
 		if not items:
-			self.ch.addItem('Chưa có kênh', None)
+			self.ch.addItem('Chua co kenh', None)
 		for it in items:
 			if isinstance(it, dict):
 				nm = str(it.get('name', it.get('id')))
@@ -272,6 +184,8 @@ class Pipeline(QWidget):
 				nm = str(it)
 				iid = it
 			self.ch.addItem(nm, iid)
+		self.ch.blockSignals(False)
+		self.load_kinds()
 
 	def load_kinds(self):
 		cid = self.ch.currentData()
@@ -293,7 +207,7 @@ class Pipeline(QWidget):
 		d = api.modules()
 		items = d.get('items', d if isinstance(d, list) else [])
 		by = {}
-		meta_by_name = {}
+		meta = {}
 		for it in items:
 			if not isinstance(it, dict):
 				continue
@@ -302,23 +216,14 @@ class Pipeline(QWidget):
 			ver = it.get('version', '')
 			label = name + ' v' + str(ver)
 			by.setdefault(cat, []).append(label)
-			meta_by_name[label] = {
-				'name': name,
-				'title': it.get('title', ''),
-				'desc': it.get('desc', ''),
-				'when': it.get('when_to_use', ''),
-				'note': it.get('note', ''),
-			}
-		self._mod_meta = meta_by_name
-		for c in self.steps:
-			cat = c.info['cat']
-			c.mod.clear()
-			c.mod.addItem(i18n.t('pipe.select_module'), None)
-			for lbl in by.get(cat, []):
-				c.mod.addItem(lbl, lbl)
-			c._meta = meta_by_name
-			if not by.get(cat):
-				c.msg.setText(i18n.t('common.none'))
+			meta[label] = it
+		self._mod_meta = meta
+		for i, s in enumerate(STEPS):
+			cb = self.modules[i]
+			cb.clear()
+			cb.addItem('-- ' + s['label'] + ' --', None)
+			for lbl in by.get(s['cat'], []):
+				cb.addItem(lbl, lbl)
 
 	def load_voice_presets(self):
 		try:
@@ -346,31 +251,17 @@ class Pipeline(QWidget):
 		if self.preset.count() == 0:
 			self.preset.addItem('default', 'default')
 
-	def set_all(self, state, msg='', pct=None):
-		for c in self.steps:
-			c.set_status(state, msg, pct)
-
 	def do_trend(self):
 		self.logline('> Dang thu thap xu huong...')
 		try:
-			_niche = (self.kind.currentData() or self.kind.currentText() or '').strip().lower()
-			rc = api.post('/api/trends/collect', {'niche': _niche, 'limit': 30})
-			self.logline(' Thu thap: ' + str(rc.get('collected', 0)) + ' / luu: ' + str(rc.get('saved', 0)) + ' moi')
+			niche = (self.kind.currentData() or self.kind.currentText() or '').strip().lower()
+			rc = api.post('/api/trends/collect', {'niche': niche, 'limit': 30})
+			self.logline(' Thu thap: ' + str(rc.get('collected', 0)) + ' / luu: ' + str(rc.get('saved', 0)))
 		except Exception as e:
-			self.logline(' Loi collect: ' + str(e))
-		try:
-			d = api.get('/api/trends')
-			items = d.get('items', [])
-			self.logline(' Tong trend trong DB: ' + str(len(items)) + ' xu huong')
-			for it in items[:10]:
-				if isinstance(it, dict):
-					kw = it.get('topic', it.get('keyword', '?'))
-					sc = it.get('score', '?')
-					self.logline(' - ' + str(kw)[:70] + ' (score=' + str(sc) + ')')
-		except Exception as e:
-			self.logline(' Loi doc trends: ' + str(e))
+			self.logline(' Loi: ' + str(e)[:120])
+
 	def do_viral(self):
-		self.logline('> Dang phan tich video viral...')
+		self.logline('> Dang phan tich viral...')
 		kw = self.topic.text().strip() or (self.kind.currentText() if self.kind.count() else 'meo con')
 		try:
 			r = api.post('/api/viral/search', {'query': kw, 'max_results': 15})
@@ -379,136 +270,115 @@ class Pipeline(QWidget):
 				return
 			items = r.get('items', [])
 			self.logline(' Tim thay: ' + str(len(items)) + ' video')
-			s = r.get('summary') or {}
-			self.logline(' Views max: ' + str(s.get('views_max', 0)))
-			self.logline(' Duration median: ' + str(s.get('duration_median_s', 0)) + 's')
-			self.logline(' % cau hoi: ' + str(s.get('pct_question_title', 0)) + '%')
-			self.logline(' % emoji: ' + str(s.get('pct_emoji_title', 0)) + '%')
-			saved = r.get('saved')
-			if saved:
-				self.logline(' Luu: ' + str(saved)[-60:])
 		except Exception as e:
-			self.logline(' Loi: ' + str(e)[:150])
+			self.logline(' Loi: ' + str(e)[:120])
 
-	def do_analyze(self):
-		self.logline('> Phan tich video da dang...')
-		try:
-			d = api.publications()
-			items = d.get('items', d if isinstance(d, list) else [])
-			n = len(items)
-			self.logline(' Tong so: ' + str(n) + ' video')
-			by = {}
-			bych = {}
-			for x in items:
-				if not isinstance(x, dict):
-					continue
-				st = str(x.get('status') or '?')
-				by[st] = by.get(st, 0) + 1
-				ch = str(x.get('channel_id') or '?')
-				bych[ch] = bych.get(ch, 0) + 1
-			self.logline(' Theo trang thai:')
-			for k in by:
-				self.logline(' ' + str(k) + ': ' + str(by[k]))
-			self.logline(' Theo kenh:')
-			for k in bych:
-				self.logline(' ' + str(k) + ': ' + str(bych[k]))
-			pub = by.get('published', 0)
-			rend = by.get('rendered', 0)
-			self.logline(' => Da dang that: ' + str(pub) + ' | Cho duyet: ' + str(rend))
-		except Exception as e:
-			self.logline(' Loi: ' + str(e))
-	def load_advisor(self, force=False):
+	def load_advisor(self):
 		self.logline('> Lay goi y tu Advisor...')
 		try:
-			url = '/api/studio/advice?force=' + ('1' if force else '0')
+			url = '/api/studio/advice?force=0'
 			cid = self.ch.currentData()
 			if cid:
-				url = url + '&channel_id=' + str(cid)
-				kid = self.kind.currentData()
-				if kid:
-					url = url + '&kind=' + str(kid)
+				url += '&channel_id=' + str(cid)
+			kid = self.kind.currentData()
+			if kid:
+				url += '&kind=' + str(kid)
 			d = api.get(url)
 			adv = (d or {}).get('advisor') or {}
-			summary = adv.get('summary') or i18n.t('pipe.advisor.none')
+			self.advisor_ideas.blockSignals(True)
 			self.advisor_ideas.clear()
-			self.advisor_ideas.addItem(i18n.t('pipe.advisor.pick'), None)
+			self.advisor_ideas.addItem('-- Chon y tuong --', None)
 			for idea in (adv.get('next_ideas') or []):
 				ttl = (idea.get('title') or '')[:80]
 				if ttl:
 					self.advisor_ideas.addItem(ttl, ttl)
+			self.advisor_ideas.blockSignals(False)
 			self.logline(' Advisor OK: ' + str(len(adv.get('next_ideas') or [])) + ' y tuong')
 		except Exception as e:
 			self.logline('! Advisor loi: ' + str(e)[:120])
 
-	def apply_idea(self, idx):
+	def _apply_idea(self, idx):
 		t = self.advisor_ideas.currentData()
 		if t:
 			self.topic.setText(t)
-			self.logline('> Ap dung y tuong: ' + t[:60])
-
-	def on_when_changed(self, idx):
-		self.sched.setVisible(idx == 1)
+			self.logline('> Ap dung: ' + t[:60])
 	def do_run(self):
 		cid = self.ch.currentData()
 		if cid is None:
 			self.logline('! Chua chon kenh')
 			return
-		body = {'channel_id': cid}
+		n = int(self.batch_count.currentData() or 1)
+		body = {
+			'channel_id': cid,
+			'count': n,
+			'topic': self.topic.text(),
+			'require_approval': (self.mode.currentIndex() == 1),
+			'voice_override': self.voice.currentData(),
+			'voice_preset': self.preset.currentData(),
+			}
 		k = self.kind.currentData()
 		if k:
 			body['kind'] = k
 		lo = self.length.currentData()
 		if lo:
 			body['length_override'] = lo
-		body['topic'] = self.topic.text()
-		body['require_approval'] = (self.mode.currentIndex() == 1)
-		body['voice_override'] = self.voice.currentData()
-		body['voice_preset'] = self.preset.currentData()
-		# Thu thap modules user chon
 		mods = {}
-		for c in self.steps:
-			cat = c.info['cat']
-			cur = c.mod.currentData()
+		for i, cb in enumerate(self.modules):
+			cur = cb.currentData()
 			if cur:
-				mods[cat] = cur
-		mods['_opts'] = {'caption': self.chk_caption.isChecked(), 'music_only': self.chk_music_only.isChecked()}
+				mods[STEPS[i]['cat']] = cur
+		mods['_opts'] = {'caption': self.chk_row.is_checked('caption'), 'music_only': self.chk_row.is_checked('music')}
 		body['modules'] = mods
 		if self.when.currentIndex() == 1:
 			body['run_at'] = self.sched.dateTime().toString('yyyy-MM-dd HH:mm:ss')
-		self.logline('> Tao cong viec: ' + str(body))
-		r = api.create_job(body)
-		self.logline(str(r))
+		self.logline('> Tao job: kenh=' + str(cid) + ', so luong=' + str(n))
+		try:
+			r = api.create_job(body)
+		except Exception as e:
+			self.logline('! Loi API: ' + str(e)[:150])
+			return
 		jid = r.get('job_id', r.get('id'))
 		if not jid:
-			self.logline('! Khong tao duoc cong viec')
+			self.logline('! Khong tao duoc job: ' + str(r)[:150])
 			return
 		self.logline('> Dang chay: ' + str(jid))
-		rr = api.run_job(jid)
-		self.logline(str(rr))
+		try:
+			rr = api.run_job(jid)
+		except Exception as e:
+			self.logline('! Loi chay: ' + str(e)[:150])
+			return
 		if rr.get('ok') is False:
-			self.set_all('error')
+			self.logline('! Run loi: ' + str(rr)[:150])
+			self._set_timeline_error()
 			return
 		self._jid = jid
 		import time as _tm
 		self._started = _tm.time()
 		self._lastn = -1
 		self._lastchange = _tm.time()
-		self.set_all('queued')
-		for c in self.steps:
-			c.set_status('running')
-		if not hasattr(self, 'timer'):
-			from PySide6.QtCore import QTimer
+		self.btn_run.setEnabled(False)
+		self.lbl_status.setText('Dang chay ' + str(n) + ' video...')
+		self.timeline.set_state(0, TimelineStep.STATE_RUNNING)
+		if not hasattr(self, "timer"):
 			self.timer = QTimer(self)
 			self.timer.timeout.connect(self.poll_job)
 		self.timer.start(1000)
 
+	def _set_timeline_error(self):
+		self.timeline.set_state(0, TimelineStep.STATE_ERROR)
+		self.lbl_status.setText('Loi - kiem tra nhat ky' )
+		self.btn_run.setEnabled(True)
+
 	def poll_job(self):
-		jid = getattr(self, '_jid', None)
+		jid = self._jid
 		if not jid:
 			return
-		import time
-		d = api.job_detail(jid)
-		if not isinstance(d, dict) or d.get('ok') is False:
+		import time, sqlite3
+		try:
+			d = api.job_detail(jid)
+		except Exception:
+			return
+		if not isinstance(d, dict):
 			return
 		tail = d.get('log_tail', [])
 		if tail:
@@ -516,72 +386,35 @@ class Pipeline(QWidget):
 			sb = self.log.verticalScrollBar()
 			sb.setValue(sb.maximum())
 		st = str(d.get('status') or '')
-		# Dem tu DB
 		try:
-			import sqlite3
-			cc = sqlite3.connect('state/pipeline.db')
+			cc = sqlite3.connect("state/pipeline.db")
 			row = cc.execute('SELECT COUNT() FROM publications WHERE job_id=?', (jid,)).fetchone()
 			n = int(row[0]) if row else 0
 			cc.close()
 		except Exception:
-			n = len([x for x in tail if 'rendered' in x])
+			n = 0
 		total = int(d.get('count') or 1)
 		running = bool(d.get('running'))
-		if not hasattr(self, '_started'):
+		if not self._started:
 			self._started = time.time()
-		el = int(time.time() - getattr(self, '_started', time.time()))
+		el = int(time.time() - self._started)
 		mins = el // 60
 		secs = el % 60
 		tstr = ((str(mins) + 'm ') if mins else '') + str(secs) + 's'
-		pct = min(99, int(n * 100 / max(1, total))) if running else (100 if st in ('done', 'completed', 'success', 'error', 'failed') else 0)
-		eta = ''
-		if n > 0 and running and el > 5:
-			rate = el / n
-			remain = max(0, int(rate * (total - n)))
-			eta = ' - con ~' + str(remain // 60) + 'm ' + str(remain % 60) + 's'
-		lastn = getattr(self, '_lastn', -1)
-		if n != lastn:
+		if n != self._lastn:
 			self._lastn = n
 			self._lastchange = time.time()
-		stall = int(time.time() - getattr(self, '_lastchange', time.time()))
 		if st in ('done', 'completed', 'success'):
 			self.timer.stop()
-			self.set_all('done', str(n) + ' video / ' + tstr, 100)
-			self.logline('> Hoan tat sau ' + tstr + ': ' + str(n) + ' video')
+			self.timeline.set_state(5, TimelineStep.STATE_DONE)
+			self.lbl_status.setText('Hoan tat ' + str(n) + ' video / ' + tstr)
+			self.btn_run.setEnabled(True)
+			self.logline('> Xong ' + str(n) + ' video sau ' + tstr)
 		elif st in ('error', 'failed'):
 			self.timer.stop()
-			self.set_all('error', 'Loi sau ' + tstr, 100)
-		elif running or st in ('running', 'pending', 'queued'):
-			msg = 'Chay ' + tstr + ' - ' + str(n) + '/' + str(total) + ' video' + eta
-			if stall >= 30:
-				msg = msg + ' [khong tien trien ' + str(stall) + 's]'
-			self.set_all('running', msg, pct)
-
-	def do_batch(self):
-		cid = self.ch.currentData()
-		if cid is None:
-			self.logline('! Chua chon kenh')
-			return
-		n = int(self.batch_count.currentData() or 1)
-		from PySide6.QtWidgets import QMessageBox
-		msg = 'Tao ' + str(n) + ' video cho kenh ' + str(cid) + '?'
-		msg += chr(10) + chr(10) + 'Video se duoc render (~1-3 phut/video), len lich toi uu va tu dang dung gio. Co the dong tab, quay lai tab "Tao video 1 tuan" de xem tien do.'
-		if QMessageBox.question(self, 'Tao lo video', msg) != QMessageBox.Yes:
-			return
-		self.logline('> Khoi dong lo ' + str(n) + ' video cho ' + str(cid))
-		try:
-			payload = {'days': 1, 'per_day': n, 'min_score': 100, 'channels': [cid]}
-			r = api.weekly_start(payload)
-			if not isinstance(r, dict) or not r.get('ok'):
-				self.logline('! Loi: ' + str((r or {}).get('error') or r)[:200])
-				QMessageBox.warning(self, 'Loi', str((r or {}).get('error') or r)[:400])
-				return
-			self.logline('> Da bat dau, pid=' + str(r.get('pid')) + ' — theo doi o tab "Tao video 1 tuan"')
-			self.set_all('queued', 'Lo ' + str(n) + ' video dang chay')
-			for c in self.steps:
-				c.set_status('running')
-			QMessageBox.information(self, 'Da bat dau',
-				'Lo ' + str(n) + ' video da chay nen.' + chr(10) +
-				'Xem tien do o tab "Tao video 1 tuan".')
-		except Exception as e:
-			self.logline('! Loi: ' + str(e)[:200])
+			self._set_timeline_error()
+		elif running or st in ("running", "pending", "queued"):
+			step = min(4, n)
+			self.timeline.set_state(step, TimelineStep.STATE_RUNNING)
+			msg = 'Chay ' + tstr + ' - ' + str(n) + '/' + str(total)
+			self.lbl_status.setText(msg)
