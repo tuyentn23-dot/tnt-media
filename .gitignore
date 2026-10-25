@@ -63,22 +63,22 @@ _*.py
 _*.txt
 _*.ttf
 
-# Temp dirs (session)
+# ===== cleanup 2026-10-25: runtime / binary / patch-era =====
+_ai_chrome/
+music_bank/
+library/
+assets/
+state/
+work/
+out/
+archive/
+backup/
 _trash/
-_work/
-_vids_chrome/
-_vids_dl/
-vids_profile/
-vids_tmp/
-edit_tmp/
-archive_root/
-archive_tmp/
-archive_root/
-dbg.mp4
-dbg*.mp3
-*.mp4
-*.mp3
-
-# Keep important ops files
-!ops/init.py
-!ops/_no_window.py
+_shots/
+.tnt/
+n8n/
+tnt_media_v3/
+memory/token.json
+*.bak_*
+*.broken
+*.old
